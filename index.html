@@ -33,7 +33,7 @@
             background: #94a3b8;
         }
         
-        /* [1] Chrome, Safari, Edge, Opera の数値入力矢印（スピンボタン）を除去して表示領域を最大化 */
+        /* Chrome, Safari, Edge, Opera の数値入力矢印（スピンボタン）を除去 */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -78,7 +78,7 @@
     </div>
 
     <!-- Header Grid -->
-    <header class="bg-slate-900 text-white py-6 px-4 sm:px-8 border-b border-slate-800 shadow-md">
+    <header class="bg-slate-900 text-white py-6 px-4 sm:px-8 border-b border-b-slate-800 shadow-md">
         <div class="max-w-7xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <!-- Clicking this pulsing Diamond runs simulation -->
@@ -87,27 +87,34 @@
                 </div>
                 <div>
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-emerald-400 bg-clip-text text-transparent">
-                        6大資産キャッシュフローシミュレータ・無双
+                        6大資産ライフプランシミュレータ・無双
                     </h1>
                     <p class="text-slate-400 text-xs sm:text-sm mt-0.5 font-light">
-                        未来への軍略盤 — 所得の流入と自動積立、生涯生活費の差し引きが現金と連動する人生の計
+                        未来への軍略盤 — 所得の流入と生涯生活費の引き算が現金と連動する人生の設計図
                     </p>
                 </div>
             </div>
             
-            <!-- Quick Allocation Presets & World Line Selectors merged inside header black bar -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 bg-slate-800/80 p-2 rounded-xl border border-slate-700/60 text-xs">
-                <div class="flex items-center gap-1">
-                    <span class="text-slate-400 px-1 font-medium whitespace-nowrap">黄金の配分：</span>
-                    <button onclick="applyPreset('aggressive')" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition-colors border border-emerald-500/30">🔥 積極型</button>
-                    <button onclick="applyPreset('balanced')" class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 transition-colors border border-cyan-500/30">⚖️ バランス</button>
-                    <button onclick="applyPreset('conservative')" class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 transition-colors border border-amber-500/30">🛡️ 防御型</button>
+            <!-- Characters preset dropdown & World Line Selector inside black bar -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/60 text-xs">
+                <!-- Character selector (Re-ordered, Default is salaryman) -->
+                <div class="flex items-center gap-1.5">
+                    <span class="text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-user-tie text-amber-400 mr-1"></i>人物選択：</span>
+                    <select id="scenario-selector" onchange="applyScenario(this.value)" class="bg-slate-900 text-slate-100 rounded-lg px-3 py-1.5 font-bold border border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer text-xs">
+                        <option value="rich_dad">金持ち父さん</option>
+                        <option value="poor_dad">貧乏父さん</option>
+                        <option value="salaryman" selected>一般サラリーマン</option>
+                        <option value="landlord">閃きの大家さん</option>
+                        <option value="children">未来ある子供達</option>
+                    </select>
                 </div>
-                <div class="flex items-center gap-1 border-t sm:border-t-0 sm:border-l border-slate-700 pt-2 sm:pt-0 sm:pl-2">
-                    <span class="text-slate-400 px-1 font-medium whitespace-nowrap">未来の選択：</span>
-                    <button onclick="applyWorldLine('bright')" class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition-colors border border-emerald-500/30">✨ 明るい</button>
-                    <button onclick="applyWorldLine('normal')" class="px-2.5 py-1 rounded bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition-colors border border-blue-500/30">🌱 普通</button>
-                    <button onclick="applyWorldLine('dark')" class="px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 transition-colors border border-rose-500/30">⛈️ 暗い</button>
+                <!-- World line selector with beautiful hover tooltips -->
+                <div class="flex items-center gap-1 border-t sm:border-t-0 sm:border-l border-slate-700 pt-2.5 sm:pt-0 sm:pl-3">
+                    <span class="text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-earth-asia text-blue-400 mr-1"></i>マクロ経済世界線：</span>
+                    <button onclick="applyWorldLine('bright')" class="px-2.5 py-1.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition-colors border border-emerald-500/30 font-bold" title="【超高成長（ハイパー・グロース）】&#10;・現金年利: 0.1%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 15.0%&#10;・投資信託年利: 15.0%&#10;・貴金属年利: 5.0%&#10;・安全債券年利: 5.0%">🚀 超高成長</button>
+                    <button onclick="applyWorldLine('mild_bull')" class="px-2.5 py-1.5 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 transition-colors border border-cyan-500/30 font-bold" title="【安定上昇（マイルド・ブル）】&#10;・現金年利: 0.1%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 10.0%&#10;・投資信託年利: 8.0%&#10;・貴金属年利: 5.0%&#10;・安全債券年利: 5.0%">📈 安定上昇</button>
+                    <button onclick="applyWorldLine('normal')" class="px-2.5 py-1.5 rounded bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition-colors border border-blue-500/30 font-bold" title="【巡航速度（ニュートラル）】&#10;・現金年利: 0.1%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 5.0%&#10;・投資信託年利: 4.0%&#10;・貴金属年利: 4.0%&#10;・安全債券年利: 4.0%">🌱 巡航速度</button>
+                    <button onclick="applyWorldLine('dark')" class="px-2.5 py-1.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 transition-colors border border-rose-500/30 font-bold" title="【停滞・下落（ベア・マーケット）】&#10;・現金年利: 0.0%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 4.0%&#10;・投資信託年利: 1.0%&#10;・貴金属年利: 3.0%&#10;・安全債券年利: 4.0%">⛈️ 停滞下落</button>
                 </div>
             </div>
         </div>
@@ -138,19 +145,19 @@
                         <label for="start-age" class="block text-[10px] font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">現在の年齢</label>
                         <div class="relative">
                             <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs"><i class="fa-solid fa-user-clock"></i></span>
-                            <input type="number" id="start-age" value="35" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
+                            <input type="number" id="start-age" value="30" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
                         </div>
                     </div>
                     <div>
                         <label for="years" class="block text-[10px] font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">期間 (年)</label>
                         <div class="relative">
                             <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs"><i class="fa-solid fa-hourglass-half"></i></span>
-                            <input type="number" id="years" value="50" min="1" max="50" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
+                            <input type="number" id="years" value="55" min="1" max="70" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
                         </div>
                     </div>
                 </div>
 
-                <!-- Salary Income Default configuration: 800万 to 2033 -->
+                <!-- Salary Income Configuration -->
                 <div class="border-t border-slate-100 pt-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
@@ -161,16 +168,16 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="text-slate-400 text-[10px] block mb-1">所得額 (万円/年)</label>
-                            <input type="number" id="salary-amount" value="800" class="w-full rounded-lg border border-slate-200 p-2 font-bold text-slate-800 focus:outline-slate-500 text-xs">
+                            <input type="number" id="salary-amount" value="550" class="w-full rounded-lg border border-slate-200 p-2 font-bold text-slate-800 focus:outline-slate-500 text-xs">
                         </div>
                         <div>
                             <label class="text-slate-400 text-[10px] block mb-1">受給期限 (西暦年まで)</label>
-                            <input type="number" id="salary-limit" value="2033" class="w-full rounded-lg border border-slate-200 p-2 font-bold text-slate-800 focus:outline-slate-500 text-xs">
+                            <input type="number" id="salary-limit" value="2056" class="w-full rounded-lg border border-slate-200 p-2 font-bold text-slate-800 focus:outline-slate-500 text-xs">
                         </div>
                     </div>
                 </div>
 
-                <!-- Real Estate Income Plan with Start/End fields. [1] Grid spacing strictly polished to display 4-digit numbers on PC -->
+                <!-- Real Estate Income Plan with Start/End fields. -->
                 <div class="border-t border-slate-100 pt-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
@@ -181,18 +188,11 @@
                         </button>
                     </div>
                     <div id="re-income-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1">
-                        <div class="re-income-row grid grid-cols-12 gap-1 items-center bg-slate-50/50 p-1.5 rounded-lg border border-slate-100 text-[11px]">
-                            <input type="text" class="re-name col-span-3 rounded border border-slate-200 p-1 font-semibold text-center" value="メゾンA" placeholder="物件名">
-                            <input type="number" class="re-amount col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="400" placeholder="年額(万)">
-                            <input type="number" class="re-start col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2000" placeholder="開始年">
-                            <span class="col-span-1 text-center text-slate-400 text-[10px] font-bold">-</span>
-                            <input type="number" class="re-end col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="2035" placeholder="終了年">
-                            <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
-                        </div>
+                        <!-- Dynamically generated rows -->
                     </div>
                 </div>
 
-                <!-- Other Income Plan (Default 0) -->
+                <!-- Other Income Plan -->
                 <div class="border-t border-slate-100 pt-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
@@ -205,7 +205,7 @@
                     </div>
                 </div>
 
-                <!-- Annual Expense (年間生活費) section with breakdowns [3] CHOO IMPORTANT FOR DIE-WITH-ZERO -->
+                <!-- Annual Expense (年間生活費) section with breakdowns -->
                 <div class="border-t border-slate-100 pt-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="font-bold text-rose-700 text-xs flex items-center gap-1.5">
@@ -216,75 +216,61 @@
                     <div class="bg-rose-50/20 p-3 rounded-xl border border-rose-100/50 flex flex-col gap-3">
                         <div>
                             <label class="text-slate-500 text-[10px] block mb-1 font-semibold">年間生活費 合計 (万円/年) <span class="text-rose-500 font-bold">*自動計算</span></label>
-                            <input type="number" id="annual-expense" value="980" readonly class="w-full rounded-lg border border-rose-200 bg-rose-100/30 p-2 font-black text-rose-700 text-xs focus:outline-none cursor-not-allowed">
+                            <input type="number" id="annual-expense" value="490" readonly class="w-full rounded-lg border border-rose-200 bg-rose-100/30 p-2 font-black text-rose-700 text-xs focus:outline-none cursor-not-allowed">
                         </div>
-                        <div class="grid grid-cols-3 gap-2 text-[10px]">
+                        <div class="grid grid-cols-4 gap-1 text-[9px]">
                             <div>
-                                <label class="text-slate-400 block mb-1 font-medium">税金・必要経費 (年)</label>
-                                <input type="number" id="expense-tax" value="600" oninput="calculateTotalExpense(); runSimulation();" class="w-full rounded-lg border border-slate-200 p-1.5 font-bold text-slate-800 focus:outline-rose-500 text-xs">
+                                <label class="text-slate-400 block mb-1 font-medium" title="税金や義務的な支出">税金・必要経費 (年)</label>
+                                <input type="number" id="expense-tax" value="150" oninput="calculateTotalExpense(); runSimulation();" class="w-full rounded-lg border border-slate-200 p-1.5 font-bold text-slate-800 focus:outline-rose-500 text-xs">
                             </div>
                             <div>
-                                <label class="text-slate-400 block mb-1 font-medium">毎月消費 (万/月)</label>
-                                <input type="number" id="expense-monthly" value="15" oninput="calculateTotalExpense(); runSimulation();" class="w-full rounded-lg border border-slate-200 p-1.5 font-bold text-slate-800 focus:outline-rose-500 text-xs">
+                                <label class="text-slate-400 block mb-1 font-medium" title="毎月の基礎生活費">生活費 (万/月)</label>
+                                <input type="number" id="expense-monthly" value="20" oninput="calculateTotalExpense(); runSimulation();" class="w-full rounded-lg border border-slate-200 p-1.5 font-bold text-slate-800 focus:outline-rose-500 text-xs">
                             </div>
                             <div>
-                                <label class="text-slate-400 block mb-1 font-medium">臨時消費 (万/年)</label>
-                                <input type="number" id="expense-extra" value="200" oninput="calculateTotalExpense(); runSimulation();" class="w-full rounded-lg border border-slate-200 p-1.5 font-bold text-slate-800 focus:outline-rose-500 text-xs">
+                                <label class="text-slate-400 block mb-1 font-medium" title="毎月の任意消費額">毎月消費 (万/月)</label>
+                                <input type="number" id="expense-personal-monthly" value="0" oninput="calculateTotalExpense(); runSimulation();" class="w-full rounded-lg border border-slate-200 p-1.5 font-bold text-slate-800 focus:outline-rose-500 text-xs">
+                            </div>
+                            <div>
+                                <label class="text-slate-400 block mb-1 font-medium" title="旅行、レジャー、特別費">臨時消費 (万/年)</label>
+                                <input type="number" id="expense-extra" value="100" oninput="calculateTotalExpense(); runSimulation();" class="w-full rounded-lg border border-slate-200 p-1.5 font-bold text-slate-800 focus:outline-rose-500 text-xs">
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Extra Incomes. Default: Retirement 2000万 (2033) -->
+                <!-- Extra Incomes -->
                 <div class="border-t border-slate-100 pt-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="font-bold text-emerald-800 text-xs flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-arrow-up text-emerald-500"></i> 💰 臨時収入の計画
+                            <i class="fa-solid fa-circle-check text-emerald-500"></i> 💰 臨時収入の計画
                         </span>
                         <button type="button" onclick="addIncomeRow()" class="px-2 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold rounded hover:bg-emerald-100 transition-colors">
                             ＋ 追加
                         </button>
                     </div>
                     <div id="income-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1">
-                        <div class="income-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
-                            <input type="text" class="income-memo col-span-3 rounded border border-slate-200 p-1 font-medium text-center" value="退職金" placeholder="名目">
-                            <input type="number" class="income-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2033" placeholder="西暦">
-                            <input type="number" class="income-amount col-span-3 rounded border border-slate-200 p-1 font-bold text-emerald-700 text-center" value="2000" placeholder="万円">
-                            <select class="income-target col-span-2 rounded border border-slate-200 p-0.5 font-bold text-slate-700 bg-white">
-                                <option value="cash">現金</option>
-                                <option value="realestate">不動産</option>
-                                <option value="stocks">株式</option>
-                                <option value="trust" selected>投信</option>
-                                <option value="metal">金</option>
-                                <option value="bonds">債券</option>
-                            </select>
-                            <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
+                        <!-- Dynamically generated rows -->
                     </div>
                 </div>
 
-                <!-- Extra Expenses. Default: Maison B construction 1億 (2035) -->
+                <!-- Extra Expenses -->
                 <div class="border-t border-slate-100 pt-3">
                     <div class="flex items-center justify-between mb-2">
                         <span class="font-bold text-rose-800 text-xs flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-arrow-down text-rose-500"></i> 💸 臨時出費の計画
+                            <i class="fa-solid fa-circle-minus text-rose-500"></i> 💸 臨時出費の計画
                         </span>
                         <button type="button" onclick="addExpenseRow()" class="px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded hover:bg-rose-100 transition-colors">
                             ＋ 追加
                         </button>
                     </div>
                     <div id="expense-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1">
-                        <div class="expense-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
-                            <input type="text" class="expense-memo col-span-4 rounded border border-slate-200 p-1 font-medium text-center" value="メゾンB建築" placeholder="名目">
-                            <input type="number" class="expense-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2035" placeholder="西暦">
-                            <input type="number" class="expense-amount col-span-4 rounded border border-slate-200 p-1 font-bold text-rose-700 text-center" value="10000" placeholder="出費(万円)">
-                            <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
+                        <!-- Dynamically generated rows -->
                     </div>
                 </div>
             </div>
 
-            <!-- Asset Settings List -->
+            <!-- Asset Settings List (Dynamic Assets system) -->
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
                 <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
                     <span class="flex items-center gap-2">
@@ -293,7 +279,7 @@
                     <span class="text-xs font-normal text-slate-400">キャッシュフロー連動</span>
                 </h2>
 
-                <!-- Cash (現金) -->
+                <!-- Cash (現金) - Hub account remains fixed -->
                 <div class="border-l-4 border-slate-500 bg-slate-50 p-4 rounded-xl flex flex-col gap-3">
                     <div class="flex items-center justify-between">
                         <span class="font-bold text-slate-800 text-sm flex items-center gap-2">💵 現金口座（普通・タンス預金）</span>
@@ -301,166 +287,44 @@
                     </div>
                     <div class="grid grid-cols-2 gap-3 text-xs">
                         <div>
-                            <label class="text-slate-400 block mb-1">初期資産 (万円)</label>
-                            <input type="number" id="init-cash" value="100" class="w-full rounded-lg border border-slate-200 bg-white p-2 font-bold text-slate-800 focus:outline-slate-500">
+                            <label class="text-slate-400 block mb-1">初期資金 (万円)</label>
+                            <input type="number" id="init-cash" value="200" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 bg-white p-2 font-bold text-slate-800 focus:outline-slate-500">
                         </div>
                         <div>
                             <label class="text-slate-400 block mb-1">想定年利 (%)</label>
-                            <input type="number" id="rate-cash" value="0.0" step="0.1" class="w-full rounded-lg border border-slate-200 bg-white p-2 font-bold text-slate-800 focus:outline-slate-500">
+                            <input type="number" id="rate-cash" value="0.1" step="0.1" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 bg-white p-2 font-bold text-slate-800 focus:outline-slate-500">
                         </div>
                     </div>
                 </div>
 
-                <!-- Real Estate (不動産) [2] Payout toggle completely removed, rate default 0% -->
-                <div class="border-l-4 border-rose-500 bg-rose-50/20 p-4 rounded-xl flex flex-col gap-3">
+                <!-- Dynamic Investment Assets Container -->
+                <div class="border-t border-slate-100 pt-4 flex flex-col gap-3">
                     <div class="flex items-center justify-between">
-                        <span class="font-bold text-rose-800 text-sm flex items-center gap-2">🏢 不動産</span>
-                        <span class="text-xs text-rose-500 font-medium">純資産価値（キャピタル）</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="text-slate-400 block mb-1">初期資産 (万円)</label>
-                            <input type="number" id="init-realestate" value="0" class="w-full rounded-lg border border-rose-100 bg-white p-2 font-bold text-slate-800 focus:outline-rose-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">想定年利 (%)</label>
-                            <input type="number" id="rate-realestate" value="0.0" step="0.1" class="w-full rounded-lg border border-rose-100 bg-white p-2 font-bold text-slate-800 focus:outline-rose-500">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stocks (株式) -->
-                <div class="border-l-4 border-blue-500 bg-blue-50/20 p-4 rounded-xl flex flex-col gap-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-blue-800 text-sm flex items-center gap-2">📈 株式</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="text-slate-400 block mb-1">初期資産 (万円)</label>
-                            <input type="number" id="init-stocks" value="100" class="w-full rounded-lg border border-blue-100 bg-white p-2 font-bold text-slate-800 focus:outline-blue-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">想定年利 (%)</label>
-                            <input type="number" id="rate-stocks" value="4.0" step="0.1" class="w-full rounded-lg border border-blue-100 bg-white p-2 font-bold text-slate-800 focus:outline-blue-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">年初投資 (万円/年)</label>
-                            <input type="number" id="year-stocks" value="0" class="w-full rounded-lg border border-blue-100 bg-white p-2 font-bold text-slate-800 focus:outline-blue-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">月々積立 (万円/月)</label>
-                            <input type="number" id="month-stocks" value="0" class="w-full rounded-lg border border-blue-100 bg-white p-2 font-bold text-slate-800 focus:outline-blue-500">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-slate-400 block mb-1">利益の受取方法</label>
-                            <select id="payout-stocks" class="w-full rounded-lg border border-blue-100 bg-white p-2 font-bold text-slate-800 focus:outline-blue-500">
-                                <option value="reinvest" selected>再投資 (複利)</option>
-                                <option value="cashout">現金受取</option>
+                        <span class="font-bold text-slate-700 text-xs">📈 個別投資アセット一覧</span>
+                        <!-- Choose asset type before adding -->
+                        <div class="flex items-center gap-1.5">
+                            <select id="new-asset-type" class="bg-slate-100 text-slate-800 rounded px-2 py-1 font-bold border-none text-[10px] cursor-pointer focus:outline-none">
+                                <option value="stocks" selected>📈 株式</option>
+                                <option value="trust">💼 投資信託</option>
+                                <option value="realestate">🏢 不動産</option>
+                                <option value="metal">👑 貴金属</option>
+                                <option value="bonds">📜 債券</option>
                             </select>
+                            <button type="button" onclick="addNewAssetRow()" class="px-2 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold rounded-lg hover:bg-emerald-100 transition-colors">
+                                ＋ 追加
+                            </button>
                         </div>
+                    </div>
+                    <div id="dynamic-assets-container" class="flex flex-col gap-4">
+                        <!-- Programmatically generated investment cards -->
                     </div>
                 </div>
 
-                <!-- Investment Trusts (投資信託) -->
-                <div class="border-l-4 border-emerald-500 bg-emerald-50/20 p-4 rounded-xl flex flex-col gap-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-emerald-800 text-sm flex items-center gap-2">💼 投資信託</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="text-slate-400 block mb-1">初期資産 (万円)</label>
-                            <input type="number" id="init-trust" value="200" class="w-full rounded-lg border border-emerald-100 bg-white p-2 font-bold text-slate-800 focus:outline-emerald-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">想定年利 (%)</label>
-                            <input type="number" id="rate-trust" value="4.0" step="0.1" class="w-full rounded-lg border border-emerald-100 bg-white p-2 font-bold text-slate-800 focus:outline-emerald-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">年初投資 (万円/年)</label>
-                            <input type="number" id="year-trust" value="0" class="w-full rounded-lg border border-emerald-100 bg-white p-2 font-bold text-slate-800 focus:outline-emerald-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">月々積立 (万円/月)</label>
-                            <input type="number" id="month-trust" value="3" class="w-full rounded-lg border border-emerald-100 bg-white p-2 font-bold text-slate-800 focus:outline-emerald-500">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-slate-400 block mb-1">利益の受取方法</label>
-                            <select id="payout-trust" class="w-full rounded-lg border border-emerald-100 bg-white p-2 font-bold text-slate-800 focus:outline-emerald-500">
-                                <option value="reinvest" selected>再投資 (複利)</option>
-                                <option value="cashout">現金受取</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Precious Metals (貴金属) -->
-                <div class="border-l-4 border-amber-500 bg-amber-50/20 p-4 rounded-xl flex flex-col gap-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-amber-800 text-sm flex items-center gap-2">👑 貴金属</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="text-slate-400 block mb-1">初期資産 (万円)</label>
-                            <input type="number" id="init-metal" value="50" class="w-full rounded-lg border border-amber-100 bg-white p-2 font-bold text-slate-800 focus:outline-amber-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">想定年利 (%)</label>
-                            <input type="number" id="rate-metal" value="4.0" step="0.1" class="w-full rounded-lg border border-amber-100 bg-white p-2 font-bold text-slate-800 focus:outline-amber-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">年初投資 (万円/年)</label>
-                            <input type="number" id="year-metal" value="0" class="w-full rounded-lg border border-amber-100 bg-white p-2 font-bold text-slate-800 focus:outline-amber-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">月々積立 (万円/月)</label>
-                            <input type="number" id="month-metal" value="0" class="w-full rounded-lg border border-amber-100 bg-white p-2 font-bold text-slate-800 focus:outline-amber-500">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-slate-400 block mb-1">利益の受取方法</label>
-                            <select id="payout-metal" class="w-full rounded-lg border border-amber-100 bg-white p-2 font-bold text-slate-800 focus:outline-amber-500">
-                                <option value="reinvest" selected>再投資 (複利)</option>
-                                <option value="cashout">現金受取</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bonds (債券) [4] Default payout is cashout (現金受取) -->
-                <div class="border-l-4 border-purple-500 bg-purple-50/20 p-4 rounded-xl flex flex-col gap-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-purple-800 text-sm flex items-center gap-2">📜 債券</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                            <label class="text-slate-400 block mb-1">初期資産 (万円)</label>
-                            <input type="number" id="init-bonds" value="50" class="w-full rounded-lg border border-purple-100 bg-white p-2 font-bold text-slate-800 focus:outline-purple-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">想定年利 (%)</label>
-                            <input type="number" id="rate-bonds" value="4.0" step="0.1" class="w-full rounded-lg border border-purple-100 bg-white p-2 font-bold text-slate-800 focus:outline-purple-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">年初投資 (万円/年)</label>
-                            <input type="number" id="year-bonds" value="0" class="w-full rounded-lg border border-purple-100 bg-white p-2 font-bold text-slate-800 focus:outline-purple-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1">月々積立 (万円/月)</label>
-                            <input type="number" id="month-bonds" value="0" class="w-full rounded-lg border border-purple-100 bg-white p-2 font-bold text-slate-800 focus:outline-purple-500">
-                        </div>
-                        <div class="col-span-2">
-                            <label class="text-slate-400 block mb-1">利益の受取方法</label>
-                            <select id="payout-bonds" class="w-full rounded-lg border border-purple-100 bg-white p-2 font-bold text-slate-800 focus:outline-purple-500">
-                                <option value="reinvest">再投資 (複利)</option>
-                                <option value="cashout" selected>現金受取 (単利＋現金流入)</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Run Simulation Button -->
             <button onclick="runSimulation()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-calculator text-amber-400"></i> 軍略を試算する (再計算)
+                <i class="fa-solid fa-calculator text-amber-400"></i> 各種設定で再試算を実行
             </button>
         </section>
 
@@ -471,12 +335,12 @@
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                     <div>
-                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-line text-blue-500"></i> 資産増殖軌跡
+                        <h2 id="graph-title-element" class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-blue-500"></i> 「一般サラリーマン」の資産増殖軌跡
                         </h2>
                         <!-- Warning status message dynamically generated near subtitle -->
                         <p class="text-slate-400 text-xs mt-0.5 flex flex-wrap items-center gap-2">
-                            <span>X軸付近を含む各ポイントにホバーすると資産比率(%)と全額面を円単位で浮遊表示します</span>
+                            <span>各プロット点にホバーすると資産割合(%)と額面（万円）が浮遊ポップアップします</span>
                             <span id="cash-warning-badge" class="hidden px-2.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] animate-pulse">
                                 ⚠️ 預金不足期間あり
                             </span>
@@ -557,7 +421,7 @@
             bonds: '#8b5cf6'       // violet-500
         };
 
-        // Custom Toast Notification Function (iframe safe)
+        // Toast message displayer
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const toastText = document.getElementById('toast-text');
@@ -581,16 +445,17 @@
             }, 3000);
         }
 
-        // [2] Realtime calculation of Annual Expense Total based on tax, monthly and extra sub-inputs
+        // Calculate Total Expense base on tax, monthly and extra sub-inputs
         function calculateTotalExpense() {
             const tax = parseFloat(document.getElementById('expense-tax').value) || 0;
             const monthly = parseFloat(document.getElementById('expense-monthly').value) || 0;
+            const personalMonthly = parseFloat(document.getElementById('expense-personal-monthly').value) || 0;
             const extra = parseFloat(document.getElementById('expense-extra').value) || 0;
-            const total = tax + (monthly * 12) + extra;
+            const total = tax + (monthly * 12) + (personalMonthly * 12) + extra;
             document.getElementById('annual-expense').value = total;
         }
 
-        // Add dynamic Real Estate income row [1] FIXED WESTERN CALENDAR WIDTH ON PC - NO WRAPPING
+        // Add dynamic Real Estate income row
         function addREIncomeRow() {
             const container = document.getElementById('re-income-container');
             const startYear = parseInt(document.getElementById('start-year').value) || 2026;
@@ -602,7 +467,7 @@
                 <input type="number" class="re-start col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="${startYear}" placeholder="開始年">
                 <span class="col-span-1 text-center text-slate-400 text-[10px] font-bold">-</span>
                 <input type="number" class="re-end col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="${startYear + 15}" placeholder="終了年">
-                <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
             `;
             container.appendChild(div);
             showToast('🏢 不動産所得枠を追加しました！');
@@ -627,7 +492,7 @@
                     <option value="metal">金</option>
                     <option value="bonds">債券</option>
                 </select>
-                <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
             `;
             container.appendChild(div);
             showToast('💰 臨時収入計画を追加しました。');
@@ -644,133 +509,13 @@
                 <input type="text" class="expense-memo col-span-4 rounded border border-slate-200 p-1 font-medium text-center" value="車購入" placeholder="名目">
                 <input type="number" class="expense-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="${startYear + 3}" placeholder="西暦">
                 <input type="number" class="expense-amount col-span-4 rounded border border-slate-200 p-1 font-bold text-rose-700 text-center" value="400" placeholder="出費(万円)">
-                <button type="button" onclick="this.parentElement.remove()" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
             `;
             container.appendChild(div);
             showToast('💸 臨時出費計画を追加しました。');
         }
 
-        // Apply interest rate scenario based on world line select
-        function applyWorldLine(scenario) {
-            if (scenario === 'bright') {
-                document.getElementById('rate-cash').value = "0.1";
-                document.getElementById('rate-realestate').value = "2.0";
-                document.getElementById('rate-stocks').value = "8.0";
-                document.getElementById('rate-trust').value = "6.5";
-                document.getElementById('rate-metal').value = "4.5";
-                document.getElementById('rate-bonds').value = "3.0";
-                showToast('✨ 楽観世界線：技術革新と高成長アロケーションを適用しました！');
-            } else if (scenario === 'normal') {
-                document.getElementById('rate-cash').value = "0.0";
-                document.getElementById('rate-realestate').value = "0.0";
-                document.getElementById('rate-stocks').value = "5.0";
-                document.getElementById('rate-trust').value = "4.5";
-                document.getElementById('rate-metal').value = "2.5";
-                document.getElementById('rate-bonds').value = "1.8";
-                showToast('🌱 巡航世界線：現実的な成長シナリオを適用しました。');
-            } else if (scenario === 'dark') {
-                document.getElementById('rate-cash').value = "0.0";
-                document.getElementById('rate-realestate').value = "0.0";
-                document.getElementById('rate-stocks').value = "1.0";
-                document.getElementById('rate-trust').value = "0.5";
-                document.getElementById('rate-metal').value = "0.5";
-                document.getElementById('rate-bonds').value = "0.2";
-                showToast('⛈️ 悲観世界線：長期不況とデフレシナリオを適用しました。');
-            }
-            runSimulation();
-        }
-
-        // Apply Preset Allocation Templates
-        function applyPreset(type) {
-            if (type === 'aggressive') {
-                document.getElementById('init-cash').value = 50;
-                document.getElementById('rate-cash').value = 0.0;
-
-                document.getElementById('init-realestate').value = 0;
-                document.getElementById('rate-realestate').value = 0.0;
-
-                document.getElementById('init-stocks').value = 300;
-                document.getElementById('rate-stocks').value = 7.0;
-                document.getElementById('year-stocks').value = 20;
-                document.getElementById('month-stocks').value = 3;
-
-                document.getElementById('init-trust').value = 200;
-                document.getElementById('rate-trust').value = 5.5;
-                document.getElementById('year-trust').value = 0;
-                document.getElementById('month-trust').value = 5;
-
-                document.getElementById('init-metal').value = 30;
-                document.getElementById('rate-metal').value = 3.0;
-                document.getElementById('year-metal').value = 0;
-                document.getElementById('month-metal').value = 0.5;
-
-                document.getElementById('init-bonds').value = 20;
-                document.getElementById('rate-bonds').value = 1.5;
-                document.getElementById('year-bonds').value = 0;
-                document.getElementById('month-bonds').value = 0;
-
-                showToast('🚀 積極型のアロケーションを適用しました！(万単位)');
-            } else if (type === 'balanced') {
-                document.getElementById('init-cash').value = 100;
-                document.getElementById('rate-cash').value = 0.0;
-
-                document.getElementById('init-realestate').value = 100;
-                document.getElementById('rate-realestate').value = 0.0;
-
-                document.getElementById('init-stocks').value = 150;
-                document.getElementById('rate-stocks').value = 5.0;
-                document.getElementById('year-stocks').value = 10;
-                document.getElementById('month-stocks').value = 1.5;
-
-                document.getElementById('init-trust').value = 150;
-                document.getElementById('rate-trust').value = 4.5;
-                document.getElementById('year-trust').value = 0;
-                document.getElementById('month-trust').value = 2.5;
-
-                document.getElementById('init-metal').value = 50;
-                document.getElementById('rate-metal').value = 2.5;
-                document.getElementById('year-metal').value = 0;
-                document.getElementById('month-metal').value = 1;
-
-                document.getElementById('init-bonds').value = 100;
-                document.getElementById('rate-bonds').value = 2.0;
-                document.getElementById('year-bonds').value = 0;
-                document.getElementById('month-bonds').value = 1;
-
-                showToast('⚖️ バランス型のアロケーションを適用しました！(万単位)');
-            } else if (type === 'conservative') {
-                document.getElementById('init-cash').value = 250;
-                document.getElementById('rate-cash').value = 0.0;
-
-                document.getElementById('init-realestate').value = 0;
-                document.getElementById('rate-realestate').value = 0.0;
-
-                document.getElementById('init-stocks').value = 50;
-                document.getElementById('rate-stocks').value = 3.5;
-                document.getElementById('year-stocks').value = 0;
-                document.getElementById('month-stocks').value = 0.5;
-
-                document.getElementById('init-trust').value = 100;
-                document.getElementById('rate-trust').value = 3.0;
-                document.getElementById('year-trust').value = 0;
-                document.getElementById('month-trust').value = 1.5;
-
-                document.getElementById('init-metal').value = 150;
-                document.getElementById('rate-metal').value = 2.0;
-                document.getElementById('year-metal').value = 0;
-                document.getElementById('month-metal').value = 2;
-
-                document.getElementById('init-bonds').value = 250;
-                document.getElementById('rate-bonds').value = 1.8;
-                document.getElementById('year-bonds').value = 10;
-                document.getElementById('month-bonds').value = 3;
-
-                showToast('🛡️ 防御型・安全の盾ポートフォリオを適用しました！(万単位)');
-            }
-            runSimulation();
-        }
-
-        // Draws the Donut Chart inside the Custom Tooltip Pop-up along with exact asset values
+        // Custom Tooltip Pop-up Pie renderer
         function drawTooltipPieChart(data) {
             const ctx = document.getElementById('tooltipPieChart').getContext('2d');
             const total = data.cash + data.realestate + data.stocks + data.trust + data.metal + data.bonds;
@@ -809,10 +554,10 @@
                 }
             });
 
-            // [4] Update Total sum text inside center hole using "万円" units as requested
+            // Update Total sum text inside center hole
             document.getElementById('tooltip-total-text').textContent = Math.round(total / 10000).toLocaleString() + '万円';
 
-            // Generate Breakdown list with icons, colored square indicator, asset values in 万, and percents
+            // Generate Breakdown list inside Tooltip Popup
             const breakdownContainer = document.getElementById('tooltip-breakdown');
             breakdownContainer.innerHTML = '';
             
@@ -829,7 +574,6 @@
                 const value = data[asset.key];
                 const pct = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
                 
-                // [4] Formatted display values strictly in 万円 units as requested
                 let valueText = Math.round(value / 10000).toLocaleString() + "万円";
                 if (value === 0) valueText = "0万円";
 
@@ -848,7 +592,7 @@
                 breakdownContainer.appendChild(item);
             });
 
-            // [5] Inject Year-on-Year metrics (total sum diff) inside pop-up tooltip
+            // Diff from previous year inside pop-up
             const diffContainer = document.getElementById('tooltip-diff');
             if (data.index === 0) {
                 diffContainer.innerHTML = '<span class="text-slate-500">前年比: —</span>';
@@ -868,7 +612,7 @@
             }
         }
 
-        // Custom Floating HTML Tooltip Handler linked to Line chart
+        // Custom HTML Tooltip hover engine
         function customTooltipHandler(context) {
             const tooltipEl = document.getElementById('chart-tooltip');
 
@@ -902,59 +646,555 @@
             let targetLeft = positionX + context.tooltip.caretX + 20;
             let targetTop = positionY + context.tooltip.caretY - 80;
 
-            if (targetLeft + 330 > window.innerWidth) {
-                targetLeft = positionX + context.tooltip.caretX - 345;
+            const tooltipWidth = 320; // Matches tooltip width token
+            const tooltipHeight = tooltipEl.offsetHeight || 340;
+
+            // Robust Viewport safety lock for both Desktop & Touch Mobile devices
+            if (window.innerWidth < 768) {
+                // On mobile, stick tooltip cleanly below graph canvas with safe centered padding
+                targetLeft = (window.innerWidth - tooltipWidth) / 2;
+                targetTop = positionY + context.chart.height + 30;
+            } else {
+                // Desktop hovering tracker
+                if (targetLeft + tooltipWidth > window.innerWidth) {
+                    targetLeft = positionX + context.tooltip.caretX - (tooltipWidth + 20);
+                }
+                if (targetLeft < 10) targetLeft = 10;
+
+                if (targetTop < 10) {
+                    targetTop = positionY + context.tooltip.caretY + 20;
+                }
+                const maxTop = window.innerHeight + window.scrollY - tooltipHeight - 15;
+                if (targetTop > maxTop) {
+                    targetTop = maxTop;
+                }
             }
 
             tooltipEl.style.left = targetLeft + 'px';
             tooltipEl.style.top = targetTop + 'px';
         }
 
-        // Core Mathematical Calculation Engine
+        // Add dynamic asset element row into Sidebar
+        function addAssetElement(data) {
+            const container = document.getElementById('dynamic-assets-container');
+            const id = data.id || 'asset-' + Date.now() + Math.random().toString(36).substr(2, 5);
+            
+            const div = document.createElement('div');
+            div.id = id;
+            div.className = 'asset-card border-l-4 bg-white shadow-sm border-slate-300 p-4 rounded-xl flex flex-col gap-3 text-xs relative group animate-fade-in transition-all';
+            
+            const applyBorder = (type) => {
+                div.className = div.className.replace(/border-([a-z]+)-\d+/g, '');
+                if (type === 'realestate') div.classList.add('border-rose-500');
+                if (type === 'stocks') div.classList.add('border-blue-500');
+                if (type === 'trust') div.classList.add('border-emerald-500');
+                if (type === 'metal') div.classList.add('border-amber-500');
+                if (type === 'bonds') div.classList.add('border-purple-500');
+            };
+
+            const typeLabelText = {
+                realestate: '🏢 不動産',
+                stocks: '📈 株式',
+                trust: '💼 投資信託',
+                metal: '👑 貴金属',
+                bonds: '📜 債券'
+            }[data.type];
+
+            // Render asset card markup
+            div.innerHTML = `
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-[10px]">${typeLabelText}</span>
+                        <input type="text" class="asset-name-field font-bold text-slate-800 bg-transparent border-b border-dashed border-slate-200 focus:border-slate-500 focus:outline-none py-0.5 px-1 text-sm w-40" value="${data.name}" placeholder="アセット名称 (例：トヨタ)" oninput="runSimulation();">
+                        <input type="hidden" class="asset-type-field" value="${data.type}">
+                    </div>
+                    <button type="button" onclick="document.getElementById('${id}').remove(); runSimulation(); showToast('資産アセットを削除しました。')" class="text-rose-500 hover:text-rose-700 p-1 rounded hover:bg-rose-50 transition-colors" title="削除">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-[10px]">
+                    <div>
+                        <label class="text-slate-400 block mb-0.5">初期/購入額 (万円)</label>
+                        <input type="number" class="asset-init-field w-full rounded border border-slate-200 p-1.5 font-bold" value="${data.initAmt}" oninput="runSimulation();">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-0.5">想定年利 (%)</label>
+                        <input type="number" class="asset-rate-field w-full rounded border border-slate-200 p-1.5 font-bold" value="${data.rate}" step="0.1" oninput="runSimulation();">
+                    </div>
+                    <div>
+                        <label class="text-slate-400 block mb-0.5">利益受取</label>
+                        <select class="asset-payout-field w-full rounded border border-slate-200 p-1 bg-white font-semibold" onchange="runSimulation();">
+                            <option value="reinvest" ${data.payout === 'reinvest' ? 'selected' : ''}>再投資</option>
+                            <option value="cashout" ${data.payout === 'cashout' ? 'selected' : ''}>現金受取</option>
+                        </select>
+                    </div>
+                    <div class="regular-invest-fields">
+                        <label class="text-slate-400 block mb-0.5">年初投資 (万円/年)</label>
+                        <input type="number" class="asset-year-field w-full rounded border border-slate-200 p-1.5 font-bold" value="${data.yearAmt || 0}" oninput="runSimulation();">
+                    </div>
+                    <div class="regular-invest-fields">
+                        <label class="text-slate-400 block mb-0.5">月々積立 (万円/月)</label>
+                        <input type="number" class="asset-month-field w-full rounded border border-slate-200 p-1.5 font-bold" value="${data.monthAmt || 0}" oninput="runSimulation();">
+                    </div>
+                    <div class="grid grid-cols-5 items-center gap-1">
+                        <div class="col-span-2">
+                            <label class="text-slate-400 block mb-0.5 text-[9px] truncate">購入年(西暦)</label>
+                            <input type="number" class="asset-start-field w-full rounded border border-slate-200 p-1 text-center font-bold text-[10px]" value="${data.startYear}" oninput="runSimulation();">
+                        </div>
+                        <span class="col-span-1 text-center text-slate-400 mt-3 font-bold">-</span>
+                        <div class="col-span-2">
+                            <label class="text-slate-400 block mb-0.5 text-[9px] truncate">売却年(西暦)</label>
+                            <input type="number" class="asset-end-field w-full rounded border border-slate-200 p-1 text-center font-bold text-[10px]" value="${data.endYear}" oninput="runSimulation();">
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+            applyBorder(data.type);
+
+            // Disable regular investment fields for Real Estate to preserve logic integrity
+            const toggleRealestateFields = () => {
+                const regularInvestFields = div.querySelectorAll('.regular-invest-fields');
+                const payoutField = div.querySelector('.asset-payout-field');
+
+                if (data.type === 'realestate') {
+                    regularInvestFields.forEach(el => el.style.opacity = '0.3');
+                    regularInvestFields.forEach(el => el.querySelector('input').disabled = true);
+                    payoutField.disabled = true;
+                    payoutField.style.opacity = '0.3';
+                } else {
+                    regularInvestFields.forEach(el => el.style.opacity = '1');
+                    regularInvestFields.forEach(el => el.querySelector('input').disabled = false);
+                    payoutField.disabled = false;
+                    payoutField.style.opacity = '1';
+                }
+            };
+            toggleRealestateFields();
+        }
+
+        // Add a blank new asset manually
+        function addNewAssetRow() {
+            const startYear = parseInt(document.getElementById('start-year').value) || 2026;
+            const years = parseInt(document.getElementById('years').value) || 50;
+            const chosenType = document.getElementById('new-asset-type').value || 'stocks';
+            
+            const assetNames = {
+                stocks: '新興個別株',
+                trust: 'つみたてインデックス',
+                realestate: '新規不動産B',
+                metal: '地金',
+                bonds: '国債'
+            };
+
+            addAssetElement({
+                name: assetNames[chosenType],
+                type: chosenType,
+                initAmt: 100,
+                rate: 4.0,
+                yearAmt: 0,
+                monthAmt: 0,
+                payout: chosenType === 'bonds' ? 'cashout' : 'reinvest',
+                startYear: startYear,
+                endYear: startYear + years
+            });
+            runSimulation();
+            showToast(`📈 新規の ${assetNames[chosenType]} アセットカードを配備しました！`);
+        }
+
+        // World Line Selector for Quick Macro Interest adjustments
+        function applyWorldLine(scenario) {
+            if (scenario === 'bright') {
+                document.getElementById('rate-cash').value = "0.1";
+                showToast('🚀 超高成長：各アセットの個別年利を再設定してください！');
+            } else if (scenario === 'mild_bull') {
+                document.getElementById('rate-cash').value = "0.1";
+                showToast('📈 安定上昇：各アセットの個別年利を再設定してください！');
+            } else if (scenario === 'normal') {
+                document.getElementById('rate-cash').value = "0.1";
+                showToast('🌱 巡航速度：各アセットの個別年利を再設定してください。');
+            } else if (scenario === 'dark') {
+                document.getElementById('rate-cash').value = "0.0";
+                showToast('⛈️ 停滞下落：各アセットの個別年利を再設定してください。');
+            }
+            
+            // Mass update dynamic asset rates depending on selection scenario
+            const cards = document.querySelectorAll('.asset-card');
+            cards.forEach(card => {
+                const typeEl = card.querySelector('.asset-type-field');
+                const rateEl = card.querySelector('.asset-rate-field');
+                if (!typeEl || !rateEl) return;
+                const type = typeEl.value;
+
+                if (scenario === 'bright') {
+                    if (type === 'stocks' || type === 'trust') rateEl.value = "15.0";
+                    if (type === 'metal' || type === 'bonds') rateEl.value = "5.0";
+                    if (type === 'realestate') rateEl.value = "0.0";
+                } else if (scenario === 'mild_bull') {
+                    if (type === 'stocks') rateEl.value = "10.0";
+                    if (type === 'trust') rateEl.value = "8.0";
+                    if (type === 'metal' || type === 'bonds') rateEl.value = "5.0";
+                    if (type === 'realestate') rateEl.value = "0.0";
+                } else if (scenario === 'normal') {
+                    if (type === 'stocks') rateEl.value = "5.0";
+                    if (type === 'trust') rateEl.value = "4.0";
+                    if (type === 'metal' || type === 'bonds') rateEl.value = "4.0";
+                    if (type === 'realestate') rateEl.value = "0.0";
+                } else if (scenario === 'dark') {
+                    if (type === 'stocks') rateEl.value = "4.0";
+                    if (type === 'trust') rateEl.value = "1.0";
+                    if (type === 'metal') rateEl.value = "3.0";
+                    if (type === 'bonds') rateEl.value = "4.0";
+                    if (type === 'realestate') rateEl.value = "0.0";
+                }
+            });
+
+            runSimulation();
+        }
+
+        // Characters Preset Engine
+        function applyScenario(scenario) {
+            const reContainer = document.getElementById('re-income-container');
+            const incContainer = document.getElementById('income-container');
+            const expContainer = document.getElementById('expense-container');
+            const assetContainer = document.getElementById('dynamic-assets-container');
+
+            // Clear dynamic sections
+            reContainer.innerHTML = '';
+            incContainer.innerHTML = '';
+            expContainer.innerHTML = '';
+            assetContainer.innerHTML = '';
+
+            const titleEl = document.getElementById('graph-title-element');
+
+            if (scenario === 'landlord') {
+                // 閃きの大家さん
+                document.getElementById('start-year').value = 2026;
+                document.getElementById('start-age').value = 35;
+                document.getElementById('years').value = 50;
+
+                document.getElementById('salary-amount').value = 800;
+                document.getElementById('salary-limit').value = 2033;
+                document.getElementById('other-income-amount').value = 0;
+
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「閃きの大家さん」の資産増殖軌跡`;
+
+                // Dynamic RE income
+                reContainer.innerHTML = `
+                    <div class="re-income-row grid grid-cols-12 gap-1 items-center bg-slate-50/50 p-1.5 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="re-name col-span-3 rounded border border-slate-200 p-1 font-semibold text-center" value="メゾンA" placeholder="物件名">
+                        <input type="number" class="re-amount col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="400" placeholder="年額(万)">
+                        <input type="number" class="re-start col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2000" placeholder="開始年">
+                        <span class="col-span-1 text-center text-slate-400 text-[10px] font-bold">-</span>
+                        <input type="number" class="re-end col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="2035" placeholder="終了年">
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+
+                // Life Expenses sub breakdowns
+                document.getElementById('expense-tax').value = 360;    // 必要経費 (年)
+                document.getElementById('expense-monthly').value = 20; // 生活費 (万/月)
+                document.getElementById('expense-personal-monthly').value = 15; // 毎月消費 (万/月)
+                document.getElementById('expense-extra').value = 200;  // 臨時消費 (年)
+
+                // Extra income
+                incContainer.innerHTML = `
+                    <div class="income-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="income-memo col-span-3 rounded border border-slate-200 p-1 font-medium text-center" value="退職金" placeholder="名目">
+                        <input type="number" class="income-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2033" placeholder="西暦">
+                        <input type="number" class="income-amount col-span-3 rounded border border-slate-200 p-1 font-bold text-emerald-700 text-center" value="2000" placeholder="万円">
+                        <select class="income-target col-span-2 rounded border border-slate-200 p-0.5 font-bold text-slate-700 bg-white">
+                            <option value="cash">現金</option>
+                            <option value="realestate">不動産</option>
+                            <option value="stocks">株式</option>
+                            <option value="trust" selected>投信</option>
+                            <option value="metal">金</option>
+                            <option value="bonds">債券</option>
+                        </select>
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                `;
+
+                // Extra expense
+                expContainer.innerHTML = `
+                    <div class="expense-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="expense-memo col-span-4 rounded border border-slate-200 p-1 font-medium text-center" value="メゾンB建築" placeholder="名目">
+                        <input type="number" class="expense-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2035" placeholder="西暦">
+                        <input type="number" class="expense-amount col-span-4 rounded border border-slate-200 p-1 font-bold text-rose-700 text-center" value="10000" placeholder="出費(万円)">
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+
+                // High precision asset loading
+                document.getElementById('init-cash').value = 1750;
+                document.getElementById('rate-cash').value = 0.0;
+
+                addAssetElement({ name: "オルカン,S&P500", type: "trust", initAmt: 7500, rate: 4.5, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2076 });
+                addAssetElement({ name: "プラチナ,銀", type: "metal", initAmt: 200, rate: 2.5, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2076 });
+                addAssetElement({ name: "安全国債", type: "bonds", initAmt: 4500, rate: 1.8, yearAmt: 0, monthAmt: 0, payout: "cashout", startYear: 2026, endYear: 2071 });
+
+                showToast('🛡️ 「閃きの大家さん」のアロケーションを精密ロードしました！');
+
+            } else if (scenario === 'rich_dad') {
+                // 金持ち父さん (資産家富裕層)
+                document.getElementById('start-year').value = 2026;
+                document.getElementById('start-age').value = 45;
+                document.getElementById('years').value = 45;
+
+                document.getElementById('salary-amount').value = 1500;
+                document.getElementById('salary-limit').value = 2040;
+                document.getElementById('other-income-amount').value = 200;
+
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「金持ち父さん」の資産増殖軌跡`;
+
+                reContainer.innerHTML = `
+                    <div class="re-income-row grid grid-cols-12 gap-1 items-center bg-slate-50/50 p-1.5 rounded-lg border border-slate-100 text-[11px] mb-1">
+                        <input type="text" class="re-name col-span-3 rounded border border-slate-200 p-1 font-semibold text-center" value="商業ビルA" placeholder="物件名">
+                        <input type="number" class="re-amount col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="1200" placeholder="年額(万)">
+                        <input type="number" class="re-start col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2015" placeholder="開始年">
+                        <span class="col-span-1 text-center text-slate-400 text-[10px] font-bold">-</span>
+                        <input type="number" class="re-end col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="2055" placeholder="終了年">
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+
+                document.getElementById('expense-tax').value = 1200;
+                document.getElementById('expense-monthly').value = 50;
+                document.getElementById('expense-personal-monthly').value = 0;
+                document.getElementById('expense-extra').value = 500;
+
+                incContainer.innerHTML = `
+                    <div class="income-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="income-memo col-span-3 rounded border border-slate-200 p-1 font-medium text-center" value="企業売却益" placeholder="名目">
+                        <input type="number" class="income-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2035" placeholder="西暦">
+                        <input type="number" class="income-amount col-span-3 rounded border border-slate-200 p-1 font-bold text-emerald-700 text-center" value="5000" placeholder="万円">
+                        <select class="income-target col-span-2 rounded border border-slate-200 p-0.5 font-bold text-slate-700 bg-white">
+                            <option value="cash">現金</option>
+                            <option value="realestate">不動産</option>
+                            <option value="stocks">株式</option>
+                            <option value="trust" selected>投信</option>
+                            <option value="metal">金</option>
+                            <option value="bonds">債券</option>
+                        </select>
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                `;
+
+                expContainer.innerHTML = `
+                    <div class="expense-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="expense-memo col-span-4 rounded border border-slate-200 p-1 font-medium text-center" value="クルーザー" placeholder="名目">
+                        <input type="number" class="expense-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2030" placeholder="西暦">
+                        <input type="number" class="expense-amount col-span-4 rounded border border-slate-200 p-1 font-bold text-rose-700 text-center" value="3000" placeholder="出費(万円)">
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+
+                document.getElementById('init-cash').value = 500;
+                document.getElementById('rate-cash').value = 0.1;
+
+                addAssetElement({ name: "商業ビルA本体", type: "realestate", initAmt: 5000, rate: 0.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2060 });
+                addAssetElement({ name: "グローバル株式", type: "stocks", initAmt: 3000, rate: 10.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2050 });
+                addAssetElement({ name: "オルカン", type: "trust", initAmt: 2000, rate: 8.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2055 });
+                addAssetElement({ name: "実物金", type: "metal", initAmt: 1000, rate: 5.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2060 });
+                addAssetElement({ name: "社債", type: "bonds", initAmt: 1500, rate: 5.0, yearAmt: 0, monthAmt: 0, payout: "cashout", startYear: 2026, endYear: 2045 });
+
+                showToast('💎 「金持ち父さん」の高額アセットアロケーションを配備しました！');
+
+            } else if (scenario === 'poor_dad') {
+                // 貧乏父さん (ギリギリ生活)
+                document.getElementById('start-year').value = 2026;
+                document.getElementById('start-age').value = 50;
+                document.getElementById('years').value = 35;
+
+                document.getElementById('salary-amount').value = 450;
+                document.getElementById('salary-limit').value = 2036;
+                document.getElementById('other-income-amount').value = 0;
+
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「貧乏父さん」の資産増殖軌跡`;
+
+                document.getElementById('expense-tax').value = 100;
+                document.getElementById('expense-monthly').value = 25;
+                document.getElementById('expense-personal-monthly').value = 0;
+                document.getElementById('expense-extra').value = 50;
+
+                expContainer.innerHTML = `
+                    <div class="expense-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="expense-memo col-span-4 rounded border border-slate-200 p-1 font-medium text-center" value="借金返済" placeholder="名目">
+                        <input type="number" class="expense-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2030" placeholder="西暦">
+                        <input type="number" class="expense-amount col-span-4 rounded border border-slate-200 p-1 font-bold text-rose-700 text-center" value="500" placeholder="出費(万円)">
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+
+                document.getElementById('init-cash').value = 50;
+                document.getElementById('rate-cash').value = 0.0;
+
+                addAssetElement({ name: "郵便貯金信託", type: "trust", initAmt: 50, rate: 1.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2040 });
+
+                showToast('⚠️ 「貧乏父さん」のキャッシュショートモデルを展開しました。');
+
+            } else if (scenario === 'salaryman') {
+                // 普通のサラリーマン (堅実ライフ)
+                document.getElementById('start-year').value = 2026;
+                document.getElementById('start-age').value = 30;
+                document.getElementById('years').value = 55;
+
+                document.getElementById('salary-amount').value = 550;
+                document.getElementById('salary-limit').value = 2056;
+                document.getElementById('other-income-amount').value = 0;
+
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「一般サラリーマン」の資産増殖軌跡`;
+
+                document.getElementById('expense-tax').value = 150;
+                document.getElementById('expense-monthly').value = 20;
+                document.getElementById('expense-personal-monthly').value = 0;
+                document.getElementById('expense-extra').value = 100;
+
+                incContainer.innerHTML = `
+                    <div class="income-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="income-memo col-span-3 rounded border border-slate-200 p-1 font-medium text-center" value="退職金" placeholder="名目">
+                        <input type="number" class="income-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2056" placeholder="西暦">
+                        <input type="number" class="income-amount col-span-3 rounded border border-slate-200 p-1 font-bold text-emerald-700 text-center" value="1500" placeholder="万円">
+                        <select class="income-target col-span-2 rounded border border-slate-200 p-0.5 font-bold text-slate-700 bg-white">
+                            <option value="cash">現金</option>
+                            <option value="realestate">不動産</option>
+                            <option value="stocks">株式</option>
+                            <option value="trust" selected>投信</option>
+                            <option value="metal">金</option>
+                            <option value="bonds">債券</option>
+                        </select>
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                `;
+
+                expContainer.innerHTML = `
+                    <div class="expense-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="expense-memo col-span-4 rounded border border-slate-200 p-1 font-medium text-center" value="マイホーム頭金" placeholder="名目">
+                        <input type="number" class="expense-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2032" placeholder="西暦">
+                        <input type="number" class="expense-amount col-span-4 rounded border border-slate-200 p-1 font-bold text-rose-700 text-center" value="800" placeholder="出費(万円)">
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+
+                document.getElementById('init-cash').value = 200;
+                document.getElementById('rate-cash').value = 0.1;
+
+                addAssetElement({ name: "企業型持株会", type: "stocks", initAmt: 50, rate: 5.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2056 });
+                addAssetElement({ name: "つみたて投信", type: "trust", initAmt: 150, rate: 4.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2056 });
+
+                showToast('🌱 「一般サラリーマン」の標準ライフプランモデルを配備しました。');
+
+            } else if (scenario === 'children') {
+                // 未来ある子供達 (超長期運用)
+                document.getElementById('start-year').value = 2026;
+                document.getElementById('start-age').value = 15;
+                document.getElementById('years').value = 70;
+
+                document.getElementById('salary-amount').value = 350;
+                document.getElementById('salary-limit').value = 2080;
+                document.getElementById('other-income-amount').value = 10;
+
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「未来ある子供達」の資産増殖軌跡`;
+
+                document.getElementById('expense-tax').value = 10;
+                document.getElementById('expense-monthly').value = 5;
+                document.getElementById('expense-personal-monthly').value = 0;
+                document.getElementById('expense-extra').value = 50;
+
+                incContainer.innerHTML = `
+                    <div class="income-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="income-memo col-span-3 rounded border border-slate-200 p-1 font-medium text-center" value="お祝い金" placeholder="名目">
+                        <input type="number" class="income-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2035" placeholder="西暦">
+                        <input type="number" class="income-amount col-span-3 rounded border border-slate-200 p-1 font-bold text-emerald-700 text-center" value="100" placeholder="万円">
+                        <select class="income-target col-span-2 rounded border border-slate-200 p-0.5 font-bold text-slate-700 bg-white">
+                            <option value="cash">現金</option>
+                            <option value="realestate">不動産</option>
+                            <option value="stocks">株式</option>
+                            <option value="trust" selected>投信</option>
+                            <option value="metal">金</option>
+                            <option value="bonds">債券</option>
+                        </select>
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                `;
+
+                expContainer.innerHTML = `
+                    <div class="expense-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]">
+                        <input type="text" class="expense-memo col-span-4 rounded border border-slate-200 p-1 font-medium text-center" value="大学進学費用" placeholder="名目">
+                        <input type="number" class="expense-year col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="2030" placeholder="西暦">
+                        <input type="number" class="expense-amount col-span-4 rounded border border-slate-200 p-1 font-bold text-rose-700 text-center" value="400" placeholder="出費(万円)">
+                        <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                `;
+
+                document.getElementById('init-cash').value = 30;
+                document.getElementById('rate-cash').value = 0.1;
+
+                addAssetElement({ name: "教育信託基金", type: "trust", initAmt: 10, rate: 4.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startYear: 2026, endYear: 2080 });
+
+                showToast('✨ 「未来ある子供達」の超複利長期プランをロードしました。');
+            }
+
+            // Execute dynamic calculations automatically on scenario change
+            runSimulation();
+        }
+
+        // Core Mathematical Calculation Engine with Dynamic Assets & Compounding & Purchase-Sale period system
         function runSimulation() {
-            // [2] Assure the breakdown expenses sum-up to total annual expense first
+            // Assure the breakdown expenses sum-up to total annual expense first
             calculateTotalExpense();
 
             const startYear = parseInt(document.getElementById('start-year').value) || 2026;
-            const startAge = parseInt(document.getElementById('start-age').value) || 35;
-            const years = Math.min(Math.max(parseInt(document.getElementById('years').value) || 30, 1), 50);
-            
-            const assets = [
-                { id: 'cash', name: '現金' },
-                { id: 'realestate', name: '不動産' },
-                { id: 'stocks', name: '株式' },
-                { id: 'trust', name: '投資信託' },
-                { id: 'metal', name: '貴金属' },
-                { id: 'bonds', name: '債券' }
-            ];
+            const startAge = parseInt(document.getElementById('start-age').value) || 30;
+            const years = Math.min(Math.max(parseInt(document.getElementById('years').value) || 30, 1), 70); 
 
+            // Initialize categories to aggregate dynamic assets value into 6-main types
             let labels = [];
-            let datasetTemplates = {};
             
-            // Extract input values safely and initialize dataset variables (Converted to 円 internally)
-            assets.forEach(a => {
-                const initAmt = (parseFloat(document.getElementById(`init-${a.id}`).value) || 0) * 10000;
-                const rate = (parseFloat(document.getElementById(`rate-${a.id}`).value) || 0) / 100;
+            // Reconstruct active list of dynamic investment assets from UI card elements
+            let dynamicAssets = [];
+            const cards = document.querySelectorAll('.asset-card');
+            cards.forEach(card => {
+                const name = card.querySelector('.asset-name-field').value || '未定義資産';
+                const type = card.querySelector('.asset-type-field').value || 'stocks';
+                const initAmt = (parseFloat(card.querySelector('.asset-init-field').value) || 0) * 10000;
+                const rate = (parseFloat(card.querySelector('.asset-rate-field').value) || 0) / 100;
+                const payout = card.querySelector('.asset-payout-field').value || 'reinvest';
                 
-                // Cash and Realestate don't have regular savings
-                const yearAmt = (a.id === 'cash' || a.id === 'realestate') ? 0 : (parseFloat(document.getElementById(`year-${a.id}`).value) || 0) * 10000;
-                const monthAmt = (a.id === 'cash' || a.id === 'realestate') ? 0 : (parseFloat(document.getElementById(`month-${a.id}`).value) || 0) * 10000;
+                // Realestate does not permit regular savings
+                const yearAmt = type === 'realestate' ? 0 : (parseFloat(card.querySelector('.asset-year-field').value) || 0) * 10000;
+                const monthAmt = type === 'realestate' ? 0 : (parseFloat(card.querySelector('.asset-month-field').value) || 0) * 10000;
                 
-                datasetTemplates[a.id] = {
-                    name: a.name,
-                    current: initAmt,
-                    rate: rate,
-                    yearAmt: yearAmt,
-                    monthAmt: monthAmt,
-                    data: [initAmt]
-                };
+                const start = parseInt(card.querySelector('.asset-start-field').value) || startYear;
+                const end = parseInt(card.querySelector('.asset-end-field').value) || (startYear + years);
+
+                dynamicAssets.push({
+                    name, type, initAmt, rate, payout, yearAmt, monthAmt, start, end,
+                    currentVal: 0,
+                    active: false,
+                    purchased: false,
+                    sold: false
+                });
+            });
+
+            // Initialize cash parameters
+            const initCashVal = (parseFloat(document.getElementById('init-cash').value) || 0) * 10000;
+            const rateCash = (parseFloat(document.getElementById('rate-cash').value) || 0) / 100;
+            let currentCashVal = initCashVal;
+
+            // Determine assets possessed initially at Year 0
+            dynamicAssets.forEach(a => {
+                if (a.start <= startYear) {
+                    a.currentVal = a.initAmt;
+                    a.active = true;
+                    a.purchased = true;
+                }
             });
 
             // Salary Income Configuration
             const salaryAmount = (parseFloat(document.getElementById('salary-amount').value) || 0) * 10000;
             const salaryLimit = parseInt(document.getElementById('salary-limit').value) || 2060;
 
-            // Real Estate Income Configuration (Multiple Items with Start/End西暦) [1] FIXED WESTERN CALENDAR EXTRACTION
+            // Real Estate Income Configuration (Multiple Items with Start/End西暦)
             let reIncomes = [];
             const reRows = document.querySelectorAll('.re-income-row');
             reRows.forEach(row => {
@@ -1008,20 +1248,27 @@
                     }
                 }
             });
+
+            // Aggregate function to fetch combined value for dynamic items depending on category
+            const sumOfCategory = (type) => {
+                return dynamicAssets
+                    .filter(a => a.type === type && a.active)
+                    .reduce((sum, a) => sum + a.currentVal, 0);
+            };
             
             // Add Year 0 labels including age metric
             labels.push(`0年目 (${startYear}年/${startAge}歳)`);
-            let totalData = [assets.reduce((sum, a) => sum + datasetTemplates[a.id].current, 0)];
+            let totalData = [currentCashVal + ['realestate', 'stocks', 'trust', 'metal', 'bonds'].reduce((sum, cat) => sum + sumOfCategory(cat), 0)];
 
             let simRecords = [{
                 index: 0,
                 yearLabel: `0年目 (${startYear}年/${startAge}歳)`,
-                cash: datasetTemplates['cash'].data[0],
-                realestate: datasetTemplates['realestate'].data[0],
-                stocks: datasetTemplates['stocks'].data[0],
-                trust: datasetTemplates['trust'].data[0],
-                metal: datasetTemplates['metal'].data[0],
-                bonds: datasetTemplates['bonds'].data[0],
+                cash: currentCashVal,
+                realestate: sumOfCategory('realestate'),
+                stocks: sumOfCategory('stocks'),
+                trust: sumOfCategory('trust'),
+                metal: sumOfCategory('metal'),
+                bonds: sumOfCategory('bonds'),
                 total: totalData[0]
             }];
 
@@ -1034,107 +1281,114 @@
                 labels.push(`${y}年目 (${currentYear}年/${currentAge}歳)`);
                 let yearTotal = 0;
                 
-                // 1. Compounding interest/yield first and processing reinvest/cashout payout types
+                // A. CASH ACCOUNT COMPOUNDING PRE-SAVINGS INJECTION
+                currentCashVal = currentCashVal * (1 + rateCash);
+
+                // B. INCOME FLOW: Cashout yields + Salary + RE rent + Other
                 let payoutIncomes = 0;
-                assets.forEach(a => {
-                    if (a.id !== 'cash') {
-                        let t = datasetTemplates[a.id];
-                        let profit = t.current * t.rate;
-                        
-                        let payoutType = 'reinvest';
-                        const payoutEl = document.getElementById(`payout-${a.id}`);
-                        if (payoutEl) {
-                            payoutType = payoutEl.value;
+
+                // C. PROCESS PORTFOLIO INJECTIONS & COMOUNDING INTEREST & LIQUIDATION PERIOD
+                dynamicAssets.forEach(a => {
+                    // C1. Check dynamic purchase trigger
+                    if (currentYear === a.start && !a.purchased && a.start > startYear) {
+                        currentCashVal -= a.initAmt; // Deduct original capital from central cash hub
+                        a.currentVal = a.initAmt;
+                        a.active = true;
+                        a.purchased = true;
+                    }
+
+                    // C2. Compound and invest if asset is currently active and within period
+                    if (a.active && currentYear >= a.start && currentYear <= a.end) {
+                        // Compound asset value by interest rate first
+                        const profit = a.currentVal * a.rate;
+                        if (a.payout === 'cashout') {
+                            payoutIncomes += profit; // Paid out to cash pool
+                        } else {
+                            a.currentVal += profit;  // Reinvested back to principal
                         }
 
-                        if (payoutType === 'cashout') {
-                            // Yield sent to cash income pool
-                            payoutIncomes += profit;
-                        } else {
-                            // Compounded back into the asset
-                            t.current += profit;
-                        }
+                        // Regular recurring savings (year & month) subtracted from Cash
+                        const regularSavings = a.yearAmt + (a.monthAmt * 12);
+                        currentCashVal -= regularSavings;
+                        a.currentVal += regularSavings;
                     }
                 });
 
-                // 2. 所得の加算 (毎年、現金口座に加算)
-                let collectedIncomes = payoutIncomes; // Add yield cashout as income first
+                // D. PROCESS ANNUAL REVENUE STREAM
+                let collectedIncomes = payoutIncomes;
                 
-                // 給与所得加算
+                // Salary
                 if (currentYear <= salaryLimit) {
                     collectedIncomes += salaryAmount;
                 }
                 
-                // 不動産所得加算（西暦開始・終了年判定）
+                // Real Estate
                 reIncomes.forEach(re => {
                     if (currentYear >= re.start && currentYear <= re.end) {
                         collectedIncomes += re.amount;
                     }
                 });
 
-                // その他所得加算
+                // Other income
                 collectedIncomes += otherIncomeAmount;
+                currentCashVal += collectedIncomes;
 
-                datasetTemplates['cash'].current += collectedIncomes;
+                // E. MINUS STANDARD HOUSEHOLD LIVING OUTLAYS
+                currentCashVal -= annualExpenseAmount;
 
-                // [3] Annual Expenses (年間生活費) subtraction directly from Cash hub
-                datasetTemplates['cash'].current -= annualExpenseAmount;
-
-                // 3. 臨時収入アロケーション (指定再投資先へ直通)
+                // F. PROCESS EXTRA SINGLE OPPORTUNITY INCOMES / OUTFLOWS
                 extraIncomes
                     .filter(item => item.year === currentYear)
                     .forEach(item => {
-                        if (datasetTemplates[item.target] !== undefined) {
-                            datasetTemplates[item.target].current += item.amount;
+                        if (item.target === 'cash') {
+                            currentCashVal += item.amount;
                         } else {
-                            datasetTemplates['trust'].current += item.amount; // fallback
+                            // Find any active asset of the targeted type and add there, or fallback to cash
+                            const targetAsset = dynamicAssets.find(a => a.type === item.target && a.active);
+                            if (targetAsset) {
+                                targetAsset.currentVal += item.amount;
+                            } else {
+                                currentCashVal += item.amount; // fallback
+                            }
                         }
                     });
 
-                // 4. 臨時出費アロケーション (現金口座からマイナス)
+                // Deduct temporary high-outlay single event expenses
                 let thisYearExpenses = extraExpenses
                     .filter(item => item.year === currentYear)
                     .reduce((sum, item) => sum + item.amount, 0);
 
-                datasetTemplates['cash'].current -= thisYearExpenses;
+                currentCashVal -= thisYearExpenses;
 
-                // 5. 各資産への年初＆月々積立の実行 (現金口座から差し引き)
-                assets.forEach(a => {
-                    if (a.id !== 'cash') {
-                        let t = datasetTemplates[a.id];
-                        const annualInvestment = t.yearAmt + (t.monthAmt * 12);
-                        
-                        // 現金から年間投資分を減算
-                        datasetTemplates['cash'].current -= annualInvestment;
-                        // 対象運用資産に加算
-                        t.current += annualInvestment;
+                // G. PROCESS LIQUIDATION MATURITY (売却年西暦の期末全額払い戻し)
+                dynamicAssets.forEach(a => {
+                    if (a.active && currentYear === a.end && !a.sold) {
+                        currentCashVal += a.currentVal; // Liquidation value routed back to Cash
+                        a.currentVal = 0;
+                        a.active = false;
+                        a.sold = true;
                     }
                 });
 
                 // Check cash deficit state for Warning UI
-                if (datasetTemplates['cash'].current < 0) {
+                if (currentCashVal < 0) {
                     cashCheckDeficit = true;
                 }
 
-                // Collect results for recording
-                assets.forEach(a => {
-                    let t = datasetTemplates[a.id];
-                    t.data.push(Math.round(t.current));
-                    yearTotal += t.current;
-                });
-
+                // Push aggregate totals of active assets for dataset category mapping
+                yearTotal = currentCashVal + ['realestate', 'stocks', 'trust', 'metal', 'bonds'].reduce((sum, cat) => sum + sumOfCategory(cat), 0);
                 totalData.push(Math.round(yearTotal));
 
                 // Cache records for Table & CSV
                 simRecords.push({
                     index: y,
                     yearLabel: `${y}年目 (${currentYear}年/${currentAge}歳)`,
-                    cash: datasetTemplates['cash'].data[y],
-                    realestate: datasetTemplates['realestate'].data[y],
-                    stocks: datasetTemplates['stocks'].data[y],
-                    trust: datasetTemplates['trust'].data[y],
-                    metal: datasetTemplates['metal'].data[y],
-                    bonds: datasetTemplates['bonds'].data[y],
+                    cash: Math.round(currentCashVal),
+                    realestate: Math.round(sumOfCategory('realestate')),
+                    stocks: Math.round(sumOfCategory('stocks')),
+                    trust: Math.round(sumOfCategory('trust')),
+                    metal: Math.round(sumOfCategory('metal')),
+                    bonds: Math.round(sumOfCategory('bonds')),
                     total: Math.round(yearTotal)
                 });
             }
@@ -1147,8 +1401,18 @@
                 badge.classList.add('hidden');
             }
 
+            // Recreate aggregated categories templates for ChartJs rendering
+            let aggregatedTemplates = {
+                cash: { name: '現金', data: simRecords.map(r => r.cash) },
+                realestate: { name: '不動産', data: simRecords.map(r => r.realestate) },
+                stocks: { name: '株式', data: simRecords.map(r => r.stocks) },
+                trust: { name: '投資信託', data: simRecords.map(r => r.trust) },
+                metal: { name: '貴金属', data: simRecords.map(r => r.metal) },
+                bonds: { name: '債券', data: simRecords.map(r => r.bonds) }
+            };
+
             // Update UI components with computed simulation values
-            renderTableAndChart(labels, datasetTemplates, totalData, simRecords);
+            renderTableAndChart(labels, aggregatedTemplates, totalData, simRecords);
         }
 
         // Shared Sub-engine to render UI from dataset (Supports both fresh Simulation and CSV Imports)
@@ -1441,9 +1705,8 @@
         }
 
         window.onload = function() {
-            // [2] Assure the breakdown calculation is initialised
-            calculateTotalExpense();
-            runSimulation();
+            // [1] Apply initial default scenarios correctly
+            applyScenario('salaryman');
         }
     </script>
 </body>
