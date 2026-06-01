@@ -59,15 +59,19 @@
             </div>
             
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/60 text-xs">
-                <div class="flex items-center gap-1.5">
+                <div class="flex items-center gap-1.5 relative">
                     <span class="text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-user-tie text-amber-400 mr-1"></i>人物選択：</span>
-                    <select id="scenario-selector" onchange="applyScenario(this.value)" class="bg-slate-900 text-slate-100 rounded-lg px-3 py-1.5 font-bold border border-slate-700 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer text-xs">
-                        <option value="rich_dad">金持ち父さん</option>
-                        <option value="poor_dad">貧乏父さん</option>
-                        <option value="salaryman" selected>一般サラリーマン</option>
-                        <option value="landlord">閃きの大家さん</option>
-                        <option value="children">未来ある子供達</option>
-                    </select>
+                    <div class="flex items-center bg-slate-900 rounded-lg border border-slate-700 overflow-hidden">
+                        <input type="text" id="scenario-input" value="一般サラリーマン" oninput="handleUserTypeInput()" class="bg-transparent text-slate-100 px-3 py-1.5 font-bold focus:outline-none text-xs w-36">
+                        <select id="scenario-selector" onchange="handleScenarioSelect(this.value)" class="bg-slate-800 text-slate-400 border-l border-slate-700 focus:outline-none cursor-pointer py-1.5 text-xs px-1">
+                            <option value="custom">— 自由入力中 —</option>
+                            <option value="rich_dad">金持ち父さん</option>
+                            <option value="poor_dad">貧乏父さん</option>
+                            <option value="salaryman" selected>一般サラリーマン</option>
+                            <option value="landlord">閃きの大家さん</option>
+                            <option value="children">未来ある子供達</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="flex items-center gap-1 border-t sm:border-t-0 sm:border-l border-slate-700 pt-2.5 sm:pt-0 sm:pl-3">
                     <span class="text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-earth-asia text-blue-400 mr-1"></i>マクロ経済世界線：</span>
@@ -219,22 +223,15 @@
                 </div>
 
                 <div class="border-t border-slate-100 pt-4 flex flex-col gap-3">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-slate-700 text-xs">📈 個別投資アセット一覧</span>
-                        <div class="flex items-center gap-1.5">
-                            <select id="new-asset-type" class="bg-slate-100 text-slate-800 rounded px-2 py-1 font-bold border-none text-[10px] cursor-pointer focus:outline-none">
-                                <option value="stocks" selected>📈 株式</option>
-                                <option value="trust">💼 投資信託</option>
-                                <option value="realestate">🏢 不動産</option>
-                                <option value="metal">👑 貴金属</option>
-                                <option value="bonds">📜 債券</option>
-                            </select>
-                            <button type="button" onclick="addNewAssetRow()" class="px-2 py-1 bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold rounded-lg hover:bg-emerald-100 transition-colors">
-                                ＋ 追加
-                            </button>
-                        </div>
+                    <span class="font-bold text-slate-700 text-xs">📈 個別投資アセット一覧</span>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                        <button type="button" onclick="addDirectAsset('stocks')" class="px-2 py-1.5 bg-blue-50 text-blue-600 border border-blue-200 text-[10px] font-bold rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-1">📈 株式追加</button>
+                        <button type="button" onclick="addDirectAsset('trust')" class="px-2 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold rounded-lg hover:bg-emerald-100 transition-colors flex items-center justify-center gap-1">💼 投信追加</button>
+                        <button type="button" onclick="addDirectAsset('realestate')" class="px-2 py-1.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded-lg hover:bg-rose-100 transition-colors flex items-center justify-center gap-1">🏢 不動産追加</button>
+                        <button type="button" onclick="addDirectAsset('metal')" class="px-2 py-1.5 bg-amber-50 text-amber-600 border border-amber-200 text-[10px] font-bold rounded-lg hover:bg-amber-100 transition-colors flex items-center justify-center gap-1">👑 貴金属追加</button>
+                        <button type="button" onclick="addDirectAsset('bonds')" class="px-2 py-1.5 bg-purple-50 text-purple-600 border border-purple-200 text-[10px] font-bold rounded-lg hover:bg-purple-100 transition-colors flex items-center justify-center gap-1">📜 債券追加</button>
                     </div>
-                    <div id="dynamic-assets-container" class="flex flex-col gap-4"></div>
+                    <div id="dynamic-assets-container" class="flex flex-col gap-4 mt-2"></div>
                 </div>
             </div>
 
@@ -249,7 +246,7 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                     <div>
                         <h2 id="graph-title-element" class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー
+                            <i class="fa-solid fa-chart-line text-blue-500"></i> 「一般サラリーマン」の生涯キャッシュフロー
                         </h2>
                         <p class="text-slate-400 text-xs mt-0.5 flex flex-wrap items-center gap-2">
                             <span>各プロット点にホバーすると資産割合(%)と額面（万円）が浮遊ポップアップします</span>
@@ -260,6 +257,12 @@
                     </div>
                     
                     <div class="flex items-center gap-2 self-stretch sm:self-auto">
+                        <button id="save-local-btn" onclick="saveToLocalStorage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
+                            <i class="fa-solid fa-floppy-disk"></i> 💾 設定を保存
+                        </button>
+                        <button id="clear-local-btn" onclick="clearLocalStorage()" class="px-4 py-2 bg-slate-500 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
+                            <i class="fa-solid fa-trash-can"></i> 🧹 初期化
+                        </button>
                         <label for="csv-import-file" class="cursor-pointer px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
                             <i class="fa-solid fa-file-import"></i> CSV読込
                         </label>
@@ -722,10 +725,10 @@
             toggleRealestateFields();
         }
 
-        function addNewAssetRow() {
+        // [2] 専用ボタンから一発追加する新機構
+        function addDirectAsset(chosenType) {
             const startAge = parseInt(document.getElementById('start-age').value) || 30;
             const endAge = parseInt(document.getElementById('years').value) || 85;
-            const chosenType = document.getElementById('new-asset-type').value || 'stocks';
             const assetNames = { stocks: '新興個別株', trust: 'つみたてインデックス', realestate: '新規不動産B', metal: '地金', bonds: '国債' };
 
             addAssetElement({
@@ -740,6 +743,7 @@
                 endAge: endAge
             });
             runSimulation();
+            showToast(`${assetNames[chosenType]}カードを戦場に展開しました。`);
         }
 
         function applyWorldLine(scenario) {
@@ -780,6 +784,23 @@
             runSimulation();
         }
 
+        // [1] ユーザーの直接テキスト入力に反応してグラフタイトルを動的追従させる
+        function handleUserTypeInput() {
+            const inputVal = document.getElementById('scenario-input').value || '名無し';
+            const titleEl = document.getElementById('graph-title-element');
+            titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${inputVal}」の生涯キャッシュフロー`;
+            document.getElementById('scenario-selector').value = 'custom'; // 自由入力モードへ自動スイッチ
+        }
+
+        // 選択されたプリセットを展開しつつ、入力欄を同期させる
+        function handleScenarioSelect(scenario) {
+            if (scenario === 'custom') return;
+            const selectEl = document.getElementById('scenario-selector');
+            const selectedText = selectEl.options[selectEl.selectedIndex].text;
+            document.getElementById('scenario-input').value = selectedText;
+            applyScenario(scenario);
+        }
+
         function applyScenario(scenario) {
             const reContainer = document.getElementById('re-income-container');
             const otherContainer = document.getElementById('other-income-container');
@@ -796,6 +817,8 @@
             assetContainer.innerHTML = '';
 
             const titleEl = document.getElementById('graph-title-element');
+            const currentName = document.getElementById('scenario-input').value || 'カスタム人物';
+            titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${currentName}」の生涯キャッシュフロー`;
 
             if (scenario === 'landlord') {
                 document.getElementById('start-year').value = 2026;
@@ -803,9 +826,9 @@
                 document.getElementById('years').value = 110;
                 document.getElementById('salary-amount').value = 800;
                 document.getElementById('salary-limit').value = 60;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
-                addREIncomeRow("メゾンA", 400, 35, 60);
-                addOtherIncomeRow("年金", 18, 60, 110);
+                addREIncomeRow("メゾンA", 400, 35, 65);
+                addREIncomeRow("メゾンB", 0, 63, 95);
+                addOtherIncomeRow("年金", 216, 60, 110);
                 addStageRow(360, 20, 15, 200, 65);   
                 addStageRow(400, 30, 25, 340, 80);   
                 addStageRow(200, 15, 10, 100, 110);  
@@ -813,9 +836,11 @@
                 addExpenseRow("メゾンB建築", 60, 10000);
                 document.getElementById('init-cash').value = 1750;
                 document.getElementById('rate-cash').value = 0.0;
-                addAssetElement({ name: "オルカン,S&P500", type: "trust", initAmt: 7500, rate: 4.5, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 35, endAge: 110 });
-                addAssetElement({ name: "プラチナ,銀", type: "metal", initAmt: 200, rate: 2.5, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 35, endAge: 110 });
-                addAssetElement({ name: "安全国債", type: "bonds", initAmt: 4500, rate: 1.8, yearAmt: 0, monthAmt: 0, payout: "cashout", startAge: 35, endAge: 110 });
+                addAssetElement({ name: "オルカン,S&P500", type: "trust", initAmt: 7500, rate: 4.5, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 50, endAge: 110 });
+                addAssetElement({ name: "実家", type: "realestate", initAmt: 0, rate: 0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 0, endAge: 95 });
+                addAssetElement({ name: "新居", type: "realestate", initAmt: 0, rate: 0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 39, endAge: 95 });
+                addAssetElement({ name: "プラチナ,銀", type: "metal", initAmt: 200, rate: 2.5, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 53, endAge: 110 });
+                addAssetElement({ name: "安全国債", type: "bonds", initAmt: 4500, rate: 4.0, yearAmt: 0, monthAmt: 0, payout: "cashout", startAge: 41, endAge: 110 });
 
             } else if (scenario === 'rich_dad') {
                 document.getElementById('start-year').value = 2026;
@@ -823,7 +848,6 @@
                 document.getElementById('years').value = 90;
                 document.getElementById('salary-amount').value = 2500;
                 document.getElementById('salary-limit').value = 65;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
                 
                 addREIncomeRow("商業ビルオーナー権", 1500, 45, 80);
                 addOtherIncomeRow("未公開株配当金", 300, 50, 90);
@@ -846,7 +870,6 @@
                 document.getElementById('years').value = 80;
                 document.getElementById('salary-amount').value = 380;
                 document.getElementById('salary-limit').value = 60;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
                 
                 addStageRow(80, 20, 5, 50, 65);
                 addStageRow(40, 15, 0, 30, 80);
@@ -860,11 +883,10 @@
 
             } else if (scenario === 'children') {
                 document.getElementById('start-year').value = 2026;
-                document.getElementById('start-age').value = 18;
+                document.getElementById('start-age').value = 10;
                 document.getElementById('years').value = 100;
-                document.getElementById('salary-amount').value = 300;
+                document.getElementById('salary-amount').value = 0;
                 document.getElementById('salary-limit').value = 65;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
                 
                 addStageRow(30, 12, 5, 50, 30);
                 addStageRow(100, 25, 10, 150, 65);
@@ -873,7 +895,7 @@
                 addIncomeRow("祖父母からの相続/生前贈与", 30, 500, "trust");
                 addExpenseRow("結婚式頭金/マイホーム頭金", 32, 700);
                 
-                document.getElementById('init-cash').value = 50;
+                document.getElementById('init-cash').value = 1000;
                 document.getElementById('rate-cash').value = 0.1;
                 addAssetElement({ name: "世界分散インデックス株", type: "trust", initAmt: 100, rate: 5.5, yearAmt: 60, monthAmt: 5, payout: "reinvest", startAge: 18, endAge: 100 });
 
@@ -883,7 +905,6 @@
                 document.getElementById('years').value = 85;
                 document.getElementById('salary-amount').value = 550;
                 document.getElementById('salary-limit').value = 65;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
                 addStageRow(150, 20, 0, 100, 75);  
                 addStageRow(100, 15, 0, 70, 85);   
                 addIncomeRow("退職金", 65, 1500, "trust");
@@ -1142,6 +1163,53 @@
                     scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { callback: value => (value / 10000).toLocaleString() + '万' } } }
                 }
             });
+        }
+
+        function saveToLocalStorage() {
+            try {
+                const currentScenario = document.getElementById('scenario-selector').value;
+                const customName = document.getElementById('scenario-input').value;
+                const state = {
+                    customName: customName,
+                    startYear: document.getElementById('start-year').value,
+                    startAge: document.getElementById('start-age').value,
+                    years: document.getElementById('years').value,
+                    salaryAmount: document.getElementById('salary-amount').value,
+                    salaryLimit: document.getElementById('salary-limit').value,
+                    initCash: document.getElementById('init-cash').value,
+                    rateCash: document.getElementById('rate-cash').value,
+                    reIncomeHTML: document.getElementById('re-income-container').innerHTML,
+                    otherIncomeHTML: document.getElementById('other-income-container').innerHTML,
+                    stageHTML: document.getElementById('stage-container').innerHTML,
+                    incomeHTML: document.getElementById('income-container').innerHTML,
+                    expenseHTML: document.getElementById('expense-container').innerHTML,
+                    assets: Array.from(document.querySelectorAll('.asset-card')).map(card => ({
+                        name: card.querySelector('.asset-name-field').value,
+                        type: card.querySelector('.asset-type-field').value,
+                        initAmt: card.querySelector('.asset-init-field').value,
+                        rate: card.querySelector('.asset-rate-field').value,
+                        payout: card.querySelector('.asset-payout-field').value,
+                        yearAmt: card.querySelector('.asset-year-field')?.value || 0,
+                        monthAmt: card.querySelector('.asset-month-field')?.value || 0,
+                        startAge: card.querySelector('.asset-start-field').value,
+                        endAge: card.querySelector('.asset-end-field').value
+                    }))
+                };
+                localStorage.setItem('gemkin_unrivaled_config_' + currentScenario, JSON.stringify(state));
+                showToast("💾 現在の入力数値をブラウザ内部の暗室（LocalStorage）に記録しました！");
+            } catch(e) { showToast("保存に失敗しました。", "error"); }
+        }
+
+        function clearLocalStorage() {
+            const currentScenario = document.getElementById('scenario-selector').value;
+            localStorage.removeItem('gemkin_unrivaled_config_' + currentScenario);
+            showToast("🧹 ブラウザの記憶を抹消しました。初期コードのデフォルト値に戻します。");
+            if(currentScenario === 'custom') {
+                document.getElementById('scenario-selector').value = 'salaryman';
+                handleScenarioSelect('salaryman');
+            } else {
+                applyScenario(currentScenario);
+            }
         }
 
         function importCSV(event) {
