@@ -29,9 +29,9 @@
     <div id="chart-tooltip" class="absolute bg-slate-950/95 text-white p-4 rounded-2xl shadow-2xl border border-slate-800 pointer-events-none opacity-0 transition-opacity duration-200 z-50 w-80 lg:w-80 flex flex-col gap-3 max-sm:w-[calc(100%-2rem)] max-sm:left-4 max-sm:right-4">
         <div id="tooltip-year" class="text-xs font-bold tracking-wider text-slate-400 border-b border-slate-800 pb-1.5 flex justify-between">
             <span>経過年次</span>
-            <span id="tooltip-header-tag" class="text-amber-400">資産ポートフォリオ</span>
+            <span class="text-amber-400">資産ポートフォリオ</span>
         </div>
-        <div id="tooltip-pie-container" class="relative w-full h-32 flex items-center justify-center">
+        <div class="relative w-full h-32 flex items-center justify-center">
             <canvas id="tooltipPieChart" class="w-full h-full"></canvas>
             <div class="absolute flex flex-col items-center justify-center text-center">
                 <span class="text-[10px] text-slate-400 uppercase tracking-widest leading-none">Total</span>
@@ -608,43 +608,26 @@
             }
         }
 
-        // スマホ閲覧・PC閲覧でポップアップの位置および構造を完全に最適化する羅針盤
+        // スマホ閲覧・PC閲覧でポップアップの位置を完全に最適化する羅針盤
         function customTooltipHandler(context) {
             const tooltipEl = document.getElementById('chart-tooltip');
-            const pieContainer = document.getElementById('tooltip-pie-container');
-            const headerTag = document.getElementById('tooltip-header-tag');
-
             if (context.tooltip.opacity === 0) { tooltipEl.style.opacity = 0; return; }
             const dataPoints = context.tooltip.dataPoints;
             if (!dataPoints || dataPoints.length === 0) return;
             const dataIndex = dataPoints[0].dataIndex;
             
-            const isMobile = window.innerWidth < 1024;
-
             if (lastSimulationData && lastSimulationData[dataIndex]) {
                 const yearData = lastSimulationData[dataIndex];
                 const parts = yearData.yearLabel.split(' ');
                 document.getElementById('tooltip-year').innerHTML = `<span>${parts[0]}</span><span class="text-amber-400 font-bold">${parts[1] || ''} ${parts[2] || ''}</span>`;
-                
-                if (isMobile) {
-                    // モバイル環境：円グラフを非表示にし、ヘッダータグを総資産額に切り替える
-                    pieContainer.style.display = 'none';
-                    const totalAsset = yearData.cash + yearData.realestate + yearData.stocks + yearData.trust + yearData.metal + yearData.bonds;
-                    headerTag.textContent = `総資産: ${formatAssetValue(totalAsset)}`;
-                } else {
-                    // PC環境：円グラフを通常通り表示
-                    pieContainer.style.display = 'flex';
-                    headerTag.textContent = '資産ポートフォリオ';
-                }
-                
                 drawTooltipPieChart(yearData);
             }
 
             const { offsetLeft: positionX, offsetTop: positionY } = context.chart.canvas;
             tooltipEl.style.opacity = 1;
 
-            if (isMobile) {
-                // モバイル環境の設計図（最下部に固定配置して見やすさを担保）
+            // 画面幅が1024px未満（モバイル・タブレット環境）の設計図
+            if (window.innerWidth < 1024) {
                 tooltipEl.style.position = 'fixed';
                 tooltipEl.style.left = '16px';
                 tooltipEl.style.right = '16px';
@@ -811,7 +794,6 @@
             runSimulation();
         }
 
-        // 入力時の挙動ハンドラ
         function handleUserTypeInput() {
             const inputVal = document.getElementById('scenario-input').value || '名無し';
             const titleEl = document.getElementById('graph-title-element');
