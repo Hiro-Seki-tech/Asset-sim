@@ -26,7 +26,7 @@
         <span id="toast-text" class="text-sm font-medium">通知メッセージ</span>
     </div>
 
-    <div id="chart-tooltip" class="absolute bg-slate-950/95 text-white p-4 rounded-2xl shadow-2xl border border-slate-800 pointer-events-none opacity-0 transition-opacity duration-200 z-50 w-80 flex flex-col gap-3">
+    <div id="chart-tooltip" class="absolute bg-slate-950/95 text-white p-4 rounded-2xl shadow-2xl border border-slate-800 pointer-events-none opacity-0 transition-opacity duration-200 z-50 w-80 lg:w-80 flex flex-col gap-3 max-sm:w-[calc(100%-2rem)] max-sm:left-4 max-sm:right-4">
         <div id="tooltip-year" class="text-xs font-bold tracking-wider text-slate-400 border-b border-slate-800 pb-1.5 flex justify-between">
             <span>経過年次</span>
             <span class="text-amber-400">資産ポートフォリオ</span>
@@ -86,7 +86,7 @@
 
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <section class="lg:col-span-5 flex flex-col gap-6">
+        <section class="lg:col-span-5 flex flex-col gap-6 w-full min-w-0">
             
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-5">
                 <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
@@ -240,7 +240,7 @@
             </button>
         </section>
 
-        <section class="lg:col-span-7 flex flex-col gap-6">
+        <section class="lg:col-span-7 flex flex-col gap-6 w-full min-w-0">
             
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
@@ -256,7 +256,7 @@
                         </p>
                     </div>
                     
-                    <div class="flex items-center gap-2 self-stretch sm:self-auto">
+                    <div class="flex flex-wrap items-center gap-2 self-stretch sm:self-auto w-full sm:w-auto">
                         <button id="save-local-btn" onclick="saveToLocalStorage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
                             <i class="fa-solid fa-floppy-disk"></i> 💾 設定を保存
                         </button>
@@ -283,7 +283,7 @@
                     <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
                         <i class="fa-solid fa-table text-violet-500"></i> 年次データ明細
                     </h2>
-                    <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium">所得は現金に流入・各積立は現金より期末支出</span>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium max-sm:hidden">所得は現金に流入・各積立は現金より期末支出</span>
                 </div>
 
                 <div class="table-container custom-scrollbar overflow-x-auto rounded-xl border border-slate-100 max-h-[480px]">
@@ -608,6 +608,7 @@
             }
         }
 
+        // スマホ閲覧・PC閲覧でポップアップの位置を完全に最適化する羅針盤
         function customTooltipHandler(context) {
             const tooltipEl = document.getElementById('chart-tooltip');
             if (context.tooltip.opacity === 0) { tooltipEl.style.opacity = 0; return; }
@@ -624,23 +625,33 @@
 
             const { offsetLeft: positionX, offsetTop: positionY } = context.chart.canvas;
             tooltipEl.style.opacity = 1;
-            let targetLeft = positionX + context.tooltip.caretX + 20;
-            let targetTop = positionY + context.tooltip.caretY - 80;
-            const tooltipWidth = 320;
-            const tooltipHeight = tooltipEl.offsetHeight || 340;
 
+            // 画面幅が1024px未満（モバイル・タブレット環境）の設計図
             if (window.innerWidth < 1024) {
-                targetLeft = (window.innerWidth - tooltipWidth) / 2;
-                targetTop = positionY + context.chart.height + 20;
+                tooltipEl.style.position = 'fixed';
+                tooltipEl.style.left = '16px';
+                tooltipEl.style.right = '16px';
+                tooltipEl.style.bottom = '16px';
+                tooltipEl.style.top = 'auto';
+                tooltipEl.style.width = 'calc(100% - 32px)';
             } else {
+                // PC環境の設計図（追従・反転ロジック）
+                tooltipEl.style.position = 'absolute';
+                tooltipEl.style.width = '20rem';
+                let targetLeft = positionX + context.tooltip.caretX + 20;
+                let targetTop = positionY + context.tooltip.caretY - 80;
+                const tooltipWidth = 320;
+                const tooltipHeight = tooltipEl.offsetHeight || 340;
+
                 if (targetLeft + tooltipWidth > window.innerWidth) { targetLeft = positionX + context.tooltip.caretX - (tooltipWidth + 20); }
                 if (targetLeft < 10) targetLeft = 10;
                 if (targetTop < 10) { targetTop = positionY + context.tooltip.caretY + 20; }
                 const maxTop = window.innerHeight + window.scrollY - tooltipHeight - 15;
                 if (targetTop > maxTop) { targetTop = maxTop; }
+                
+                tooltipEl.style.left = targetLeft + 'px';
+                tooltipEl.style.top = targetTop + 'px';
             }
-            tooltipEl.style.left = targetLeft + 'px';
-            tooltipEl.style.top = targetTop + 'px';
         }
 
         function addAssetElement(data) {
@@ -725,7 +736,6 @@
             toggleRealestateFields();
         }
 
-        // [2] 専用ボタンから一発追加する新機構
         function addDirectAsset(chosenType) {
             const startAge = parseInt(document.getElementById('start-age').value) || 30;
             const endAge = parseInt(document.getElementById('years').value) || 85;
@@ -784,15 +794,13 @@
             runSimulation();
         }
 
-        // [1] ユーザーの直接テキスト入力に反応してグラフタイトルを動的追従させる
         function handleUserTypeInput() {
             const inputVal = document.getElementById('scenario-input').value || '名無し';
             const titleEl = document.getElementById('graph-title-element');
             titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${inputVal}」の生涯キャッシュフロー`;
-            document.getElementById('scenario-selector').value = 'custom'; // 自由入力モードへ自動スイッチ
+            document.getElementById('scenario-selector').value = 'custom';
         }
 
-        // 選択されたプリセットを展開しつつ、入力欄を同期させる
         function handleScenarioSelect(scenario) {
             if (scenario === 'custom') return;
             const selectEl = document.getElementById('scenario-selector');
