@@ -46,12 +46,18 @@
     <header class="bg-slate-900 text-white py-6 px-4 sm:px-8 border-b border-b-slate-800 shadow-md lg:sticky lg:top-0 lg:z-40">
         <div class="max-w-7xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <!-- 試算実行ボタンをコンパクトにし、文字を表示 -->
-                <div onclick="runSimulation(); showToast('💎 ジェムの魔力により、未来が再計算されました！')" class="bg-amber-500 text-slate-950 px-3 py-1.5 rounded-xl shadow-inner font-black animate-pulse cursor-pointer hover:bg-amber-400 transition-colors flex flex-col items-center justify-center gap-0.5 leading-none" title="クリックしてシミュレーションを実行">
-                    <span class="text-lg">💎</span>
-                    <span class="text-[9px] tracking-tighter">試算実行</span>
+                <!-- 試算実行ボタン：元の大きさに戻し、右側に吹き出しアニメーションを配置 -->
+                <div class="relative flex items-center">
+                    <div onclick="runSimulation(); showToast('💎 ジェムの魔力により、未来が再計算されました！')" class="bg-amber-500 text-slate-950 p-3 rounded-xl text-2xl shadow-inner font-black animate-pulse cursor-pointer hover:bg-amber-400 transition-colors flex items-center justify-center select-none" title="クリックしてシミュレーションを実行">
+                        💎
+                    </div>
+                    <!-- 吹き出しバッジ：自動で上下に小さく跳ねるアニメーション -->
+                    <div class="absolute left-full ml-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 text-[10px] font-black px-2 py-1 rounded-md whitespace-nowrap shadow-md flex items-center select-none animate-bounce" style="animation-duration: 2s;">
+                        <span class="absolute right-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-[4px] border-y-transparent border-r-[6px] border-r-amber-500"></span>
+                        試算実行！
+                    </div>
                 </div>
-                <div>
+                <div class="ml-16 xl:ml-0">
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight bg-gradient-to-r from-amber-400 via-yellow-200 to-emerald-400 bg-clip-text text-transparent">
                         資産ライフプランシミュレータ・無双
                     </h1>
