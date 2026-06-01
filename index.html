@@ -86,7 +86,7 @@
             
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-5">
                 <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-amber-500"></i> 基本設定・生涯キャッシュフロー
+                    <i class="fa-solid fa-sliders text-amber-500"></i> 基本設定
                 </h2>
                 
                 <div class="grid grid-cols-3 gap-3">
@@ -249,7 +249,7 @@
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                     <div>
                         <h2 id="graph-title-element" class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-chart-line text-blue-500"></i> 資産増殖軌跡
+                            <i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー
                         </h2>
                         <p class="text-slate-400 text-xs mt-0.5 flex flex-wrap items-center gap-2">
                             <span>各プロット点にホバーすると資産割合(%)と額面（万円）が浮遊ポップアップします</span>
@@ -345,7 +345,6 @@
             }, 3000);
         }
 
-        // [2] 開始年齢〜終了年齢を動的に算出し表示する、スマホ時も下にキレイに収まる連動システム
         function updateStageAges() {
             const startAge = parseInt(document.getElementById('start-age').value) || 30;
             const rows = document.querySelectorAll('.stage-row');
@@ -431,12 +430,24 @@
             const div = document.createElement('div');
             div.className = 're-income-row grid grid-cols-12 gap-1 items-center bg-slate-50/50 p-1.5 rounded-lg border border-slate-100 text-[11px]';
             div.innerHTML = `
-                <input type="text" class="re-name col-span-3 rounded border border-slate-200 p-1 font-semibold text-center" value="${name}">
-                <input type="number" class="re-amount col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="${amount}">
-                <input type="number" class="re-start col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="${start}">
-                <span class="col-span-1 text-center text-slate-400 font-bold">～</span>
-                <input type="number" class="re-end col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="${end}">
-                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">不動産名称</span>
+                    <input type="text" class="re-name rounded border border-slate-200 p-1 font-semibold text-center" value="${name}">
+                </div>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">所得額(万/年)</span>
+                    <input type="number" class="re-amount rounded border border-slate-200 p-1 font-bold text-center" value="${amount}">
+                </div>
+                <div class="col-span-2 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">設立年齢</span>
+                    <input type="number" class="re-start rounded border border-slate-200 p-1 font-bold text-center" value="${start}">
+                </div>
+                <span class="col-span-1 text-center text-slate-400 font-bold mt-4">～</span>
+                <div class="col-span-2 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">解体年齢</span>
+                    <input type="number" class="re-end rounded border border-slate-200 p-1 font-bold text-center" value="${end}">
+                </div>
+                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center mt-4"><i class="fa-solid fa-trash-can"></i></button>
             `;
             container.appendChild(div);
             runSimulation();
@@ -447,12 +458,24 @@
             const div = document.createElement('div');
             div.className = 'other-income-row grid grid-cols-12 gap-1 items-center bg-slate-50/50 p-1.5 rounded-lg border border-slate-100 text-[11px]';
             div.innerHTML = `
-                <input type="text" class="other-inc-name col-span-3 rounded border border-slate-200 p-1 font-semibold text-center" value="${name}">
-                <input type="number" class="other-inc-amount col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="${amount}">
-                <input type="number" class="other-inc-start col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="${start}">
-                <span class="col-span-1 text-center text-slate-400 font-bold">～</span>
-                <input type="number" class="other-inc-end col-span-2 rounded border border-slate-200 p-1 font-bold text-center" value="${end}">
-                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">所得の名称</span>
+                    <input type="text" class="other-inc-name rounded border border-slate-200 p-1 font-semibold text-center" value="${name}">
+                </div>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">所得額(万/年)</span>
+                    <input type="number" class="other-inc-amount rounded border border-slate-200 p-1 font-bold text-center" value="${amount}">
+                </div>
+                <div class="col-span-2 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">開始年齢</span>
+                    <input type="number" class="other-inc-start rounded border border-slate-200 p-1 font-bold text-center" value="${start}">
+                </div>
+                <span class="col-span-1 text-center text-slate-400 font-bold mt-4">～</span>
+                <div class="col-span-2 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">終了年齢</span>
+                    <input type="number" class="other-inc-end rounded border border-slate-200 p-1 font-bold text-center" value="${end}">
+                </div>
+                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center mt-4"><i class="fa-solid fa-trash-can"></i></button>
             `;
             container.appendChild(div);
             runSimulation();
@@ -463,18 +486,30 @@
             const div = document.createElement('div');
             div.className = 'income-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]';
             div.innerHTML = `
-                <input type="text" class="income-memo col-span-3 rounded border border-slate-200 p-1 font-medium text-center" value="${memo}" placeholder="名称">
-                <input type="number" class="income-age col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="${age}" placeholder="年齢">
-                <input type="number" class="income-amount col-span-3 rounded border border-slate-200 p-1 font-bold text-emerald-700 text-center" value="${amount}" placeholder="金額">
-                <select class="income-target col-span-2 rounded border border-slate-200 p-0.5 font-bold text-slate-700 bg-white" onchange="runSimulation();">
-                    <option value="cash">現金</option>
-                    <option value="realestate">不動産</option>
-                    <option value="stocks">株式</option>
-                    <option value="trust" ${target==='trust'?'selected':''}>投資信託</option>
-                    <option value="metal">貴金属</option>
-                    <option value="bonds">債券</option>
-                </select>
-                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-xmark"></i></button>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">収入の名称</span>
+                    <input type="text" class="income-memo rounded border border-slate-200 p-1 font-medium text-center" value="${memo}" placeholder="名称">
+                </div>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">発生年齢</span>
+                    <input type="number" class="income-age rounded border border-slate-200 p-1 font-bold text-center" value="${age}" placeholder="年齢">
+                </div>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">金額(万円)</span>
+                    <input type="number" class="income-amount rounded border border-slate-200 p-1 font-bold text-emerald-700 text-center" value="${amount}" placeholder="金額">
+                </div>
+                <div class="col-span-2 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">入金先</span>
+                    <select class="income-target rounded border border-slate-200 p-1.5 font-bold text-slate-700 bg-white" onchange="runSimulation();">
+                        <option value="cash">現金</option>
+                        <option value="realestate">不動産</option>
+                        <option value="stocks">株式</option>
+                        <option value="trust" ${target==='trust'?'selected':''}>投資信託</option>
+                        <option value="metal">貴金属</option>
+                        <option value="bonds">債券</option>
+                    </select>
+                </div>
+                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center mt-4"><i class="fa-solid fa-xmark"></i></button>
             `;
             container.appendChild(div);
             runSimulation();
@@ -485,10 +520,19 @@
             const div = document.createElement('div');
             div.className = 'expense-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]';
             div.innerHTML = `
-                <input type="text" class="expense-memo col-span-4 rounded border border-slate-200 p-1 font-medium text-center" value="${memo}" placeholder="名称">
-                <input type="number" class="expense-age col-span-3 rounded border border-slate-200 p-1 font-bold text-center" value="${age}" placeholder="年齢">
-                <input type="number" class="expense-amount col-span-4 rounded border border-slate-200 p-1 font-bold text-rose-700 text-center" value="${amount}" placeholder="金額">
-                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center"><i class="fa-solid fa-trash-can"></i></button>
+                <div class="col-span-4 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">出費の名称</span>
+                    <input type="text" class="expense-memo rounded border border-slate-200 p-1 font-medium text-center" value="${memo}" placeholder="名称">
+                </div>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">発生年齢</span>
+                    <input type="number" class="expense-age rounded border border-slate-200 p-1 font-bold text-center" value="${age}" placeholder="年齢">
+                </div>
+                <div class="col-span-4 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">金額(万円)</span>
+                    <input type="number" class="expense-amount rounded border border-slate-200 p-1 font-bold text-rose-700 text-center" value="${amount}" placeholder="金額">
+                </div>
+                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center mt-4"><i class="fa-solid fa-trash-can"></i></button>
             `;
             container.appendChild(div);
             runSimulation();
@@ -561,7 +605,6 @@
             }
         }
 
-        // [2] 浮遊ポップアップのスマホ位置固定とPC追従ロジックを完全復元
         function customTooltipHandler(context) {
             const tooltipEl = document.getElementById('chart-tooltip');
             if (context.tooltip.opacity === 0) { tooltipEl.style.opacity = 0; return; }
@@ -584,7 +627,6 @@
             const tooltipHeight = tooltipEl.offsetHeight || 340;
 
             if (window.innerWidth < 1024) {
-                // スマホ・タブレット時は資産増殖軌跡の真下に固定して表示（ヒロの指示を完全再現）
                 targetLeft = (window.innerWidth - tooltipWidth) / 2;
                 targetTop = positionY + context.chart.height + 20;
             } else {
@@ -738,7 +780,6 @@
             runSimulation();
         }
 
-        // [3] キャラクターごとの年齢ベースアロケーション＆ライフプランの初期値を「それっぽく」最適化
         function applyScenario(scenario) {
             const reContainer = document.getElementById('re-income-container');
             const otherContainer = document.getElementById('other-income-container');
@@ -757,13 +798,12 @@
             const titleEl = document.getElementById('graph-title-element');
 
             if (scenario === 'landlord') {
-                // 【不変】閃きの大家さん（指示通り一切いじらない）
                 document.getElementById('start-year').value = 2026;
                 document.getElementById('start-age').value = 35;
                 document.getElementById('years').value = 110;
                 document.getElementById('salary-amount').value = 800;
                 document.getElementById('salary-limit').value = 60;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「閃きの大家さん」の資産増殖軌跡`;
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
                 addREIncomeRow("メゾンA", 400, 35, 60);
                 addOtherIncomeRow("年金", 18, 60, 110);
                 addStageRow(360, 20, 15, 200, 65);   
@@ -778,60 +818,57 @@
                 addAssetElement({ name: "安全国債", type: "bonds", initAmt: 4500, rate: 1.8, yearAmt: 0, monthAmt: 0, payout: "cashout", startAge: 35, endAge: 110 });
 
             } else if (scenario === 'rich_dad') {
-                // 【最適化】金持ち父さん：45歳から90歳までの圧倒的な富裕層アロケーション
                 document.getElementById('start-year').value = 2026;
                 document.getElementById('start-age').value = 45;
                 document.getElementById('years').value = 90;
-                document.getElementById('salary-amount').value = 2500; // 高額役員報酬
+                document.getElementById('salary-amount').value = 2500;
                 document.getElementById('salary-limit').value = 65;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「金持ち父さん」の資産増殖軌跡`;
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
                 
                 addREIncomeRow("商業ビルオーナー権", 1500, 45, 80);
                 addOtherIncomeRow("未公開株配当金", 300, 50, 90);
                 
-                addStageRow(800, 50, 30, 600, 65);  // ステージI: 現役時代の豪快な生活費 (2360万)
-                addStageRow(500, 30, 10, 300, 90);  // ステージII: 引退後のゆとりある生活 (1280万)
+                addStageRow(800, 50, 30, 600, 65);
+                addStageRow(500, 30, 10, 300, 90);
                 
                 addIncomeRow("事業売却益（M&A）", 55, 8000, "trust");
                 addExpenseRow("プライベートジェット/慈善財団組成", 60, 5000);
                 
-                document.getElementById('init-cash').value = 5000; // 初期現金5000万
+                document.getElementById('init-cash').value = 5000;
                 document.getElementById('rate-cash').value = 0.2;
                 addAssetElement({ name: "米国優良個別株", type: "stocks", initAmt: 8000, rate: 8.5, yearAmt: 500, monthAmt: 0, payout: "reinvest", startAge: 45, endAge: 80 });
                 addAssetElement({ name: "海外ヘッジファンド", type: "trust", initAmt: 12000, rate: 6.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 45, endAge: 90 });
                 addAssetElement({ name: "実物インゴット（金）", type: "metal", initAmt: 3000, rate: 4.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 45, endAge: 90 });
 
             } else if (scenario === 'poor_dad') {
-                // 【最適化】貧乏父さん：50歳から80歳。現金枯渇ショートリスクを孕んだギリギリの戦い
                 document.getElementById('start-year').value = 2026;
                 document.getElementById('start-age').value = 50;
                 document.getElementById('years').value = 80;
-                document.getElementById('salary-amount').value = 380; // カツカツの所得
+                document.getElementById('salary-amount').value = 380;
                 document.getElementById('salary-limit').value = 60;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「貧乏父さん」の資産増殖軌跡`;
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
                 
-                addStageRow(80, 20, 5, 50, 65);   // ステージI: 教育費やローンが重い時期 (430万)
-                addStageRow(40, 15, 0, 30, 80);   // ステージII: 年金頼みのシニア生活 (250万)
+                addStageRow(80, 20, 5, 50, 65);
+                addStageRow(40, 15, 0, 30, 80);
                 
                 addIncomeRow("微々たる満期共済金", 65, 100, "cash");
                 addExpenseRow("子供の結婚援助/車の買い替え", 55, 300);
                 
-                document.getElementById('init-cash').value = 80;  // 初期現金わずか80万
+                document.getElementById('init-cash').value = 80;
                 document.getElementById('rate-cash').value = 0.01;
                 addAssetElement({ name: "低利回りの定期預金", type: "trust", initAmt: 50, rate: 0.3, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 50, endAge: 80 });
 
             } else if (scenario === 'children') {
-                // 【最適化】未来ある子供達：18歳から100歳までの「超長期・複利の暴力」モデル
                 document.getElementById('start-year').value = 2026;
                 document.getElementById('start-age').value = 18;
                 document.getElementById('years').value = 100;
-                document.getElementById('salary-amount').value = 300; // 初任給スタート
+                document.getElementById('salary-amount').value = 300;
                 document.getElementById('salary-limit').value = 65;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「未来ある子供達」の資産増殖軌跡`;
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
                 
-                addStageRow(30, 12, 5, 50, 30);   // ステージI: 若手独身時代 (284万)
-                addStageRow(100, 25, 10, 150, 65); // ステージII: 結婚・子育て黄金期 (670万)
-                addStageRow(60, 15, 0, 80, 100);  // ステージIII: 悠々自適のシニア期 (320万)
+                addStageRow(30, 12, 5, 50, 30);
+                addStageRow(100, 25, 10, 150, 65);
+                addStageRow(60, 15, 0, 80, 100);
                 
                 addIncomeRow("祖父母からの相続/生前贈与", 30, 500, "trust");
                 addExpenseRow("結婚式頭金/マイホーム頭金", 32, 700);
@@ -841,13 +878,12 @@
                 addAssetElement({ name: "世界分散インデックス株", type: "trust", initAmt: 100, rate: 5.5, yearAmt: 60, monthAmt: 5, payout: "reinvest", startAge: 18, endAge: 100 });
 
             } else {
-                // 【不変】一般サラリーマン（指示通り一切いじらない）
                 document.getElementById('start-year').value = 2026;
                 document.getElementById('start-age').value = 30;
                 document.getElementById('years').value = 85;
                 document.getElementById('salary-amount').value = 550;
                 document.getElementById('salary-limit').value = 65;
-                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「一般サラリーマン」の資産増殖軌跡`;
+                titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 生涯キャッシュフロー`;
                 addStageRow(150, 20, 0, 100, 75);  
                 addStageRow(100, 15, 0, 70, 85);   
                 addIncomeRow("退職金", 65, 1500, "trust");
@@ -916,8 +952,10 @@
 
             let reIncomes = [];
             document.querySelectorAll('.re-income-row').forEach(row => {
+                const amtEl = row.querySelector('.re-amount');
+                if(!amtEl) return;
                 reIncomes.push({
-                    amount: (parseFloat(row.querySelector('.re-amount').value) || 0) * 10000,
+                    amount: (parseFloat(amtEl.value) || 0) * 10000,
                     start: parseInt(row.querySelector('.re-start').value) || 0,
                     end: parseInt(row.querySelector('.re-end').value) || 0
                 });
@@ -925,8 +963,10 @@
 
             let otherIncomes = [];
             document.querySelectorAll('.other-income-row').forEach(row => {
+                const amtEl = row.querySelector('.other-inc-amount');
+                if(!amtEl) return;
                 otherIncomes.push({
-                    amount: (parseFloat(row.querySelector('.other-inc-amount').value) || 0) * 10000,
+                    amount: (parseFloat(amtEl.value) || 0) * 10000,
                     start: parseInt(row.querySelector('.other-inc-start').value) || 0,
                     end: parseInt(row.querySelector('.other-inc-end').value) || 0
                 });
@@ -943,8 +983,10 @@
 
             let extraIncomes = [];
             document.querySelectorAll('.income-row').forEach(row => {
+                const ageEl = row.querySelector('.income-age');
+                if(!ageEl) return;
                 extraIncomes.push({
-                    age: parseInt(row.querySelector('.income-age').value) || 0,
+                    age: parseInt(ageEl.value) || 0,
                     amount: (parseFloat(row.querySelector('.income-amount').value) || 0) * 10000,
                     target: row.querySelector('.income-target').value || 'cash'
                 });
@@ -952,8 +994,10 @@
 
             let extraExpenses = [];
             document.querySelectorAll('.expense-row').forEach(row => {
+                const ageEl = row.querySelector('.expense-age');
+                if(!ageEl) return;
                 extraExpenses.push({
-                    age: parseInt(row.querySelector('.expense-age').value) || 0,
+                    age: parseInt(ageEl.value) || 0,
                     amount: (parseFloat(row.querySelector('.expense-amount').value) || 0) * 10000
                 });
             });
