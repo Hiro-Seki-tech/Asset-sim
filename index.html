@@ -850,6 +850,46 @@
             expContainer.innerHTML = '';
             assetContainer.innerHTML = '';
 
+            // [1] ローカルストレージ（保存された設定）の読み込み判定
+            const saved = localStorage.getItem('gemkin_unrivaled_config_' + scenario);
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    document.getElementById('scenario-input').value = state.customName || '';
+                    document.getElementById('start-year').value = state.startYear;
+                    document.getElementById('start-age').value = state.startAge;
+                    document.getElementById('years').value = state.years;
+                    document.getElementById('salary-amount').value = state.salaryAmount;
+                    document.getElementById('salary-limit').value = state.salaryLimit;
+                    document.getElementById('init-cash').value = state.initCash;
+                    document.getElementById('rate-cash').value = state.rateCash;
+                    
+                    // 各コンテナのHTML構造をインジェクションして、入力状態を即時復元
+                    reContainer.innerHTML = state.reIncomeHTML || '';
+                    otherContainer.innerHTML = state.otherIncomeHTML || '';
+                    stageContainer.innerHTML = state.stageHTML || '';
+                    incContainer.innerHTML = state.incomeHTML || '';
+                    expContainer.innerHTML = state.expenseHTML || '';
+                    
+                    // 動的アセットを構造化データから完璧に再構成
+                    if (state.assets && Array.isArray(state.assets)) {
+                        state.assets.forEach(asset => {
+                            addAssetElement(asset);
+                        });
+                    }
+                    
+                    const titleEl = document.getElementById('graph-title-element');
+                    titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${state.customName || 'カスタム人物'}」の生涯キャッシュフロー`;
+                    
+                    updateStageAges();
+                    runSimulation();
+                    return; // 保存済み設定からの展開に成功したため、以下のハードコード規定値による上書き処理を回避
+                } catch (e) {
+                    console.error("保存設定の解析・展開に失敗しました。規定値で立ち上げます。", e);
+                }
+            }
+
+            // 保存データがない場合のデフォルト展開（従前のロジック）
             const titleEl = document.getElementById('graph-title-element');
             const currentName = document.getElementById('scenario-input').value || 'カスタム人物';
             titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${currentName}」の生涯キャッシュフロー`;
@@ -1199,10 +1239,43 @@
             });
         }
 
+        // HTML要素の値がinnerHTMLシリアライズ時に消滅するのを防止するためのヘルパー関数
+        function updateDOMAttributes(container) {
+            if (!container) return;
+            // 全input要素の現在のDOM上の値をHTML属性「value」に直接書き戻す
+            container.querySelectorAll('input').forEach(input => {
+                input.setAttribute('value', input.value);
+            });
+            // 全select要素のアクティブ選択肢をHTML属性「selected」に同期する
+            container.querySelectorAll('select').forEach(select => {
+                select.querySelectorAll('option').forEach(opt => {
+                    if (opt.value === select.value) {
+                        opt.setAttribute('selected', 'selected');
+                    } else {
+                        opt.removeAttribute('selected');
+                    }
+                });
+            });
+        }
+
         function saveToLocalStorage() {
             try {
                 const currentScenario = document.getElementById('scenario-selector').value;
                 const customName = document.getElementById('scenario-input').value;
+                
+                const reContainer = document.getElementById('re-income-container');
+                const otherContainer = document.getElementById('other-income-container');
+                const stageContainer = document.getElementById('stage-container');
+                const incContainer = document.getElementById('income-container');
+                const expContainer = document.getElementById('expense-container');
+
+                // innerHTMLを取得する前に、現在の入力値をDOM要素の「属性」として強制的に埋め込む
+                updateDOMAttributes(reContainer);
+                updateDOMAttributes(otherContainer);
+                updateDOMAttributes(stageContainer);
+                updateDOMAttributes(incContainer);
+                updateDOMAttributes(expContainer);
+
                 const state = {
                     customName: customName,
                     startYear: document.getElementById('start-year').value,
@@ -1212,11 +1285,11 @@
                     salaryLimit: document.getElementById('salary-limit').value,
                     initCash: document.getElementById('init-cash').value,
                     rateCash: document.getElementById('rate-cash').value,
-                    reIncomeHTML: document.getElementById('re-income-container').innerHTML,
-                    otherIncomeHTML: document.getElementById('other-income-container').innerHTML,
-                    stageHTML: document.getElementById('stage-container').innerHTML,
-                    incomeHTML: document.getElementById('income-container').innerHTML,
-                    expenseHTML: document.getElementById('expense-container').innerHTML,
+                    reIncomeHTML: reContainer.innerHTML,
+                    otherIncomeHTML: otherContainer.innerHTML,
+                    stageHTML: stageContainer.innerHTML,
+                    incomeHTML: incContainer.innerHTML,
+                    expenseHTML: expContainer.innerHTML,
                     assets: Array.from(document.querySelectorAll('.asset-card')).map(card => ({
                         name: card.querySelector('.asset-name-field').value,
                         type: card.querySelector('.asset-type-field').value,
@@ -1231,7 +1304,10 @@
                 };
                 localStorage.setItem('gemkin_unrivaled_config_' + currentScenario, JSON.stringify(state));
                 showToast("💾 現在の入力数値をブラウザ内部の暗室（LocalStorage）に記録しました！");
-            } catch(e) { showToast("保存に失敗しました。", "error"); }
+            } catch(e) { 
+                console.error(e);
+                showToast("保存に失敗しました。", "error"); 
+            }
         }
 
         function clearLocalStorage() {
@@ -1288,6 +1364,30 @@
             link.setAttribute("download", "investment_simulation.csv");
             link.click();
         }
+
+        // [2] グラフエリア（canvas）以外、およびツールチップそれ自体以外をタップ/クリックされた場合に、チップ表示を解除するイベントリスナー
+        document.addEventListener('click', function(event) {
+            const chartCanvas = document.getElementById('growthChart');
+            const tooltipEl = document.getElementById('chart-tooltip');
+            if (chartCanvas && tooltipEl) {
+                // タップされた対象がグラフ(Canvas)でもポップアップ本体でもない場合、即座に隠蔽する
+                if (!chartCanvas.contains(event.target) && !tooltipEl.contains(event.target)) {
+                    tooltipEl.style.opacity = '0';
+                    tooltipEl.style.pointerEvents = 'none';
+                }
+            }
+        });
+        
+        document.addEventListener('touchstart', function(event) {
+            const chartCanvas = document.getElementById('growthChart');
+            const tooltipEl = document.getElementById('chart-tooltip');
+            if (chartCanvas && tooltipEl) {
+                if (!chartCanvas.contains(event.target) && !tooltipEl.contains(event.target)) {
+                    tooltipEl.style.opacity = '0';
+                    tooltipEl.style.pointerEvents = 'none';
+                }
+            }
+        }, { passive: true });
 
         window.onload = function() { applyScenario('salaryman'); }
     </script>
