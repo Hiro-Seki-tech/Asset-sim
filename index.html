@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow, noarchive">
-    <title>ジェムキン特製・マイ・資産・ライフプランシミュレータ💡・無双</title>
+    <title>💡ジェムキン特製・マイ・資産・ライフプランシミュレータ・無双</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&family=Noto+Sans+JP:wght=300;400;500;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -75,14 +75,15 @@
                     </div>
                 </div>
                 <div class="ml-16 xl:ml-0">
-                    <!-- シミュレータ名称の変更：💡を挿入し、レインボーカラー（7色）に発光するように定義 -->
+                    <!-- シミュレータ名称の変更：💡を先頭へ、そしてレインボー発光するように配置 -->
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight flex items-center flex-wrap gap-1">
-                        <span class="bg-gradient-to-r from-amber-400 via-yellow-200 to-emerald-400 bg-clip-text text-transparent">マイ・資産・ライフプランシミュレータ</span>
                         <span class="rainbow-bulb text-lg sm:text-xl px-0.5"><i class="fa-solid fa-lightbulb"></i></span>
+                        <span class="bg-gradient-to-r from-amber-400 via-yellow-200 to-emerald-400 bg-clip-text text-transparent">マイ・資産・ライフプランシミュレータ</span>
                         <span class="bg-gradient-to-r from-amber-400 via-yellow-200 to-emerald-400 bg-clip-text text-transparent">（無双）</span>
                     </h1>
+                    <!-- サブタイトル部分の直訳をわかりやすい綺麗な日本語に修正 -->
                     <p class="text-slate-400 text-xs sm:text-sm mt-0.5 font-light">
-                        未来への軍略盤 — 所得の流入と生涯生活費の引き算が現金と連動する人生 of 設計図
+                        人生の軍略盤 — 日々の所得と生涯の生活費がリアルタイムに現金と連動する、あなただけの「人生の設計図」
                     </p>
                 </div>
             </div>
@@ -106,7 +107,7 @@
                     <span class="text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-earth-asia text-blue-400 mr-1"></i>マクロ経済世界線：</span>
                     <button onclick="applyWorldLine('bright')" class="px-2.5 py-1.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition-colors border border-emerald-500/30 font-bold" title="【超高成長（ハイパー・グロース）】&#10;・現金年利: 0.1%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 15.0%&#10;・投資信託年利: 15.0%&#10;・貴金属年利: 5.0%&#10;・安全債券年利: 5.0%">🚀 超高成長</button>
                     <button onclick="applyWorldLine('mild_bull')" class="px-2.5 py-1.5 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 transition-colors border border-cyan-500/30 font-bold" title="【安定上昇（マイルド・ブル）】&#10;・現金年利: 0.1%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 10.0%&#10;・投資信託年利: 8.0%&#10;・貴金属年利: 5.0%&#10;・安全債券年利: 5.0%">📈 安定上昇</button>
-                    <button onclick="applyWorldLine('normal')" class="px-2.5 py-1.5 rounded bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition-colors border border-blue-500/30 font-bold" title="【巡航速度（ニュートラル）】&#10;・現金年利: 0.1%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 5.0%&#10;・投資信託年利: 4.0%&#10;・貴金属年利: 4.0%&#10;・安全債券年利: 4.0%">🌱 巡航速度</button>
+                    <button onclick="applyWorldLine('normal')" class="px-2.5 py-1.5 rounded bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition-colors border border-blue-500/30 font-bold" title="【巡航速度（ニュートラル）】&#10;・現金年利: 0.1%&#10;&#10;・個別株式年利: 5.0%&#10;・投資信託年利: 4.0%&#10;・貴金属年利: 4.0%&#10;・安全債券年利: 4.0%">🌱 巡航速度</button>
                     <button onclick="applyWorldLine('dark')" class="px-2.5 py-1.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 transition-colors border border-rose-500/30 font-bold" title="【停滞・下落（ベア・マーケット）】&#10;・現金年利: 0.0%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 4.0%&#10;・投資信託年利: 1.0%&#10;・貴金属年利: 3.0%&#10;・安全債券年利: 4.0%">⛈️ 停滞下落</button>
                 </div>
             </div>
