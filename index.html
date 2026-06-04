@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="index, follow">
-    <meta name="description" content="野村総合研究所の資産ピラミッドに準拠した、シンプルかつ超高性能な資産シミュレータ。あなたの未来のキャッシュフローを即座に可視化します。">
-    <meta property="og:title" content="💡資産・ライフシミュレータ（💀DIE WITH ZERO判定可能！） | 人生のキャッシュフロー軍略盤">
-    <meta property="og:description" content="純金融資産の階層別デフォルト値から、あなたの未来 of 資産推移を即座に計算。">
-    <meta property="og:type" content="website">
-
-    <title>💡資産・ライフシミュレータ（💀DIE WITH ZERO判定可能！）</title>
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <title>💡ジェムキン特製・マイ・資産・ライフプランシミュレータ・無双</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=300;400;500;600;700&family=Noto+Sans+JP:wght=300;400;500;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif; }
@@ -22,39 +18,32 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
-        
-        /* 💡マークをカッコよく明滅させるアニメーション */
-        @keyframes pulse-light {
-            0%, 100% { opacity: 0.3; filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.2)); }
-            50% { opacity: 1; filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.8)); text-shadow: 0 0 8px rgba(251, 191, 36, 0.6); }
-        }
-        .blinking-light { animation: pulse-light 2s infinite ease-in-out; color: #fbbf24; }
 
-        /* ダイウィズゼロボタンの脈動アニメーション */
-        @keyframes pulse-gold {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
-            50% { transform: scale(1.06); box-shadow: 0 0 0 15px rgba(245, 158, 11, 0); }
+        /* 電球を滑らかに7色に発光させるアニメーション */
+        @keyframes rainbow-bulb-anime {
+            0% { color: #ef4444; filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8)); }      /* 赤 */
+            14% { color: #f97316; filter: drop-shadow(0 0 2px rgba(249, 115, 22, 0.8)); }    /* 橙 */
+            28% { color: #eab308; filter: drop-shadow(0 0 2px rgba(234, 179, 8, 0.8)); }     /* 黄 */
+            42% { color: #22c55e; filter: drop-shadow(0 0 2px rgba(34, 197, 94, 0.8)); }     /* 緑 */
+            57% { color: #06b6d4; filter: drop-shadow(0 0 2px rgba(6, 182, 212, 0.8)); }     /* 水色 */
+            71% { color: #3b82f6; filter: drop-shadow(0 0 2px rgba(59, 130, 246, 0.8)); }     /* 青 */
+            85% { color: #a855f7; filter: drop-shadow(0 0 2px rgba(168, 85, 247, 0.8)); }     /* 紫 */
+            100% { color: #ef4444; filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.8)); }    /* 赤に戻る */
         }
-        .pulse-dwz { animation: pulse-gold 2s infinite ease-in-out; }
-
-        /* フェードインアニメーション */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-15px); }
-            to { opacity: 1; transform: translateY(0); }
+        .rainbow-bulb {
+            animation: rainbow-bulb-anime 5s linear infinite;
+            display: inline-block;
         }
-        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
 
-    <!-- トースト通知 -->
     <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-20px] opacity-0 pointer-events-none transition-all duration-300 ease-out bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3">
         <span id="toast-icon" class="text-emerald-400 text-lg"><i class="fa-solid fa-circle-check"></i></span>
         <span id="toast-text" class="text-sm font-medium">通知メッセージ</span>
     </div>
 
-    <!-- 浮遊ツールチップ -->
-    <div id="chart-tooltip" class="absolute bg-slate-950/95 text-white p-4 max-sm:p-3 rounded-2xl shadow-2xl border border-slate-800 pointer-events-none opacity-0 transition-opacity duration-200 z-50 w-80 lg:w-80 flex flex-col gap-3 max-sm:gap-2 max-sm:w-70 max-sm:left-1/2 max-sm:-translate-x-1/2">
+    <div id="chart-tooltip" class="absolute bg-slate-950/95 text-white p-4 rounded-2xl shadow-2xl border border-slate-800 pointer-events-none opacity-0 transition-opacity duration-200 z-50 w-80 lg:w-80 flex flex-col gap-3 max-sm:w-[calc(100%-2rem)] max-sm:left-4 max-sm:right-4">
         <div id="tooltip-year" class="text-xs font-bold tracking-wider text-slate-400 border-b border-slate-800 pb-1.5 flex justify-between">
             <span>経過年次</span>
             <span class="text-amber-400">資産ポートフォリオ</span>
@@ -66,378 +55,292 @@
                 <span id="tooltip-total-text" class="text-xs font-bold text-slate-100 mt-0.5">0万円</span>
             </div>
         </div>
-        <div id="tooltip-breakdown" class="text-[11px] max-sm:text-[10px] grid grid-cols-1 gap-y-1 max-sm:gap-y-0.5 text-slate-300 border-t border-slate-800 pt-2"></div>
+        <div id="tooltip-breakdown" class="text-[11px] grid grid-cols-1 gap-y-1 text-slate-300 border-t border-slate-800 pt-2"></div>
         <div id="tooltip-diff" class="text-[11px] text-center border-t border-slate-800 pt-2 font-bold"></div>
     </div>
 
-    <div id="simulator-view" class="flex flex-col min-h-screen">
-        <header class="bg-slate-900 text-white py-6 px-4 sm:px-8 border-b border-b-slate-800 shadow-md lg:sticky lg:top-0 lg:z-40">
-            <div class="max-w-7xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-4">
-                    <div class="relative flex items-center">
-                        <div onclick="runSimulation(); showToast('💎 ジェムの魔力により、未来が再計算されました！')" class="relative bg-amber-500 text-slate-950 p-3 rounded-xl text-2xl shadow-inner font-black animate-pulse cursor-pointer hover:bg-amber-400 transition-colors flex items-center justify-center select-none" title="クリックしてシミュレーションを実行">
-                            💎
-                            <div class="hidden sm:flex absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-md whitespace-nowrap shadow-md items-center select-none animate-bounce z-50" style="animation-duration: 2s;">
-                                <span class="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-[4px] border-y-transparent border-l-[6px] border-l-amber-500"></span>
-                                開始！
-                            </div>
-                            <div class="sm:hidden absolute top-full mt-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-md whitespace-nowrap shadow-md flex items-center select-none animate-bounce z-50" style="animation-duration: 2s;">
-                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[4px] border-x-transparent border-b-[6px] border-b-amber-500"></span>
-                                開始！
-                            </div>
-                        </div>
+    <header class="bg-slate-900 text-white py-6 px-4 sm:px-8 border-b border-b-slate-800 shadow-md lg:sticky lg:top-0 lg:z-40">
+        <div class="max-w-7xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <!-- 試算実行ボタンと吹き出し：吹き出しをジェムの「左側」に変更 -->
+                <div class="relative flex items-center">
+                    <!-- 吹き出しバッジ：ジェムマークの左側に配置 (right-full mr-3) -->
+                    <div class="absolute right-full mr-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 text-[10px] font-black px-2 py-1 rounded-md whitespace-nowrap shadow-md flex items-center select-none animate-bounce" style="animation-duration: 2s;">
+                        試算実行！
+                        <!-- 吹き出しの三角（矢印）も左側に合わせて右向き(border-l)に変更 -->
+                        <span class="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-[4px] border-y-transparent border-l-[6px] border-l-amber-500"></span>
                     </div>
-                    <div class="ml-16 sm:ml-0">
-                        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center flex-wrap gap-2">
-                            <span class="blinking-light">💡</span>資産・ライフシミュレータ<span class="text-xs sm:text-sm text-amber-400 font-extrabold bg-amber-400/10 px-2.5 py-1 rounded border border-amber-500/20">（💀DIE WITH ZERO判定可能！）</span>
-                        </h1>
-                        <p class="text-slate-400 text-xs sm:text-sm mt-0.5 font-light">
-                            人生の軍略盤 — 日々の所得と生涯の生活費がリアルタイムに現金と連動する、あなただけの「人生の設計図」
-                        </p>
+                    <div onclick="runSimulation(); showToast('💎 ジェムの魔力により、未来が再計算されました！')" class="bg-amber-500 text-slate-950 p-3 rounded-xl text-2xl shadow-inner font-black animate-pulse cursor-pointer hover:bg-amber-400 transition-colors flex items-center justify-center select-none" title="クリックしてシミュレーションを実行">
+                        💎
                     </div>
                 </div>
-                
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/60 text-xs">
-                    <div class="flex items-center gap-1.5 relative">
-                        <span class="text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-user-tie text-amber-400 mr-1"></i>人物選択：</span>
-                        <div class="flex items-center bg-slate-900 rounded-lg border border-slate-700 overflow-hidden">
-                            <input type="text" id="scenario-input" value="準富裕層" oninput="handleUserTypeInput()" class="bg-transparent text-slate-100 px-3 py-1.5 font-bold focus:outline-none text-xs w-36">
-                            <select id="scenario-selector" onchange="handleScenarioSelect(this.value)" class="bg-slate-800 text-slate-400 border-l border-slate-700 focus:outline-none cursor-pointer py-1.5 text-xs px-1">
-                                <option value="custom">— 自由入力中 —</option>
-                                <option value="ultra_rich">超富裕層（5億円以上）</option>
-                                <option value="rich">富裕層（1億〜5億円）</option>
-                                <option value="sub_rich" selected>準富裕層（5000万〜1億円）</option>
-                                <option value="upper_mass">アッパーマス層（3000万〜5000万）</option>
-                                <option value="mass">マス層（3000万円未満）</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-1 border-t sm:border-t-0 sm:border-l border-slate-700 pt-2.5 sm:pt-0 sm:pl-3">
-                        <span class="text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-earth-asia text-blue-400 mr-1"></i>マクロ経済世界線：</span>
-                        
-                        <div class="relative group" tabindex="0">
-                            <button onclick="applyWorldLine('bright')" class="px-2.5 py-1.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition-colors border border-emerald-500/30 font-bold focus:outline-none">🚀 超高成長</button>
-                            <div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-950 text-slate-200 text-[10px] p-2.5 rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 group-hover:pointer-events-auto group-focus-within:pointer-events-auto transition-opacity duration-200 z-50 whitespace-nowrap border border-slate-800 text-left">
-                                <span class="font-bold text-emerald-400">🚀 超高成長（ハイパーインフレ・強気相場）</span><br>
-                                ・株式 / 投資信託: <span class="font-bold text-white">15.0%</span><br>
-                                ・貴金属 / 債券: <span class="font-bold text-white">5.0%</span><br>
-                                ・現金（普通預金等）: <span class="font-bold text-white">0.1%</span>
-                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[4px] border-x-transparent border-b-[6px] border-b-slate-950"></span>
-                            </div>
-                        </div>
-
-                        <div class="relative group" tabindex="0">
-                            <button onclick="applyWorldLine('mild_bull')" class="px-2.5 py-1.5 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 transition-colors border border-cyan-500/30 font-bold focus:outline-none">📈 安定上昇</button>
-                            <div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-950 text-slate-200 text-[10px] p-2.5 rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 group-hover:pointer-events-auto group-focus-within:pointer-events-auto transition-opacity duration-200 z-50 whitespace-nowrap border border-slate-800 text-left">
-                                <span class="font-bold text-cyan-400">📈 安定上昇（緩やかな成長・マイルドインフレ）</span><br>
-                                ・株式: <span class="font-bold text-white">10.0%</span> | 投資信託: <span class="font-bold text-white">8.0%</span><br>
-                                ・貴金属 / 債券: <span class="font-bold text-white">5.0%</span><br>
-                                ・現金（普通預金等）: <span class="font-bold text-white">0.1%</span>
-                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[4px] border-x-transparent border-b-[6px] border-b-slate-950"></span>
-                            </div>
-                        </div>
-
-                        <div class="relative group" tabindex="0">
-                            <button onclick="applyWorldLine('normal')" class="px-2.5 py-1.5 rounded bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition-colors border border-blue-500/30 font-bold focus:outline-none">🌱 巡航速度</button>
-                            <div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-950 text-slate-200 text-[10px] p-2.5 rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 group-hover:pointer-events-auto group-focus-within:pointer-events-auto transition-opacity duration-200 z-50 whitespace-nowrap border border-slate-800 text-left">
-                                <span class="font-bold text-blue-400">🌱 巡航速度（平時の現代日本・安定的成長）</span><br>
-                                ・株式: <span class="font-bold text-white">5.0%</span> | 投資信託: <span class="font-bold text-white">4.0%</span><br>
-                                ・貴金属 / 債券: <span class="font-bold text-white">4.0%</span><br>
-                                ・現金（普通預金等）: <span class="font-bold text-white">0.1%</span>
-                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[4px] border-x-transparent border-b-[6px] border-b-slate-950"></span>
-                            </div>
-                        </div>
-
-                        <div class="relative group" tabindex="0">
-                            <button onclick="applyWorldLine('dark')" class="px-2.5 py-1.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 transition-colors border border-rose-500/30 font-bold focus:outline-none">⛈️ 停滞下落</button>
-                            <div class="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-slate-950 text-slate-200 text-[10px] p-2.5 rounded-lg shadow-xl opacity-0 pointer-events-none group-hover:opacity-100 group-focus-within:opacity-100 group-hover:pointer-events-auto group-focus-within:pointer-events-auto transition-opacity duration-200 z-50 whitespace-nowrap border border-slate-800 text-left">
-                                <span class="font-bold text-rose-400">⛈️ 停滞下落（スタグフレーション・資産デフレ）</span><br>
-                                ・株式: <span class="font-bold text-white">4.0%</span> | 投資信託: <span class="font-bold text-white">1.0%</span><br>
-                                ・貴金属: <span class="font-bold text-white">3.0%</span> | 債券: <span class="font-bold text-white">4.0%</span><br>
-                                ・現金（普通預金等）: <span class="font-bold text-white">0.0%</span>
-                                <span class="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[4px] border-x-transparent border-b-[6px] border-b-slate-950"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 pb-32">
-            <!-- 左カラム: 各種設定スライダー群 -->
-            <section class="lg:col-span-5 flex flex-col gap-6 w-full min-w-0">
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-5">
-                    <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-amber-500"></i> 基本設定
-                    </h2>
-                    
-                    <div class="grid grid-cols-3 gap-3">
-                        <div>
-                            <label for="start-year" class="block text-[10px] font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">開始西暦</label>
-                            <div class="relative">
-                                <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs"><i class="fa-solid fa-calendar-days"></i></span>
-                                <input type="number" id="start-year" value="2026" oninput="runSimulation();" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="start-age" class="block text-[10px] font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">現在の年齢</label>
-                            <div class="relative">
-                                <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs"><i class="fa-solid fa-user-clock"></i></span>
-                                <input type="number" id="start-age" value="40" oninput="updateStageAges(); runSimulation();" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
-                            </div>
-                        </div>
-                        <div>
-                            <label for="years" class="block text-[10px] font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">シミュレーション終了年齢</label>
-                            <div class="relative">
-                                <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs"><i class="fa-solid fa-hourglass-half"></i></span>
-                                <input type="number" id="years" value="85" min="1" max="120" oninput="runSimulation();" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-slate-100 pt-3">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-                                <i class="fa-solid fa-briefcase text-emerald-500"></i> 给与所得
-                            </span>
-                            <span class="text-[10px] text-slate-400">毎年、現金口座に加算</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-slate-400 text-[10px] block mb-1">所得額 (万円/年)</label>
-                                <input type="number" id="salary-amount" value="800" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 p-2 font-bold text-slate-800 focus:outline-slate-500 text-xs">
-                            </div>
-                            <div>
-                                <label class="text-slate-400 text-[10px] block mb-1">受給期限 (年齢まで)</label>
-                                <input type="number" id="salary-limit" value="65" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 p-2 font-bold text-slate-800 focus:outline-slate-500 text-xs">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-slate-100 pt-3">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-bold text-purple-500 text-xs flex items-center gap-1.5">
-                                <i class="fa-solid fa-gift text-purple-500"></i> その他所得
-                            </span>
-                            <button type="button" onclick="addOtherIncomeRow()" class="px-2 py-0.5 bg-purple-50 text-purple-600 border border-purple-200 text-[10px] font-bold rounded hover:bg-purple-100 transition-colors">
-                                ＋ 追加
-                            </button>
-                        </div>
-                        <div id="other-income-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
-                    </div>
-
-                    <div class="border-t border-slate-100 pt-3">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-bold text-rose-700 text-xs flex items-center gap-1.5">
-                                <i class="fa-solid fa-circle-minus text-rose-500"></i> 💸 年間生活費（人生の出費）
-                            </span>
-                            <button type="button" onclick="addStageRow()" class="px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded hover:bg-rose-100 transition-colors">
-                                ＋ ステージ追加
-                            </button>
-                        </div>
-                        <div id="stage-container" class="flex flex-col gap-3 max-h-72 overflow-y-auto custom-scrollbar pr-1"></div>
-                    </div>
-
-                    <div class="border-t border-slate-100 pt-3">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-bold text-emerald-800 text-xs flex items-center gap-1.5">
-                                <i class="fa-solid fa-circle-check text-emerald-500"></i> 💰 臨時収入の計画
-                            </span>
-                            <button type="button" onclick="addIncomeRow()" class="px-2 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold rounded hover:bg-emerald-100 transition-colors">
-                                ＋ 追加
-                            </button>
-                        </div>
-                        <div id="income-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
-                    </div>
-
-                    <div class="border-t border-slate-100 pt-3">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-bold text-rose-800 text-xs flex items-center gap-1.5">
-                                <i class="fa-solid fa-circle-minus text-rose-500"></i> 💸 臨時出費の計画
-                            </span>
-                            <button type="button" onclick="addExpenseRow()" class="px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded hover:bg-rose-100 transition-colors">
-                                ＋ 追加
-                            </button>
-                        </div>
-                        <div id="expense-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
-                    </div>
-                </div>
-
-                <!-- 資産配分カード -->
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
-                    <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
-                        <span class="flex items-center gap-2">
-                            <i class="fa-solid fa-chart-pie text-emerald-500"></i> 資産の配分
-                        </span>
-                        <span class="text-xs font-normal text-slate-400">キャッシュフロー連動</span>
-                    </h2>
-
-                    <div class="border-l-4 border-slate-500 bg-slate-50 p-4 rounded-xl flex flex-col gap-3">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-slate-800 text-sm flex items-center gap-2">💵 現金口座（普通・タンス預金）</span>
-                            <span class="text-xs text-slate-500 font-medium">所得流入のハブ口座</span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 text-xs">
-                            <div>
-                                <label class="text-slate-400 block mb-1">初期資金 (万円)</label>
-                                <input type="number" id="init-cash" value="2500" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 bg-white p-2 font-bold text-slate-800 focus:outline-slate-500">
-                            </div>
-                            <div>
-                                <label class="text-slate-400 block mb-1">想定年利 (%)</label>
-                                <input type="number" id="rate-cash" value="0.1" step="0.1" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 bg-white p-2 font-bold text-slate-800 focus:outline-slate-500">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-slate-100 pt-4 flex flex-col gap-3">
-                        <span class="font-bold text-slate-700 text-xs">📈 個別投資アセット一覧</span>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-                            <button type="button" onclick="addDirectAsset('stocks')" class="px-2 py-1.5 bg-blue-50 text-blue-600 border border-blue-200 text-[10px] font-bold rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-1">📈 株式追加</button>
-                            <button type="button" onclick="addDirectAsset('trust')" class="px-2 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold rounded-lg hover:bg-emerald-100 transition-colors flex items-center justify-center gap-1">💼 投信追加</button>
-                            <button type="button" onclick="addDirectAsset('realestate')" class="px-2 py-1.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded-lg hover:bg-rose-100 transition-colors flex items-center justify-center gap-1">🏢 不動産追加</button>
-                            <button type="button" onclick="addDirectAsset('metal')" class="px-2 py-1.5 bg-amber-50 text-amber-600 border border-amber-200 text-[10px] font-bold rounded-lg hover:bg-amber-100 transition-colors flex items-center justify-center gap-1">👑 貴金属追加</button>
-                            <button type="button" onclick="addDirectAsset('bonds')" class="px-2 py-1.5 bg-purple-50 text-purple-600 border border-purple-200 text-[10px] font-bold rounded-lg hover:bg-purple-100 transition-colors flex items-center justify-center gap-1">📜 債券追加</button>
-                        </div>
-                        <div id="dynamic-assets-container" class="flex flex-col gap-4 mt-2"></div>
-                    </div>
-                </div>
-
-                <button onclick="runSimulation()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-calculator text-amber-400"></i> 各種設定で再試算を実行
-                </button>
-            </section>
-
-            <!-- 右カラム: グラフとテーブル -->
-            <section class="lg:col-span-7 flex flex-col gap-6 w-full min-w-0">
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
-                        <div>
-                            <h2 id="graph-title-element" class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                                <i class="fa-solid fa-chart-line text-blue-500"></i> 「準富裕層」の生涯キャッシュフロー
-                            </h2>
-                            <p class="text-slate-400 text-xs mt-0.5 flex flex-wrap items-center gap-2">
-                                <span>各プロット点にホバーすると資産割合(%)と額面（万円）が浮遊ポップアップします</span>
-                                <span id="cash-warning-badge" class="hidden px-2.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] animate-pulse">
-                                    ⚠️ 預金不足期間あり
-                                </span>
-                            </p>
-                        </div>
-                        
-                        <div class="flex flex-wrap items-center gap-2 self-stretch sm:self-auto w-full sm:w-auto">
-                            <button id="save-local-btn" onclick="saveToLocalStorage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
-                                <i class="fa-solid fa-floppy-disk"></i> 💾 設定を保存
-                            </button>
-                            <button id="clear-local-btn" onclick="clearLocalStorage()" class="px-4 py-2 bg-slate-500 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
-                                <i class="fa-solid fa-trash-can"></i> 🧹 初期化
-                            </button>
-                            <label for="csv-import-file" class="cursor-pointer px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
-                                <i class="fa-solid fa-file-import"></i> CSV読込
-                            </label>
-                            <input type="file" id="csv-import-file" accept=".csv" class="hidden" onchange="importCSV(event)">
-                            <button onclick="downloadCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
-                                <i class="fa-solid fa-file-csv"></i> CSV出力
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="relative w-full h-[380px] bg-slate-50/50 rounded-xl p-2 border border-slate-100">
-                        <canvas id="growthChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
-                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-table text-violet-500"></i> 年次データ明細
-                        </h2>
-                        <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium max-sm:hidden">所得は現金に流入・各積立は現金より期末支出</span>
-                    </div>
-
-                    <div class="table-container custom-scrollbar overflow-x-auto rounded-xl border border-slate-100 max-h-[480px]">
-                        <table id="resultTable" class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-900/90 text-white text-xs tracking-wider">
-                                    <th class="p-4 text-center font-bold sticky top-0 bg-slate-900 z-10 w-24">経過年</th>
-                                    <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">現金</th>
-                                    <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">不動産</th>
-                                    <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">株式</th>
-                                    <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">投資信託</th>
-                                    <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">貴金属</th>
-                                    <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">債券</th>
-                                    <th class="p-4 text-right font-bold bg-slate-950 sticky top-0 z-20 shadow-[-4px_0_10px_rgba(0,0,0,0.1)] w-36">総資産</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 text-xs font-medium"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <footer class="bg-slate-900 text-slate-500 text-xs py-6 px-4 text-center border-t border-slate-800 mt-auto">
-            <p>© 2026 投資運用のジェムキン (Gemkin FinTech Lab). 無断転載及びハルシネーションはお断り申し上げます。</p>
-        </footer>
-    </div>
-
-    <div id="dwz-view" class="hidden min-h-screen bg-slate-950 text-slate-100 flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden">
-        <!-- 黄金に煌めく背後のグラデーション効果 -->
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.08)_0%,transparent_60%)] pointer-events-none"></div>
-        
-        <div class="max-w-3xl w-full bg-slate-900/90 border-2 border-amber-500/30 rounded-3xl p-6 sm:p-10 shadow-[0_0_50px_rgba(245,158,11,0.15)] flex flex-col gap-6 relative z-10 animate-fade-in">
-            <div class="flex items-center justify-between border-b border-amber-500/20 pb-4">
-                <div class="flex items-center gap-3">
-                    <span class="text-3xl">💀</span>
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-amber-400">
-                            DIE WITH ZERO — 生涯資金・完全使い切り警告 —
-                        </h2>
-                        <p class="text-slate-400 text-xs uppercase tracking-widest mt-0.5">The Army Counselor's Ultimate Strategy</p>
-                    </div>
-                </div>
-                <button onclick="backToSimulator()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold border border-slate-700 transition-colors flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-left"></i> シミュレータに戻る
-                </button>
-            </div>
-
-            <!-- 警告表示エリア (ゆっくり現れるアニメーション演出) -->
-            <div class="bg-slate-950/60 rounded-2xl p-6 border border-amber-500/10 flex flex-col gap-5">
-                <p id="dwz-message-box" class="text-sm sm:text-base leading-relaxed text-slate-200">
-                    <!-- JavaScriptで動的生成 -->
-                </p>
-            </div>
-
-            <!-- アセットの割合可視化 -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-800">
-                    <span class="text-[10px] uppercase text-slate-500 font-bold block mb-2">逝去時の資産ポートフォリオ</span>
-                    <div id="dwz-breakdown-list" class="flex flex-col gap-2 text-xs">
-                        <!-- JSで動的に追加 -->
-                    </div>
-                </div>
-                <div class="bg-slate-950/40 p-4 rounded-xl border border-slate-800 flex flex-col justify-center items-center text-center">
-                    <span class="text-[10px] uppercase text-slate-400 font-bold block mb-1">人生の軍師からのアドバイス</span>
-                    <p id="dwz-advice-text" class="text-xs text-amber-300 italic max-w-xs mt-1 leading-relaxed">
-                        <!-- JSで動的に書き換え -->
+                <div class="ml-16 xl:ml-0">
+                    <!-- シミュレータ名称の変更：💡を先頭へ、そしてレインボー発光するように配置 -->
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-tight flex items-center flex-wrap gap-1">
+                        <span class="rainbow-bulb text-lg sm:text-xl px-0.5"><i class="fa-solid fa-lightbulb"></i></span>
+                        <span class="bg-gradient-to-r from-amber-400 via-yellow-200 to-emerald-400 bg-clip-text text-transparent">マイ・資産・ライフプランシミュレータ</span>
+                        <span class="bg-gradient-to-r from-amber-400 via-yellow-200 to-emerald-400 bg-clip-text text-transparent">（無双）</span>
+                    </h1>
+                    <!-- サブタイトル部分の直訳をわかりやすい綺麗な日本語に修正 -->
+                    <p class="text-slate-400 text-xs sm:text-sm mt-0.5 font-light">
+                        人生の軍略盤 — 日々の所得と生涯の生活費がリアルタイムに現金と連動する、あなただけの「人生の設計図」
                     </p>
                 </div>
             </div>
-
-            <div class="flex items-center justify-center pt-4">
-                <button onclick="backToSimulator()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-sm rounded-2xl shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-arrow-left"></i> 資産・ライフプランシミュレータに戻って軍略を練り直す
-                </button>
+            
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/60 text-xs">
+                <div class="flex items-center gap-1.5 relative">
+                    <span class="text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-user-tie text-amber-400 mr-1"></i>人物選択：</span>
+                    <div class="flex items-center bg-slate-900 rounded-lg border border-slate-700 overflow-hidden">
+                        <input type="text" id="scenario-input" value="一般サラリーマン" oninput="handleUserTypeInput()" class="bg-transparent text-slate-100 px-3 py-1.5 font-bold focus:outline-none text-xs w-36">
+                        <select id="scenario-selector" onchange="handleScenarioSelect(this.value)" class="bg-slate-800 text-slate-400 border-l border-slate-700 focus:outline-none cursor-pointer py-1.5 text-xs px-1">
+                            <option value="custom">— 自由入力中 —</option>
+                            <option value="rich_dad">金持ち父さん</option>
+                            <option value="poor_dad">貧乏父さん</option>
+                            <option value="salaryman" selected>一般サラリーマン</option>
+                            <option value="landlord">閃きの大家さん</option>
+                            <option value="children">未来ある子供達</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex items-center gap-1 border-t sm:border-t-0 sm:border-l border-slate-700 pt-2.5 sm:pt-0 sm:pl-3">
+                    <span class="text-slate-400 font-bold whitespace-nowrap"><i class="fa-solid fa-earth-asia text-blue-400 mr-1"></i>マクロ経済世界線：</span>
+                    <button onclick="applyWorldLine('bright')" class="px-2.5 py-1.5 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 transition-colors border border-emerald-500/30 font-bold" title="【超高成長（ハイパー・グロース）】&#10;・現金年利: 0.1%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 15.0%&#10;・投資信託年利: 15.0%&#10;・貴金属年利: 5.0%&#10;・安全債券年利: 5.0%">🚀 超高成長</button>
+                    <button onclick="applyWorldLine('mild_bull')" class="px-2.5 py-1.5 rounded bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 transition-colors border border-cyan-500/30 font-bold" title="【安定上昇（マイルド・ブル）】&#10;・現金年利: 0.1%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 10.0%&#10;・投資信託年利: 8.0%&#10;・貴金属年利: 5.0%&#10;・安全債券年利: 5.0%">📈 安定上昇</button>
+                    <button onclick="applyWorldLine('normal')" class="px-2.5 py-1.5 rounded bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 transition-colors border border-blue-500/30 font-bold" title="【巡航速度（ニュートラル）】&#10;・現金年利: 0.1%&#10;&#10;・個別株式年利: 5.0%&#10;・投資信託年利: 4.0%&#10;・貴金属年利: 4.0%&#10;・安全債券年利: 4.0%">🌱 巡航速度</button>
+                    <button onclick="applyWorldLine('dark')" class="px-2.5 py-1.5 rounded bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 transition-colors border border-rose-500/30 font-bold" title="【停滞・下落（ベア・マーケット）】&#10;・現金年利: 0.0%&#10;・不動産年利: 0.0%&#10;・個別株式年利: 4.0%&#10;・投資信託年利: 1.0%&#10;・貴金属年利: 3.0%&#10;・安全債券年利: 4.0%">⛈️ 停滞下落</button>
+                </div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- 💀 DIE WITH ZERO 判定起動ボタン（画面右の真ん中に再配置） -->
-    <div class="fixed top-1/2 -translate-y-1/2 right-4 z-[60]" style="transform: translate3d(0,-50%,0); will-change: transform;">
-        <button onclick="transitionToDwz()" class="pulse-dwz bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-slate-950 font-black px-4 py-3 sm:px-5 sm:py-4 rounded-2xl shadow-[0_10px_30px_rgba(245,158,11,0.4)] flex items-center gap-2 transition-all group focus:outline-none focus:ring-2 focus:ring-amber-400 text-xs sm:text-sm">
-            <span class="text-base sm:text-lg">💀</span>
-            <span class="text-[10px] sm:text-xs uppercase tracking-widest font-black">DIE WITH ZERO !</span>
-            <i class="fa-solid fa-chevron-right text-[10px] sm:text-xs group-hover:translate-x-1 transition-transform"></i>
-        </button>
-    </div>
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <section class="lg:col-span-5 flex flex-col gap-6 w-full min-w-0">
+            
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-5">
+                <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-amber-500"></i> 基本設定
+                </h2>
+                
+                <div class="grid grid-cols-3 gap-3">
+                    <div>
+                        <label for="start-year" class="block text-[10px] font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">開始西暦</label>
+                        <div class="relative">
+                            <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs"><i class="fa-solid fa-calendar-days"></i></span>
+                            <input type="number" id="start-year" value="2026" oninput="runSimulation();" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="start-age" class="block text-[10px] font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">現在の年齢</label>
+                        <div class="relative">
+                            <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs"><i class="fa-solid fa-user-clock"></i></span>
+                            <input type="number" id="start-age" value="30" oninput="updateStageAges(); runSimulation();" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="years" class="block text-[10px] font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">シミュレーション終了年齢</label>
+                        <div class="relative">
+                            <span class="absolute left-2.5 top-2.5 text-slate-400 text-xs"><i class="fa-solid fa-hourglass-half"></i></span>
+                            <input type="number" id="years" value="85" min="1" max="120" oninput="runSimulation();" class="pl-7 w-full rounded-xl border border-slate-200 p-2 text-slate-800 font-bold focus:ring-2 focus:ring-slate-900 focus:outline-none text-xs">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-briefcase text-emerald-500"></i> 給与所得
+                        </span>
+                        <span class="text-[10px] text-slate-400">毎年、現金口座に加算</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-slate-400 text-[10px] block mb-1">所得額 (万円/年)</label>
+                            <input type="number" id="salary-amount" value="550" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 p-2 font-bold text-slate-800 focus:outline-slate-500 text-xs">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 text-[10px] block mb-1">受給期限 (年齢まで)</label>
+                            <input type="number" id="salary-limit" value="65" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 p-2 font-bold text-slate-800 focus:outline-slate-500 text-xs">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-house-laptop text-blue-500"></i> 不動産所得設定
+                        </span>
+                        <button type="button" onclick="addREIncomeRow()" class="px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-200 text-[10px] font-bold rounded hover:bg-blue-100 transition-colors">
+                            ＋ 追加
+                        </button>
+                    </div>
+                    <div id="re-income-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-purple-500 text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-gift text-purple-500"></i> その他所得
+                        </span>
+                        <button type="button" onclick="addOtherIncomeRow()" class="px-2 py-0.5 bg-purple-50 text-purple-600 border border-purple-200 text-[10px] font-bold rounded hover:bg-purple-100 transition-colors">
+                            ＋ 追加
+                        </button>
+                    </div>
+                    <div id="other-income-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-rose-700 text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-minus text-rose-500"></i> 💸 年間生活費（人生の出費）
+                        </span>
+                        <button type="button" onclick="addStageRow()" class="px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded hover:bg-rose-100 transition-colors">
+                            ＋ ステージ追加
+                        </button>
+                    </div>
+                    <div id="stage-container" class="flex flex-col gap-3 max-h-72 overflow-y-auto custom-scrollbar pr-1"></div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-emerald-800 text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-emerald-500"></i> 💰 臨時収入の計画
+                        </span>
+                        <button type="button" onclick="addIncomeRow()" class="px-2 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold rounded hover:bg-emerald-100 transition-colors">
+                            ＋ 追加
+                        </button>
+                    </div>
+                    <div id="income-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-bold text-rose-800 text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-minus text-rose-500"></i> 💸 臨時出費の計画
+                        </span>
+                        <button type="button" onclick="addExpenseRow()" class="px-2 py-0.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded hover:bg-rose-100 transition-colors">
+                            ＋ 追加
+                        </button>
+                    </div>
+                    <div id="expense-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
+                <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
+                    <span class="flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-emerald-500"></i> 資産の配分
+                    </span>
+                    <span class="text-xs font-normal text-slate-400">キャッシュフロー連動</span>
+                </h2>
+
+                <div class="border-l-4 border-slate-500 bg-slate-50 p-4 rounded-xl flex flex-col gap-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-slate-800 text-sm flex items-center gap-2">💵 現金口座（普通・タンス預金）</span>
+                        <span class="text-xs text-slate-500 font-medium">所得流入のハブ口座</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <label class="text-slate-400 block mb-1">初期資金 (万円)</label>
+                            <input type="number" id="init-cash" value="200" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 bg-white p-2 font-bold text-slate-800 focus:outline-slate-500">
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block mb-1">想定年利 (%)</label>
+                            <input type="number" id="rate-cash" value="0.1" step="0.1" oninput="runSimulation();" class="w-full rounded-lg border border-slate-200 bg-white p-2 font-bold text-slate-800 focus:outline-slate-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-4 flex flex-col gap-3">
+                    <span class="font-bold text-slate-700 text-xs">📈 個別投資アセット一覧</span>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                        <button type="button" onclick="addDirectAsset('stocks')" class="px-2 py-1.5 bg-blue-50 text-blue-600 border border-blue-200 text-[10px] font-bold rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-center gap-1">📈 株式追加</button>
+                        <button type="button" onclick="addDirectAsset('trust')" class="px-2 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 text-[10px] font-bold rounded-lg hover:bg-emerald-100 transition-colors flex items-center justify-center gap-1">💼 投信追加</button>
+                        <button type="button" onclick="addDirectAsset('realestate')" class="px-2 py-1.5 bg-rose-50 text-rose-600 border border-rose-200 text-[10px] font-bold rounded-lg hover:bg-rose-100 transition-colors flex items-center justify-center gap-1">🏢 不動産追加</button>
+                        <button type="button" onclick="addDirectAsset('metal')" class="px-2 py-1.5 bg-amber-50 text-amber-600 border border-amber-200 text-[10px] font-bold rounded-lg hover:bg-amber-100 transition-colors flex items-center justify-center gap-1">👑 貴金属追加</button>
+                        <button type="button" onclick="addDirectAsset('bonds')" class="px-2 py-1.5 bg-purple-50 text-purple-600 border border-purple-200 text-[10px] font-bold rounded-lg hover:bg-purple-100 transition-colors flex items-center justify-center gap-1">📜 債券追加</button>
+                    </div>
+                    <div id="dynamic-assets-container" class="flex flex-col gap-4 mt-2"></div>
+                </div>
+            </div>
+
+            <button onclick="runSimulation()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-calculator text-amber-400"></i> 各種設定で再試算を実行
+            </button>
+        </section>
+
+        <section class="lg:col-span-7 flex flex-col gap-6 w-full min-w-0">
+            
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                    <div>
+                        <h2 id="graph-title-element" class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-blue-500"></i> 「一般サラリーマン」の生涯キャッシュフロー
+                        </h2>
+                        <p class="text-slate-400 text-xs mt-0.5 flex flex-wrap items-center gap-2">
+                            <span>各プロット点にホバーすると資産割合(%)と額面（万円）が浮遊ポップアップします</span>
+                            <span id="cash-warning-badge" class="hidden px-2.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] animate-pulse">
+                                ⚠️ 預金不足期間あり
+                            </span>
+                        </p>
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-2 self-stretch sm:self-auto w-full sm:w-auto">
+                        <button id="save-local-btn" onclick="saveToLocalStorage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
+                            <i class="fa-solid fa-floppy-disk"></i> 💾 設定を保存
+                        </button>
+                        <button id="clear-local-btn" onclick="clearLocalStorage()" class="px-4 py-2 bg-slate-500 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
+                            <i class="fa-solid fa-trash-can"></i> 🧹 初期化
+                        </button>
+                        <label for="csv-import-file" class="cursor-pointer px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
+                            <i class="fa-solid fa-file-import"></i> CSV読込
+                        </label>
+                        <input type="file" id="csv-import-file" accept=".csv" class="hidden" onchange="importCSV(event)">
+                        <button onclick="downloadCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
+                            <i class="fa-solid fa-file-csv"></i> CSV出力
+                        </button>
+                    </div>
+                </div>
+
+                <div class="relative w-full h-[380px] bg-slate-50/50 rounded-xl p-2 border border-slate-100">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-table text-violet-500"></i> 年次データ明細
+                    </h2>
+                    <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium max-sm:hidden">所得は現金に流入・各積立は現金より期末支出</span>
+                </div>
+
+                <div class="table-container custom-scrollbar overflow-x-auto rounded-xl border border-slate-100 max-h-[480px]">
+                    <table id="resultTable" class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/90 text-white text-xs tracking-wider">
+                                <th class="p-4 text-center font-bold sticky top-0 bg-slate-900 z-10 w-24">経過年</th>
+                                <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">現金</th>
+                                <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">不動産</th>
+                                <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">株式</th>
+                                <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">投資信託</th>
+                                <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">貴金属</th>
+                                <th class="p-4 text-right font-bold sticky top-0 bg-slate-900 z-10">債券</th>
+                                <th class="p-4 text-right font-bold bg-slate-950 sticky top-0 z-20 shadow-[-4px_0_10px_rgba(0,0,0,0.1)] w-36">総資産</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-xs font-medium"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-500 text-xs py-6 px-4 text-center border-t border-slate-800">
+        <p>© 2026 投資運用のジェムキン (Gemkin FinTech Lab). 無断転載及びハルシネーションはお断り申し上げます。</p>
+    </footer>
 
     <script>
         let chartInstance = null;
@@ -455,7 +358,6 @@
 
         const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
 
-        /* トースト表示処理 */
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const toastText = document.getElementById('toast-text');
@@ -476,9 +378,8 @@
             }, 3000);
         }
 
-        /* ライフステージ定義の年齢連動 */
         function updateStageAges() {
-            const startAge = parseInt(document.getElementById('start-age').value) || 40;
+            const startAge = parseInt(document.getElementById('start-age').value) || 30;
             const rows = document.querySelectorAll('.stage-row');
             let currentStart = startAge;
 
@@ -497,32 +398,59 @@
         }
 
         function updateStageTotal(inputEl) {
+            const row = inputEl.closest('.stage-row');
+            const tax = parseFloat(row.querySelector('.st-tax').value) || 0;
+            const monthly = parseFloat(row.querySelector('.st-monthly').value) || 0;
+            const personal = parseFloat(row.querySelector('.st-personal').value) || 0;
+            const extra = parseFloat(row.querySelector('.st-extra').value) || 0;
+            
+            const total = tax + (monthly * 12) + (personal * 12) + extra;
+            row.querySelector('.stage-amount').value = total;
+            
             updateStageAges();
             runSimulation();
         }
 
-        function addStageRow(amount=450, endAge=75) {
+        function addStageRow(tax=150, monthly=20, personal=0, extra=100, endAge=75) {
             const container = document.getElementById('stage-container');
             const div = document.createElement('div');
             div.className = 'stage-row bg-rose-50/10 p-3 rounded-xl border border-rose-100/40 flex flex-col gap-2 text-[11px]';
+            
+            const total = tax + (monthly * 12) + (personal * 12) + extra;
             
             div.innerHTML = `
                 <div class="flex items-center justify-between border-b border-slate-100 pb-1.5 font-bold text-slate-700">
                     <span class="stage-title text-rose-600"><i class="fa-solid fa-layer-group mr-1"></i>人生のステージ</span>
                     <div class="flex items-center gap-1">
-                        <input type="number" class="stage-start w-10 rounded bg-slate-100 border-none p-0.5 text-center text-slate-500 font-bold" readonly value="40">
+                        <input type="number" class="stage-start w-10 rounded bg-slate-100 border-none p-0.5 text-center text-slate-500 font-bold" readonly value="30">
                         <span class="text-slate-400 font-bold">～</span>
                         <input type="number" class="stage-end w-12 rounded border border-slate-200 p-0.5 text-center text-slate-800 font-bold" value="${endAge}" oninput="updateStageTotal(this);">
                         <span class="text-[10px] text-slate-400">歳</span>
                         <button type="button" onclick="this.parentElement.parentElement.parentElement.remove(); updateStageAges(); runSimulation();" class="text-rose-400 hover:text-rose-600 ml-1"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
-                <div class="flex items-center justify-between gap-2 text-[10px] pt-1">
-                    <span class="text-slate-500 font-semibold">支出（人生の出費）:</span>
-                    <div class="flex items-center gap-1">
-                        <input type="number" class="stage-amount w-24 rounded border border-rose-200 bg-white p-1 font-black text-rose-700 text-center" value="${amount}" oninput="runSimulation();">
-                        <span class="text-rose-700 font-bold">万円/年</span>
+                <div class="grid grid-cols-4 gap-1 text-[9px] text-slate-400">
+                    <div>
+                        <label class="block mb-0.5">税金/経費(年)</label>
+                        <input type="number" class="st-tax w-full rounded border border-slate-200 p-1 font-bold text-slate-800" value="${tax}" oninput="updateStageTotal(this);">
                     </div>
+                    <div>
+                        <label class="block mb-0.5">生活費(万/月)</label>
+                        <input type="number" class="st-monthly w-full rounded border border-slate-200 p-1 font-bold text-slate-800" value="${monthly}" oninput="updateStageTotal(this);">
+                    </div>
+                    <div>
+                        <label class="block mb-0.5">消費(万/月)</label>
+                        <input type="number" class="st-personal w-full rounded border border-slate-200 p-1 font-bold text-slate-800" value="${personal}" oninput="updateStageTotal(this);">
+                    </div>
+                    <div>
+                        <label class="block mb-0.5">臨時費(万/年)</label>
+                        <input type="number" class="st-extra w-full rounded border border-slate-200 p-1 font-bold text-slate-800" value="${extra}" oninput="updateStageTotal(this);">
+                    </div>
+                </div>
+                <div class="flex items-center justify-end gap-2 text-[10px] pt-1">
+                    <span class="text-slate-400 font-medium">期間内合計支出:</span>
+                    <input type="number" class="stage-amount w-20 rounded border border-rose-200 bg-rose-50/50 p-0.5 font-black text-rose-700 text-center focus:outline-none" value="${total}" readonly>
+                    <span class="text-rose-700 font-bold">万円/年</span>
                 </div>
             `;
             container.appendChild(div);
@@ -530,7 +458,35 @@
             runSimulation();
         }
 
-        function addOtherIncomeRow(name="年金", amount=180, start=65, end=110) {
+        function addREIncomeRow(name="新物件", amount=60, start=35, end=50) {
+            const container = document.getElementById('re-income-container');
+            const div = document.createElement('div');
+            div.className = 're-income-row grid grid-cols-12 gap-1 items-center bg-slate-50/50 p-1.5 rounded-lg border border-slate-100 text-[11px]';
+            div.innerHTML = `
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">不動産名称</span>
+                    <input type="text" class="re-name rounded border border-slate-200 p-1 font-semibold text-center" value="${name}">
+                </div>
+                <div class="col-span-3 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">所得額(万/年)</span>
+                    <input type="number" class="re-amount rounded border border-slate-200 p-1 font-bold text-center" value="${amount}">
+                </div>
+                <div class="col-span-2 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">設立年齢</span>
+                    <input type="number" class="re-start rounded border border-slate-200 p-1 font-bold text-center" value="${start}">
+                </div>
+                <span class="col-span-1 text-center text-slate-400 font-bold mt-4">～</span>
+                <div class="col-span-2 flex flex-col">
+                    <span class="text-slate-400 text-[9px] mb-0.5 pl-1">解体年齢</span>
+                    <input type="number" class="re-end rounded border border-slate-200 p-1 font-bold text-center" value="${end}">
+                </div>
+                <button type="button" onclick="this.parentElement.remove(); runSimulation();" class="col-span-1 text-rose-500 hover:text-rose-700 text-xs text-center mt-4"><i class="fa-solid fa-trash-can"></i></button>
+            `;
+            container.appendChild(div);
+            runSimulation();
+        }
+
+        function addOtherIncomeRow(name="年金", amount=18, start=60, end=110) {
             const container = document.getElementById('other-income-container');
             const div = document.createElement('div');
             div.className = 'other-income-row grid grid-cols-12 gap-1 items-center bg-slate-50/50 p-1.5 rounded-lg border border-slate-100 text-[11px]';
@@ -558,7 +514,7 @@
             runSimulation();
         }
 
-        function addIncomeRow(memo="退職金", age=65, amount=2000, target="trust") {
+        function addIncomeRow(memo="退職金", age=60, amount=2000, target="trust") {
             const container = document.getElementById('income-container');
             const div = document.createElement('div');
             div.className = 'income-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]';
@@ -592,7 +548,7 @@
             runSimulation();
         }
 
-        function addExpenseRow(memo="イベント出費", age=45, amount=300) {
+        function addExpenseRow(memo="イベント出費", age=40, amount=300) {
             const container = document.getElementById('expense-container');
             const div = document.createElement('div');
             div.className = 'expense-row grid grid-cols-12 gap-1.5 items-center bg-slate-50/50 p-2 rounded-lg border border-slate-100 text-[11px]';
@@ -618,76 +574,25 @@
         function drawTooltipPieChart(data) {
             const ctx = document.getElementById('tooltipPieChart').getContext('2d');
             const total = data.cash + data.realestate + data.stocks + data.trust + data.metal + data.bonds;
-            
-            const isMobile = window.innerWidth < 1024;
-            const totalCenterText = document.getElementById('tooltip-total-text').parentElement;
-            const chartContainer = document.getElementById('tooltipPieChart').parentElement;
-            
             if (tooltipPieChartInstance) { tooltipPieChartInstance.destroy(); }
-            
-            if (isMobile) {
-                chartContainer.className = "relative w-full h-12 flex items-center justify-between gap-2 border-b border-slate-800 pb-1.5";
-                totalCenterText.className = "flex flex-col items-end justify-center text-right shrink-0";
-                totalCenterText.style.position = 'static';
-                totalCenterText.style.transform = 'none';
-                totalCenterText.style.display = 'flex';
-                
-                ctx.canvas.style.maxWidth = '50%';
-                ctx.canvas.style.height = '16px';
-                
-                tooltipPieChartInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['資産比率'],
-                        datasets: [
-                            { label: '現金', data: [data.cash], backgroundColor: assetColors.cash, categoryPercentage: 1.0, barPercentage: 1.0 },
-                            { label: '不動産', data: [data.realestate], backgroundColor: assetColors.realestate, categoryPercentage: 1.0, barPercentage: 1.0 },
-                            { label: '株式', data: [data.stocks], backgroundColor: assetColors.stocks, categoryPercentage: 1.0, barPercentage: 1.0 },
-                            { label: '投資信託', data: [data.trust], backgroundColor: assetColors.trust, categoryPercentage: 1.0, barPercentage: 1.0 },
-                            { label: '貴金属', data: [data.metal], backgroundColor: assetColors.metal, categoryPercentage: 1.0, barPercentage: 1.0 },
-                            { label: '債券', data: [data.bonds], backgroundColor: assetColors.bonds, categoryPercentage: 1.0, barPercentage: 1.0 }
-                        ]
-                    },
-                    options: {
-                        indexAxis: 'y',
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false }, tooltip: { enabled: false } },
-                        scales: {
-                            x: { stacked: true, display: false, grid: { display: false } },
-                            y: { stacked: true, display: false, grid: { display: false } }
-                        }
-                    }
-                });
-            } else {
-                chartContainer.className = "relative w-full h-32 flex items-center justify-center";
-                totalCenterText.className = "absolute flex flex-col items-center justify-center text-center";
-                totalCenterText.style.position = '';
-                totalCenterText.style.transform = '';
-                totalCenterText.style.display = 'flex';
-                
-                ctx.canvas.style.maxWidth = '';
-                ctx.canvas.style.height = '';
-                
-                tooltipPieChartInstance = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['現金', '不動産', '株式', '投資信託', '貴金属', '債券'],
-                        datasets: [{
-                            data: [data.cash, data.realestate, data.stocks, data.trust, data.metal, data.bonds],
-                            backgroundColor: [assetColors.cash, assetColors.realestate, assetColors.stocks, assetColors.trust, assetColors.metal, assetColors.bonds],
-                            borderColor: 'rgba(15, 23, 42, 0.95)',
-                            borderWidth: 1.5
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        cutout: '72%',
-                        plugins: { legend: { display: false }, tooltip: { enabled: false } }
-                    }
-                });
-            }
+            tooltipPieChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['現金', '不動産', '株式', '投資信託', '貴金属', '債券'],
+                    datasets: [{
+                        data: [data.cash, data.realestate, data.stocks, data.trust, data.metal, data.bonds],
+                        backgroundColor: [assetColors.cash, assetColors.realestate, assetColors.stocks, assetColors.trust, assetColors.metal, assetColors.bonds],
+                        borderColor: 'rgba(15, 23, 42, 0.95)',
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '72%',
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                }
+            });
 
             document.getElementById('tooltip-total-text').textContent = formatAssetValue(total);
             const breakdownContainer = document.getElementById('tooltip-breakdown');
@@ -706,13 +611,13 @@
                 const value = data[asset.key];
                 const pct = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
                 const item = document.createElement('div');
-                item.className = 'flex items-center justify-between border-b border-slate-900/40 pb-0.5';
+                item.className = 'flex items-center justify-between border-b border-slate-900/40 pb-1';
                 item.innerHTML = `
-                    <div class="flex items-center gap-1 w-[45%]">
-                        <span class="w-1.5 h-1.5 rounded-full shrink-0" style="background-color: ${asset.color}"></span>
-                        <span class="text-slate-400 truncate text-[10px] max-sm:text-[9px] text-left">${asset.name}</span>
+                    <div class="flex items-center gap-1.5 w-1/2">
+                        <span class="w-2 h-2 rounded-full" style="background-color: ${asset.color}"></span>
+                        <span class="text-slate-400 truncate text-[10px] text-left">${asset.name}</span>
                     </div>
-                    <div class="flex justify-end w-[55%] text-right gap-1 font-mono text-[10px] max-sm:text-[9px]">
+                    <div class="flex justify-between w-1/2 text-right gap-1 font-mono">
                         <span class="text-slate-100 font-bold">${formatAssetValue(value)}</span>
                         <span class="text-amber-400">(${pct}%)</span>
                     </div>
@@ -752,15 +657,13 @@
 
             if (window.innerWidth < 1024) {
                 tooltipEl.style.position = 'fixed';
-                tooltipEl.style.left = '50%';
-                tooltipEl.style.transform = 'translateX(-50%)';
-                tooltipEl.style.right = 'auto';
-                tooltipEl.style.bottom = '8px';
+                tooltipEl.style.left = '16px';
+                tooltipEl.style.right = '16px';
+                tooltipEl.style.bottom = '16px';
                 tooltipEl.style.top = 'auto';
-                tooltipEl.style.width = '260px';
+                tooltipEl.style.width = 'calc(100% - 32px)';
             } else {
                 tooltipEl.style.position = 'absolute';
-                tooltipEl.style.transform = '';
                 tooltipEl.style.width = '20rem';
                 let targetLeft = positionX + context.tooltip.caretX + 20;
                 let targetTop = positionY + context.tooltip.caretY - 80;
@@ -930,236 +833,165 @@
             const selectEl = document.getElementById('scenario-selector');
             const selectedText = selectEl.options[selectEl.selectedIndex].text;
             document.getElementById('scenario-input').value = selectedText;
-            localStorage.setItem('gemkin_active_scenario', scenario);
             applyScenario(scenario);
         }
 
-        function loadFromLocalStorage(scenario) {
-            try {
-                const saved = localStorage.getItem('gemkin_unrivaled_config_' + scenario);
-                if (!saved) return false;
-                const state = JSON.parse(saved);
-                
-                document.getElementById('start-year').value = state.startYear;
-                document.getElementById('start-age').value = state.startAge;
-                document.getElementById('years').value = state.years;
-                document.getElementById('salary-amount').value = state.salaryAmount;
-                document.getElementById('salary-limit').value = state.salaryLimit;
-                document.getElementById('init-cash').value = state.initCash;
-                document.getElementById('rate-cash').value = state.rateCash;
-                
-                document.getElementById('other-income-container').innerHTML = state.otherIncomeHTML || '';
-                document.getElementById('stage-container').innerHTML = state.stageHTML || '';
-                document.getElementById('income-container').innerHTML = state.incomeHTML || '';
-                document.getElementById('expense-container').innerHTML = state.expenseHTML || '';
-                
-                const container = document.getElementById('dynamic-assets-container');
-                container.innerHTML = '';
-                if (state.assets && Array.isArray(state.assets)) {
-                    state.assets.forEach(asset => {
-                        addAssetElement(asset);
-                    });
-                }
-                
-                if (state.customName) {
-                    document.getElementById('scenario-input').value = state.customName;
-                    const titleEl = document.getElementById('graph-title-element');
-                    titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${state.customName}」の生涯キャッシュフロー`;
-                }
-                
-                localStorage.setItem('gemkin_active_scenario', scenario);
-                return true;
-            } catch(e) {
-                console.error("ロードに失敗しました:", e);
-                return false;
-            }
-        }
-
-        function saveToLocalStorage() {
-            try {
-                const currentScenario = document.getElementById('scenario-selector').value;
-                const customName = document.getElementById('scenario-input').value;
-                
-                const containers = ['other-income-container', 'stage-container', 'income-container', 'expense-container'];
-                containers.forEach(id => {
-                    const cont = document.getElementById(id);
-                    if (cont) {
-                        cont.querySelectorAll('input, select').forEach(el => {
-                            if (el.tagName === 'SELECT') {
-                                Array.from(el.options).forEach(opt => {
-                                    if (opt.value === el.value) opt.setAttribute('selected', 'selected');
-                                    else opt.removeAttribute('selected');
-                                });
-                            } else {
-                                el.setAttribute('value', el.value);
-                            }
-                        });
-                    }
-                });
-
-                const state = {
-                    customName: customName,
-                    startYear: document.getElementById('start-year').value,
-                    startAge: document.getElementById('start-age').value,
-                    years: document.getElementById('years').value,
-                    salaryAmount: document.getElementById('salary-amount').value,
-                    salaryLimit: document.getElementById('salary-limit').value,
-                    initCash: document.getElementById('init-cash').value,
-                    rateCash: document.getElementById('rate-cash').value,
-                    otherIncomeHTML: document.getElementById('other-income-container').innerHTML,
-                    stageHTML: document.getElementById('stage-container').innerHTML,
-                    incomeHTML: document.getElementById('income-container').innerHTML,
-                    expenseHTML: document.getElementById('expense-container').innerHTML,
-                    assets: Array.from(document.querySelectorAll('.asset-card')).map(card => ({
-                        name: card.querySelector('.asset-name-field').value,
-                        type: card.querySelector('.asset-type-field').value,
-                        initAmt: card.querySelector('.asset-init-field').value,
-                        rate: card.querySelector('.asset-rate-field').value,
-                        payout: card.querySelector('.asset-payout-field').value,
-                        yearAmt: card.querySelector('.asset-year-field')?.value || 0,
-                        monthAmt: card.querySelector('.asset-month-field')?.value || 0,
-                        startAge: card.querySelector('.asset-start-field').value,
-                        endAge: card.querySelector('.asset-end-field').value
-                    }))
-                };
-                localStorage.setItem('gemkin_unrivaled_config_' + currentScenario, JSON.stringify(state));
-                localStorage.setItem('gemkin_active_scenario', currentScenario);
-                showToast("💾 現在の入力数値を暗室（LocalStorage）に記録しました！");
-            } catch(e) { showToast("保存に失敗しました。", "error"); }
-        }
-
-        function clearLocalStorage() {
-            const currentScenario = document.getElementById('scenario-selector').value;
-            localStorage.removeItem('gemkin_unrivaled_config_' + currentScenario);
-            showToast("🧹 ブラウザの記憶を抹消。初期デフォルト値に戻します。");
-            if(currentScenario === 'custom') {
-                document.getElementById('scenario-selector').value = 'sub_rich';
-                handleScenarioSelect('sub_rich');
-            } else {
-                applyScenario(currentScenario);
-            }
-        }
-
         function applyScenario(scenario) {
+            const reContainer = document.getElementById('re-income-container');
             const otherContainer = document.getElementById('other-income-container');
             const stageContainer = document.getElementById('stage-container');
             const incContainer = document.getElementById('income-container');
             const expContainer = document.getElementById('expense-container');
             const assetContainer = document.getElementById('dynamic-assets-container');
 
+            reContainer.innerHTML = '';
             otherContainer.innerHTML = '';
             stageContainer.innerHTML = '';
             incContainer.innerHTML = '';
             expContainer.innerHTML = '';
             assetContainer.innerHTML = '';
 
-            const titleEl = document.getElementById('graph-title-element');
-            const currentName = document.getElementById('scenario-input').value || 'カスタム階層';
-            titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${currentName}」の生涯キャッシュフロー`;
-
-            if (loadFromLocalStorage(scenario)) {
-                runSimulation();
-                return;
+            // [1] ローカルストレージ（保存された設定）の読み込み判定
+            const saved = localStorage.getItem('gemkin_unrivaled_config_' + scenario);
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    document.getElementById('scenario-input').value = state.customName || '';
+                    document.getElementById('start-year').value = state.startYear;
+                    document.getElementById('start-age').value = state.startAge;
+                    document.getElementById('years').value = state.years;
+                    document.getElementById('salary-amount').value = state.salaryAmount;
+                    document.getElementById('salary-limit').value = state.salaryLimit;
+                    document.getElementById('init-cash').value = state.initCash;
+                    document.getElementById('rate-cash').value = state.rateCash;
+                    
+                    // 各コンテナのHTML構造をインジェクションして、入力状態を即時復元
+                    reContainer.innerHTML = state.reIncomeHTML || '';
+                    otherContainer.innerHTML = state.otherIncomeHTML || '';
+                    stageContainer.innerHTML = state.stageHTML || '';
+                    incContainer.innerHTML = state.incomeHTML || '';
+                    expContainer.innerHTML = state.expenseHTML || '';
+                    
+                    // 動的アセットを構造化データから完璧に再構成
+                    if (state.assets && Array.isArray(state.assets)) {
+                        state.assets.forEach(asset => {
+                            addAssetElement(asset);
+                        });
+                    }
+                    
+                    const titleEl = document.getElementById('graph-title-element');
+                    titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${state.customName || 'カスタム人物'}」の生涯キャッシュフロー`;
+                    
+                    updateStageAges();
+                    runSimulation();
+                    return; // 保存済み設定からの展開に成功したため、以下のハードコード規定値による上書き処理を回避
+                } catch (e) {
+                    console.error("保存設定の解析・展開に失敗しました。規定値で立ち上げます。", e);
+                }
             }
 
-            if (scenario === 'ultra_rich') {
-                document.getElementById('start-year').value = 2026;
-                document.getElementById('start-age').value = 50;
-                document.getElementById('years').value = 90;
-                document.getElementById('salary-amount').value = 3500;
-                document.getElementById('salary-limit').value = 65;
-                document.getElementById('init-cash').value = 15000;
-                document.getElementById('rate-cash').value = 0.2;
-                
-                addOtherIncomeRow("事業オーナー配当金", 2000, 50, 90);
-                addStageRow(3200, 70);   
-                addStageRow(2200, 90);  
-                addIncomeRow("海外不動産売却益", 65, 10000, "cash");
-                addExpenseRow("資産管理法人設立・海外移住費用", 55, 3000);
-                addExpenseRow("超高級有料シニアレジデンス前払入居金", 78, 12000);
-                
-                addAssetElement({ name: "米国プライベートエクイティ", type: "stocks", initAmt: 20000, rate: 8.0, yearAmt: 1000, monthAmt: 0, payout: "reinvest", startAge: 50, endAge: 85 });
-                addAssetElement({ name: "コアインデックス投信", type: "trust", initAmt: 15000, rate: 5.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 50, endAge: 90 });
-                addAssetElement({ name: "金インゴット(現物)", type: "metal", initAmt: 5000, rate: 4.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 50, endAge: 90 });
+            // 保存データがない場合のデフォルト展開（従前のロジック）
+            const titleEl = document.getElementById('graph-title-element');
+            const currentName = document.getElementById('scenario-input').value || 'カスタム人物';
+            titleEl.innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${currentName}」の生涯キャッシュフロー`;
 
-            } else if (scenario === 'rich') {
-                document.getElementById('start-year').value = 2026;
-                document.getElementById('start-age').value = 45;
-                document.getElementById('years').value = 85;
-                document.getElementById('salary-amount').value = 1800;
-                document.getElementById('salary-limit').value = 60;
-                document.getElementById('init-cash').value = 5000;
-                document.getElementById('rate-cash').value = 0.1;
-                
-                addOtherIncomeRow("未公開株配当等", 300, 45, 85);
-                addStageRow(1600, 65);
-                addStageRow(1100, 85);
-                addIncomeRow("役員退職慰労金", 60, 5000, "trust");
-                addExpenseRow("別荘購入費用", 50, 2000);
-                addExpenseRow("プライベートケア付き高級老人ホーム入居金", 75, 4500);
-                
-                addAssetElement({ name: "欧米高配当個別株", type: "stocks", initAmt: 6000, rate: 6.0, yearAmt: 200, monthAmt: 0, payout: "cashout", startAge: 45, endAge: 80 });
-                addAssetElement({ name: "世界分散ファンド", type: "trust", initAmt: 8000, rate: 4.5, yearAmt: 300, monthAmt: 0, payout: "reinvest", startAge: 45, endAge: 85 });
-
-            } else if (scenario === 'sub_rich') {
-                document.getElementById('start-year').value = 2026;
-                document.getElementById('start-age').value = 40;
-                document.getElementById('years').value = 85;
-                document.getElementById('salary-amount').value = 1000;
-                document.getElementById('salary-limit').value = 65;
-                document.getElementById('init-cash').value = 2500;
-                document.getElementById('rate-cash').value = 0.1;
-                
-                addOtherIncomeRow("厚生・国民年金", 220, 65, 85);
-                addStageRow(800, 65);  
-                addStageRow(580, 85);   
-                addIncomeRow("大企業定年退職金", 65, 2000, "trust");
-                addExpenseRow("住宅ローン一括繰上返済", 50, 1500);
-                addExpenseRow("ケア付き有料シニアホーム保証前払金", 78, 2000);
-                
-                addAssetElement({ name: "企業型持株会優良株", type: "stocks", initAmt: 1000, rate: 4.5, yearAmt: 50, monthAmt: 0, payout: "reinvest", startAge: 40, endAge: 65 });
-                addAssetElement({ name: "優良インデックス投信", type: "trust", initAmt: 3500, rate: 4.0, yearAmt: 120, monthAmt: 0, payout: "reinvest", startAge: 40, endAge: 85 });
-
-            } else if (scenario === 'upper_mass') {
+            if (scenario === 'landlord') {
                 document.getElementById('start-year').value = 2026;
                 document.getElementById('start-age').value = 35;
-                document.getElementById('years').value = 85;
-                document.getElementById('salary-amount').value = 700;
+                document.getElementById('years').value = 110;
+                document.getElementById('salary-amount').value = 800;
                 document.getElementById('salary-limit').value = 60;
-                document.getElementById('init-cash').value = 1500;
+                addREIncomeRow("メゾンA", 400, 35, 65);
+                addREIncomeRow("メゾンB", 0, 63, 95);
+                addOtherIncomeRow("年金", 216, 60, 110);
+                addStageRow(360, 20, 15, 200, 65);   
+                addStageRow(400, 30, 25, 340, 80);   
+                addStageRow(200, 15, 10, 100, 110);  
+                addIncomeRow("退職金", 60, 2000, "trust");
+                addExpenseRow("メゾンB建築", 60, 10000);
+                document.getElementById('init-cash').value = 1750;
+                document.getElementById('rate-cash').value = 0.0;
+                addAssetElement({ name: "オルカン,S&P500", type: "trust", initAmt: 7500, rate: 4.5, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 50, endAge: 110 });
+                addAssetElement({ name: "実家", type: "realestate", initAmt: 0, rate: 0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 0, endAge: 95 });
+                addAssetElement({ name: "新居", type: "realestate", initAmt: 0, rate: 0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 39, endAge: 95 });
+                addAssetElement({ name: "プラチナ,銀", type: "metal", initAmt: 200, rate: 2.5, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 53, endAge: 110 });
+                addAssetElement({ name: "安全国債", type: "bonds", initAmt: 4500, rate: 4.0, yearAmt: 0, monthAmt: 0, payout: "cashout", startAge: 41, endAge: 110 });
+
+            } else if (scenario === 'rich_dad') {
+                document.getElementById('start-year').value = 2026;
+                document.getElementById('start-age').value = 45;
+                document.getElementById('years').value = 90;
+                document.getElementById('salary-amount').value = 2500;
+                document.getElementById('salary-limit').value = 65;
+                
+                addREIncomeRow("商業ビルオーナー権", 1500, 45, 80);
+                addOtherIncomeRow("未公開株配当金", 300, 50, 90);
+                
+                addStageRow(800, 50, 30, 600, 65);
+                addStageRow(500, 30, 10, 300, 90);
+                
+                addIncomeRow("事業売却益（M&A）", 55, 8000, "trust");
+                addExpenseRow("プライベートジェット/慈善財団組成", 60, 5000);
+                
+                document.getElementById('init-cash').value = 5000;
+                document.getElementById('rate-cash').value = 0.2;
+                addAssetElement({ name: "米国優良個別株", type: "stocks", initAmt: 8000, rate: 8.5, yearAmt: 500, monthAmt: 0, payout: "reinvest", startAge: 45, endAge: 80 });
+                addAssetElement({ name: "海外ヘッジファンド", type: "trust", initAmt: 12000, rate: 6.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 45, endAge: 90 });
+                addAssetElement({ name: "実物インゴット（金）", type: "metal", initAmt: 3000, rate: 4.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 45, endAge: 90 });
+
+            } else if (scenario === 'poor_dad') {
+                document.getElementById('start-year').value = 2026;
+                document.getElementById('start-age').value = 50;
+                document.getElementById('years').value = 80;
+                document.getElementById('salary-amount').value = 380;
+                document.getElementById('salary-limit').value = 60;
+                
+                addStageRow(80, 20, 5, 50, 65);
+                addStageRow(40, 15, 0, 30, 80);
+                
+                addIncomeRow("微々たる満期共済金", 65, 100, "cash");
+                addExpenseRow("子供の結婚援助/車の買い替え", 55, 300);
+                
+                document.getElementById('init-cash').value = 80;
+                document.getElementById('rate-cash').value = 0.01;
+                addAssetElement({ name: "低利回りの定期預金", type: "trust", initAmt: 50, rate: 0.3, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 50, endAge: 80 });
+
+            } else if (scenario === 'children') {
+                document.getElementById('start-year').value = 2026;
+                document.getElementById('start-age').value = 10;
+                document.getElementById('years').value = 100;
+                document.getElementById('salary-amount').value = 0;
+                document.getElementById('salary-limit').value = 65;
+                
+                addStageRow(30, 12, 5, 50, 30);
+                addStageRow(100, 25, 10, 150, 65);
+                addStageRow(60, 15, 0, 80, 100);
+                
+                addIncomeRow("祖父母からの相続/生前贈与", 30, 500, "trust");
+                addExpenseRow("結婚式頭金/マイホーム頭金", 32, 700);
+                
+                document.getElementById('init-cash').value = 1000;
                 document.getElementById('rate-cash').value = 0.1;
-                
-                addOtherIncomeRow("基礎・厚生年金", 180, 65, 85);
-                addStageRow(550, 60);
-                addStageRow(420, 85);
-                addIncomeRow("中小企業退職金", 60, 1000, "cash");
-                addExpenseRow("子供の大学進学学費", 45, 400);
-                addExpenseRow("シニア世代向け自宅リフォーム・介護改修費用", 72, 800);
-                
-                addAssetElement({ name: "つみたて新NISA(オルカン)", type: "trust", initAmt: 2000, rate: 4.0, yearAmt: 0, monthAmt: 10, startAge: 35, endAge: 85 });
+                addAssetElement({ name: "世界分散インデックス株", type: "trust", initAmt: 100, rate: 5.5, yearAmt: 60, monthAmt: 5, payout: "reinvest", startAge: 18, endAge: 100 });
 
             } else {
                 document.getElementById('start-year').value = 2026;
                 document.getElementById('start-age').value = 30;
                 document.getElementById('years').value = 85;
-                document.getElementById('salary-amount').value = 500;
+                document.getElementById('salary-amount').value = 550;
                 document.getElementById('salary-limit').value = 65;
-                document.getElementById('init-cash').value = 600;
-                document.getElementById('rate-cash').value = 0.05;
-                
-                addOtherIncomeRow("老齢基礎年金", 130, 65, 85);
-                addStageRow(420, 65);
-                addStageRow(320, 85);
-                addIncomeRow("小規模退職一時金", 65, 500, "cash");
-                addExpenseRow("自動車買い替え費用", 40, 250);
-                addExpenseRow("後期高齢期バリアフリー改修・介護補助費用", 75, 400);
-                
-                addAssetElement({ name: "初期積立投資信託", type: "trust", initAmt: 400, rate: 3.5, yearAmt: 0, monthAmt: 3, startAge: 30, endAge: 85 });
+                addStageRow(150, 20, 0, 100, 75);  
+                addStageRow(100, 15, 0, 70, 85);   
+                addIncomeRow("退職金", 65, 1500, "trust");
+                addExpenseRow("マイホーム頭金", 35, 800);
+                document.getElementById('init-cash').value = 200;
+                document.getElementById('rate-cash').value = 0.1;
+                addAssetElement({ name: "企業型持株会", type: "stocks", initAmt: 50, rate: 5.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 30, endAge: 65 });
+                addAssetElement({ name: "つみたて投信", type: "trust", initAmt: 150, rate: 4.0, yearAmt: 0, monthAmt: 0, payout: "reinvest", startAge: 30, endAge: 85 });
             }
             runSimulation();
         }
 
-        /* 万円・億の円表記フォーマッタ */
         function formatAssetValue(valInYen) {
             const valInWan = Math.round(valInYen / 10000);
             const absWan = Math.abs(valInWan);
@@ -1213,6 +1045,17 @@
 
             const salaryAmount = (parseFloat(document.getElementById('salary-amount').value) || 0) * 10000;
             const salaryLimitAge = parseInt(document.getElementById('salary-limit').value) || 65;
+
+            let reIncomes = [];
+            document.querySelectorAll('.re-income-row').forEach(row => {
+                const amtEl = row.querySelector('.re-amount');
+                if(!amtEl) return;
+                reIncomes.push({
+                    amount: (parseFloat(amtEl.value) || 0) * 10000,
+                    start: parseInt(row.querySelector('.re-start').value) || 0,
+                    end: parseInt(row.querySelector('.re-end').value) || 0
+                });
+            });
 
             let otherIncomes = [];
             document.querySelectorAll('.other-income-row').forEach(row => {
@@ -1298,6 +1141,7 @@
 
                 let collectedIncomes = payoutIncomes;
                 if (currentAge <= salaryLimitAge) collectedIncomes += salaryAmount;
+                reIncomes.forEach(re => { if (currentAge >= re.start && currentAge <= re.end) collectedIncomes += re.amount; });
                 otherIncomes.forEach(ot => { if (currentAge >= ot.start && currentAge <= ot.end) collectedIncomes += ot.amount; });
                 currentCashVal += collectedIncomes;
 
@@ -1396,150 +1240,87 @@
             });
         }
 
-        function transitionToDwz() {
-            const tooltipEl = document.getElementById('chart-tooltip');
-            if (tooltipEl) {
-                tooltipEl.style.opacity = '0';
-                tooltipEl.style.pointerEvents = 'none';
-            }
-
-            runSimulation();
-            
-            if (!lastSimulationData || lastSimulationData.length === 0) {
-                showToast("有効なシミュレーションデータがありません。", "error");
-                return;
-            }
-
-            const currentAge = parseInt(document.getElementById('start-age').value) || 40;
-            const endAge = parseInt(document.getElementById('years').value) || 85;
-            const yearsRemaining = Math.max(endAge - currentAge, 1);
-
-            const finalRecord = lastSimulationData[lastSimulationData.length - 1];
-            const totalRemainingYen = finalRecord.total; 
-
-            const msgBox = document.getElementById('dwz-message-box');
-            const adviceBox = document.getElementById('dwz-advice-text');
-            
-            const breakdownList = document.getElementById('dwz-breakdown-list');
-            breakdownList.innerHTML = '';
-            
-            const listItems = [
-                { name: '現金', val: finalRecord.cash, color: 'bg-slate-500' },
-                { name: '不動産', val: finalRecord.realestate, color: 'bg-rose-500' },
-                { name: '株式', val: finalRecord.stocks, color: 'bg-blue-500' },
-                { name: '投資信託', val: finalRecord.trust, color: 'bg-emerald-500' },
-                { name: '貴金属', val: finalRecord.metal, color: 'bg-amber-500' },
-                { name: '債券', val: finalRecord.bonds, color: 'bg-purple-500' }
-            ];
-
-            listItems.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'flex items-center justify-between pb-1 border-b border-slate-800';
-                div.innerHTML = `
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full ${item.color}"></span>
-                        <span class="text-slate-400">${item.name}</span>
-                    </div>
-                    <span class="font-mono text-slate-100 font-bold">${formatAssetValue(item.val)}</span>
-                `;
-                breakdownList.appendChild(div);
+        // HTML要素の値がinnerHTMLシリアライズ時に消滅するのを防止するためのヘルパー関数
+        function updateDOMAttributes(container) {
+            if (!container) return;
+            // 全input要素の現在のDOM上の値をHTML属性「value」に直接書き戻す
+            container.querySelectorAll('input').forEach(input => {
+                input.setAttribute('value', input.value);
             });
-
-            // ⚠️ [4] 現金ショートの有無およびショート年齢の判定
-            let cashShortageAge = null;
-            for (let i = 0; i < lastSimulationData.length; i++) {
-                if (lastSimulationData[i].cash < 0) {
-                    const ageMatch = lastSimulationData[i].yearLabel.match(/⚖️(\d+)歳/);
-                    if (ageMatch) {
-                        cashShortageAge = parseInt(ageMatch[1]);
+            // 全select要素のアクティブ選択肢をHTML属性「selected」に同期する
+            container.querySelectorAll('select').forEach(select => {
+                select.querySelectorAll('option').forEach(opt => {
+                    if (opt.value === select.value) {
+                        opt.setAttribute('selected', 'selected');
                     } else {
-                        cashShortageAge = currentAge + lastSimulationData[i].index;
+                        opt.removeAttribute('selected');
                     }
-                    break;
-                }
-            }
-
-            let advicePrefixHtml = '';
-            let dwzDisclaimer = '';
-
-            if (cashShortageAge !== null) {
-                advicePrefixHtml = `
-                    <div class="bg-rose-950/80 border border-rose-500/40 rounded-xl p-4 mb-4 text-rose-200 font-bold text-xs sm:text-sm flex items-start gap-2">
-                        <span class="text-rose-400 text-lg mt-0.5">⚠️</span>
-                        <span>・このままでは、${cashShortageAge}歳で現金がショートして生活が成り立ちません。現金がショートする前に他の資産を売却するなどの策を講じた方がよいと思われます。</span>
-                    </div>
-                `;
-                dwzDisclaimer = '（仮に、現金がショートしたまま続けた場合ですが、）';
-            }
-
-            if (totalRemainingYen < 0) {
-                let bankruptAge = endAge;
-                for (let i = 0; i < lastSimulationData.length; i++) {
-                    if (lastSimulationData[i].total < 0) {
-                        bankruptAge = currentAge + lastSimulationData[i].index;
-                        break;
-                    }
-                }
-
-                const deficitAmt = Math.abs(totalRemainingYen);
-                const reduceSpendPerYear = Math.round(deficitAmt / yearsRemaining);
-                const reduceSpendPerMonth = Math.round(reduceSpendPerYear / 12);
-
-                const deficitText = formatAssetValue(deficitAmt);
-                const reduceYearText = formatAssetValue(reduceSpendPerYear);
-                const reduceMonthText = formatAssetValue(reduceSpendPerMonth);
-
-                msgBox.innerHTML = `
-                    ${advicePrefixHtml}
-                    ${dwzDisclaimer}現在の算盤では、あなたの資産は逝去される前の <span class="text-rose-400 font-black text-lg">${bankruptAge}歳</span> の時点で【0円】となり、枯渇（破綻）する恐れがございます。<br><br>
-                    最終的にシミュレーション終了年齢（<span class="text-amber-400 font-black">${endAge}歳</span>）に達した時点では、合計で <span class="text-rose-400 font-black text-lg border-b border-dashed border-rose-400">約${deficitText}</span> が【不足】する計算となります。<br><br>
-                    この枯渇を防ぎ、人生の最後を資金ゼロで完走する（Die With Zero）ためには、残された <span class="text-amber-400 font-extrabold">${yearsRemaining}年間</span>、年間支出を<br>
-                    <span class="text-yellow-400 font-black text-2xl px-1.5 py-0.5 bg-yellow-400/10 rounded-lg shadow-inner">${reduceYearText}／年</span> 
-                    （すなわち、月々約 <span class="text-yellow-400 font-black text-xl px-1 bg-yellow-400/10 rounded">${reduceMonthText}／月</span>）
-                    【減らさなければ】なりません。
-                `;
-
-                if (adviceBox) {
-                    adviceBox.innerHTML = `「兵糧が最期を前に尽きるは軍師として痛恨 of 痛恨（※）。生活のステージ支出や高齢期の臨時コストを削減するか、年利運用を向上させる防御陣を今すぐ敷かれよ。」`;
-                }
-            } else {
-                const additionalSpendPerYear = Math.round(totalRemainingYen / yearsRemaining);
-                const additionalSpendPerMonth = Math.round(additionalSpendPerYear / 12);
-
-                const totalText = formatAssetValue(totalRemainingYen);
-                const yearText = formatAssetValue(additionalSpendPerYear);
-                const monthText = formatAssetValue(additionalSpendPerMonth);
-
-                // 📝 [2] 「現在の予定では」から「現在の推定では」に変更、および [4] 免責記述の挿入
-                msgBox.innerHTML = `
-                    ${advicePrefixHtml}
-                    ${dwzDisclaimer}現在の推定では、あなたが亡くなるとき（＝シミュレーション終了年齢 <span class="text-amber-400 font-black">${endAge}歳</span>）に、
-                    <span class="text-rose-400 font-black text-lg border-b border-dashed border-rose-400">${totalText}</span> を遺すことになります。<br><br>
-                    富を抱えたまま人生の最期を迎える「無駄」を完全に排除し、<span class="text-amber-400 font-extrabold">ダイ・ウィズ・ゼロ（Die With Zero）</span>を果たすためには、
-                    残された <span class="text-amber-400 font-extrabold">${yearsRemaining}年間</span>、今よりも、<br>
-                    <span class="text-yellow-400 font-black text-2xl px-1.5 py-0.5 bg-yellow-400/10 rounded-lg shadow-inner">${yearText}／年</span> 
-                    （すなわち <span class="text-yellow-400 font-black text-xl px-1 bg-yellow-400/10 rounded">${monthText}／月</span>）
-                    【多く】使わなければなりません。
-                `;
-
-                // 📝 [3] 「軍師の恥辱」から「人生の恥辱」に変更
-                if (adviceBox) {
-                    adviceBox.innerHTML = `「富を抱いたまま墓場へ入るは人生の恥辱。若き日に経験という名の投資へ配分を移し、人生の効用を極大化させよ。」`;
-                }
-            }
-
-            document.getElementById('simulator-view').classList.add('hidden');
-            document.getElementById('dwz-view').classList.remove('hidden');
-            document.getElementById('dwz-view').classList.add('flex');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            showToast("💀 ダイ・ウィズ・ゼロ極限軍略診断を展開しました。");
+                });
+            });
         }
 
-        function backToSimulator() {
-            document.getElementById('dwz-view').classList.remove('flex');
-            document.getElementById('dwz-view').classList.add('hidden');
-            document.getElementById('simulator-view').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function saveToLocalStorage() {
+            try {
+                const currentScenario = document.getElementById('scenario-selector').value;
+                const customName = document.getElementById('scenario-input').value;
+                
+                const reContainer = document.getElementById('re-income-container');
+                const otherContainer = document.getElementById('other-income-container');
+                const stageContainer = document.getElementById('stage-container');
+                const incContainer = document.getElementById('income-container');
+                const expContainer = document.getElementById('expense-container');
+
+                // innerHTMLを取得する前に、現在の入力値をDOM要素の「属性」として強制的に埋め込む
+                updateDOMAttributes(reContainer);
+                updateDOMAttributes(otherContainer);
+                updateDOMAttributes(stageContainer);
+                updateDOMAttributes(incContainer);
+                updateDOMAttributes(expContainer);
+
+                const state = {
+                    customName: customName,
+                    startYear: document.getElementById('start-year').value,
+                    startAge: document.getElementById('start-age').value,
+                    years: document.getElementById('years').value,
+                    salaryAmount: document.getElementById('salary-amount').value,
+                    salaryLimit: document.getElementById('salary-limit').value,
+                    initCash: document.getElementById('init-cash').value,
+                    rateCash: document.getElementById('rate-cash').value,
+                    reIncomeHTML: reContainer.innerHTML,
+                    otherIncomeHTML: otherContainer.innerHTML,
+                    stageHTML: stageContainer.innerHTML,
+                    incomeHTML: incContainer.innerHTML,
+                    expenseHTML: expContainer.innerHTML,
+                    assets: Array.from(document.querySelectorAll('.asset-card')).map(card => ({
+                        name: card.querySelector('.asset-name-field').value,
+                        type: card.querySelector('.asset-type-field').value,
+                        initAmt: card.querySelector('.asset-init-field').value,
+                        rate: card.querySelector('.asset-rate-field').value,
+                        payout: card.querySelector('.asset-payout-field').value,
+                        yearAmt: card.querySelector('.asset-year-field')?.value || 0,
+                        monthAmt: card.querySelector('.asset-month-field')?.value || 0,
+                        startAge: card.querySelector('.asset-start-field').value,
+                        endAge: card.querySelector('.asset-end-field').value
+                    }))
+                };
+                localStorage.setItem('gemkin_unrivaled_config_' + currentScenario, JSON.stringify(state));
+                showToast("💾 現在の入力数値をブラウザ内部の暗室（LocalStorage）に記録しました！");
+            } catch(e) { 
+                console.error(e);
+                showToast("保存に失敗しました。", "error"); 
+            }
+        }
+
+        function clearLocalStorage() {
+            const currentScenario = document.getElementById('scenario-selector').value;
+            localStorage.removeItem('gemkin_unrivaled_config_' + currentScenario);
+            showToast("🧹 ブラウザの記憶を抹消しました。初期コードのデフォルト値に戻します。");
+            if(currentScenario === 'custom') {
+                document.getElementById('scenario-selector').value = 'salaryman';
+                handleScenarioSelect('salaryman');
+            } else {
+                applyScenario(currentScenario);
+            }
         }
 
         function importCSV(event) {
@@ -1585,11 +1366,31 @@
             link.click();
         }
 
-        window.onload = function() { 
-            const lastScenario = localStorage.getItem('gemkin_active_scenario') || 'sub_rich';
-            document.getElementById('scenario-selector').value = lastScenario;
-            applyScenario(lastScenario);
-        }
+        // [2] グラフエリア（canvas）以外、およびツールチップそれ自体以外をタップ/クリックされた場合に、チップ表示を解除するイベントリスナー
+        document.addEventListener('click', function(event) {
+            const chartCanvas = document.getElementById('growthChart');
+            const tooltipEl = document.getElementById('chart-tooltip');
+            if (chartCanvas && tooltipEl) {
+                // タップされた対象がグラフ(Canvas)でもポップアップ本体でもない場合、即座に隠蔽する
+                if (!chartCanvas.contains(event.target) && !tooltipEl.contains(event.target)) {
+                    tooltipEl.style.opacity = '0';
+                    tooltipEl.style.pointerEvents = 'none';
+                }
+            }
+        });
+        
+        document.addEventListener('touchstart', function(event) {
+            const chartCanvas = document.getElementById('growthChart');
+            const tooltipEl = document.getElementById('chart-tooltip');
+            if (chartCanvas && tooltipEl) {
+                if (!chartCanvas.contains(event.target) && !tooltipEl.contains(event.target)) {
+                    tooltipEl.style.opacity = '0';
+                    tooltipEl.style.pointerEvents = 'none';
+                }
+            }
+        }, { passive: true });
+
+        window.onload = function() { applyScenario('salaryman'); }
     </script>
 </body>
 </html>
