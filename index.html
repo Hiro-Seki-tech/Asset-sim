@@ -62,18 +62,64 @@
     <header class="bg-slate-900 text-white py-6 px-4 sm:px-8 border-b border-b-slate-800 shadow-md lg:sticky lg:top-0 lg:z-40">
         <div class="max-w-7xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-4">
-                <!-- 試算実行ボタンと吹き出し：吹き出しをジェムの「左側」に変更 -->
-                <div class="relative flex items-center">
-                    <!-- 吹き出しバッジ：ジェムマークの左側に配置 (right-full mr-3) -->
-                    <div class="absolute right-full mr-3 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 text-[10px] font-black px-2 py-1 rounded-md whitespace-nowrap shadow-md flex items-center select-none animate-bounce" style="animation-duration: 2s;">
-                        試算実行！
-                        <!-- 吹き出しの三角（矢印）も左側に合わせて右向き(border-l)に変更 -->
-                        <span class="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-[4px] border-y-transparent border-l-[6px] border-l-amber-500"></span>
-                    </div>
-                    <div onclick="runSimulation(); showToast('💎 ジェムの魔力により、未来が再計算されました！')" class="bg-amber-500 text-slate-950 p-3 rounded-xl text-2xl shadow-inner font-black animate-pulse cursor-pointer hover:bg-amber-400 transition-colors flex items-center justify-center select-none" title="クリックしてシミュレーションを実行">
-                        💎
-                    </div>
-                </div>
+
+
+<!-- 試算実行ボタンと吹き出し：極上の虹色発光コアバースト電球仕様 -->
+<div class="relative flex items-center">
+    <!-- 吹き出しバッジ：ジェムマークの左側に配置 (right-full mr-3) -->
+    <div class="absolute right-full mr-3 bg-gradient-to-r from-purple-600 via-pink-500 to-amber-500 text-white text-[10px] font-black px-2.5 py-1.5 rounded-lg whitespace-nowrap shadow-[0_4px_12px_rgba(219,39,119,0.3)] flex items-center select-none animate-bounce z-50" style="animation-duration: 2s;">
+        試算実行！
+        <!-- 吹き出しの三角（矢印） -->
+        <span class="absolute left-full top-1/2 -translate-y-1/2 w-0 h-0 border-y-[4px] border-y-transparent border-l-[6px] border-l-purple-600"></span>
+    </div>
+    
+    <!-- 七色に光る電球と黄金の稲妻マークボタン -->
+    <div onclick="runSimulation(); showToast('⚡️ コアバースト！未来の資産が再計算されました！')" class="relative cursor-pointer group select-none flex items-center justify-center transition-transform duration-200 hover:scale-105 active:scale-95" title="クリックしてシミュレーションを実行">
+        
+        <!-- ボタン外枠（漆黒のベース＆高精度ネオンシャドウ） -->
+        <div class="relative w-14 h-14 rounded-2xl bg-slate-950 flex items-center justify-center border border-white/10 overflow-hidden shadow-[0_0_20px_rgba(255,255,255,0.05)] group-hover:shadow-[0_0_25px_rgba(236,72,153,0.45)] transition-shadow duration-300">
+            
+            <!-- 電球を滑らかな7色のレインボーに変調させるボタン内専用CSS -->
+            <style>
+                @keyframes bulbRainbowGlow {
+                    0% { stop-color: #ff007f; }    /* ネオンピンク */
+                    14% { stop-color: #ff0000; }   /* パッションレッド */
+                    28% { stop-color: #ff7f00; }   /* マリーゴールド */
+                    42% { stop-color: #ffff00; }   /* サンシャインイエロー */
+                    56% { stop-color: #00ff00; }   /* ネオングリーン */
+                    70% { stop-color: #00ffff; }   /* ターコイズシアン */
+                    84% { stop-color: #0000ff; }   /* オーシャンブルー */
+                    100% { stop-color: #ff007f; }  /* ループ */
+                }
+                .bulb-rainbow-1 { animation: bulbRainbowGlow 7s linear infinite; }
+                .bulb-rainbow-2 { animation: bulbRainbowGlow 7s linear infinite; animation-delay: -3.5s; }
+            </style>
+
+            <!-- 高解像度SVG電球コア ＆ 黄金の稲妻（コアバースト仕様） -->
+            <svg class="w-9 h-9 z-10" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <!-- 滑らかに循環する七色グラデーション定義 -->
+                    <linearGradient id="musouRainbowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" class="bulb-rainbow-1" />
+                        <stop offset="100%" class="bulb-rainbow-2" />
+                    </linearGradient>
+                </defs>
+                
+                <!-- 電球本体：ここが滑らかな七色レインボーで発光します -->
+                <path d="M50 15C33.4 15 20 28.4 20 45C20 55.3 25.2 64.3 33 69.7V80C33 81.7 34.3 83 36 83H64C65.7 83 67 81.7 67 80V69.7C74.8 64.3 80 55.3 80 45C80 28.4 66.6 15 50 15ZM44 78V73H56V78H44ZM42 68V63H58V68H42ZM50 23C59.4 23 67 30.6 67 40C67 41.1 66.1 42 65 42C63.9 42 63 41.1 63 40C63 32.8 57.2 27 50 27C48.9 27 48 26.1 48 25C48 23.9 48.9 23 50 23Z" fill="url(#musouRainbowGrad)" style="filter: drop-shadow(0 0 5px url(#musouRainbowGrad));" />
+                
+                <!-- 稲妻マーク：右上配置で力強く輝くゴールデンイエロー（パルス明滅） -->
+                <path d="M68 15L46 45H60L38 82L48 51H34L68 15Z" fill="#ffeb3b" style="filter: drop-shadow(0 0 8px #ffeb3b);" class="animate-pulse" />
+            </svg>
+            
+            <!-- マウスホバー時にうっすら浮かび上がるインナーライト加工 -->
+            <div class="absolute inset-0 bg-white/[0.02] group-hover:bg-white/[0.07] transition-colors duration-300"></div>
+        </div>
+    </div>
+</div>
+
+
+
                 <div class="ml-16 xl:ml-0">
                     <!-- シミュレータ名称の変更：💡を先頭へ、そしてレインボー発光するように配置 -->
                     <h1 class="text-xl sm:text-2xl font-bold tracking-tight flex items-center flex-wrap gap-1">
