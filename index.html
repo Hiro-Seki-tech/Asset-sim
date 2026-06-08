@@ -518,17 +518,17 @@
     <script src="./js/i18n.js"></script>
 
     <script>
+
 // 通貨切り替えスイッチ用の画面遷移関数
         function switchCurrencySimulator(selectedCurrency) {
             if (selectedCurrency === 'usd') {
-                window.location.href = './dollar/index.html';
+                window.location.href = 'https://hiro-seki-tech.github.io/asset-sim-public/dollar/index.html';
             } else if (selectedCurrency === 'eur') {
-                window.location.href = './EUR/index.html';
+                window.location.href = 'https://hiro-seki-tech.github.io/asset-sim-public/EUR/index.html'; // ←大文字のEUR
             } else if (selectedCurrency === 'cny') {
-                window.location.href = './yuan/index.html';
+                window.location.href = 'https://hiro-seki-tech.github.io/asset-sim-public/yuan/index.html';
             }
         }
-
 
         let chartInstance = null;
         let tooltipPieChartInstance = null;
