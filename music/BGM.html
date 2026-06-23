@@ -1,1 +1,110 @@
-
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>尽生 - 生きるを尽くす (100% Vol)</title>
+    <style>
+        body { background: #050609; color: #6c7282; font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .panel { background: #0b0d14; padding: 40px; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,0.9); text-align: center; border: 1px solid #131622; width: 420px; }
+        h1 { color: #c5c9d6; font-weight: 300; letter-spacing: 8px; margin-bottom: 5px; }
+        .subtitle { color: #32364a; font-size: 0.85em; margin-bottom: 35px; letter-spacing: 2px; }
+        .status { font-size: 0.95em; color: #4ad3a0; margin-bottom: 35px; min-height: 24px; font-family: monospace; }
+        .ctrl-btn { background: transparent; border: 2px solid #1a1e30; color: #a3a8b8; padding: 14px 35px; font-size: 0.95em; cursor: pointer; border-radius: 30px; margin: 0 10px; transition: all 0.3s; }
+        .ctrl-btn:hover { background: #a3a8b8; color: #050609; }
+        #stopBtn:hover { background: #db5a60; color: #fff; border-color: #db5a60; }
+    </style>
+</head>
+<body>
+<div class="panel">
+    <h1>尽生 -時の移ろい-</h1>
+    <div class="subtitle">Ambient Soundscape (100% Volume)</div>
+    <div class="status" id="statusText">◆ 静粛中 ◆</div>
+    <div>
+        <button class="ctrl-btn" id="playBtn">奏上</button>
+        <button class="ctrl-btn" id="stopBtn">静粛</button>
+    </div>
+</div>
+<script>
+let audioCtx = null, isPlaying = false, nextEventTime = 0, loopTimer = null, mainGain = null;
+function initAudio() {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    mainGain = audioCtx.createGain();
+    mainGain.gain.setValueAtTime(1.0, audioCtx.currentTime); // 全体音量を100%（最大）に設定
+    mainGain.connect(audioCtx.destination);
+}
+function createNoiseBuffer() {
+    const size = audioCtx.sampleRate * 2, buffer = audioCtx.createBuffer(1, size, audioCtx.sampleRate), data = buffer.getChannelData(0);
+    for (let i = 0; i < size; i++) data[i] = Math.random() * 2 - 1;
+    return buffer;
+}
+function whisperText(text, time) {
+    if (!audioCtx) return;
+    const dur = text === 'jinsei' ? 0.8 : 1.5, noise = audioCtx.createBufferSource();
+    noise.buffer = createNoiseBuffer();
+    const filter = audioCtx.createBiquadFilter(), gain = audioCtx.createGain();
+    filter.type = 'bandpass';
+    if (text === 'jinsei') {
+        filter.frequency.setValueAtTime(650, time); filter.frequency.exponentialRampToValueAtTime(300, time + 0.5); filter.Q.setValueAtTime(8, time);
+    } else {
+        filter.frequency.setValueAtTime(550, time); filter.frequency.exponentialRampToValueAtTime(250, time + 1.2); filter.Q.setValueAtTime(6, time);
+    }
+    gain.gain.setValueAtTime(0, time); gain.gain.linearRampToValueAtTime(0.02, time + 0.05); gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
+    const osc = audioCtx.createOscillator(); osc.type = 'sine';
+    osc.frequency.setValueAtTime(text === 'jinsei' ? 90 : 75, time); osc.frequency.linearRampToValueAtTime(text === 'jinsei' ? 75 : 60, time + dur * 0.7);
+    noise.connect(filter); osc.connect(filter); filter.connect(gain); gain.connect(mainGain);
+    noise.start(time); osc.start(time); noise.stop(time + dur); osc.stop(time + dur);
+}
+function playSand(time, duration) {
+    const noise = audioCtx.createBufferSource(); noise.buffer = createNoiseBuffer();
+    const filter = audioCtx.createBiquadFilter(), gain = audioCtx.createGain();
+    filter.type = 'lowpass'; filter.frequency.setValueAtTime(850, time);
+    gain.gain.setValueAtTime(0, time); gain.gain.linearRampToValueAtTime(0.003, time + duration/2); gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+    noise.connect(filter); filter.connect(gain); gain.connect(mainGain);
+    noise.start(time); noise.stop(time + duration);
+}
+function playTick(time) {
+    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+    osc.type = 'triangle'; osc.frequency.setValueAtTime(4500, time);
+    gain.gain.setValueAtTime(0.005, time); gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.012);
+    osc.connect(gain); gain.connect(mainGain); osc.start(time); osc.stop(time + 0.02);
+}
+function playMournfulBird(time) {
+    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+    osc.type = 'sine'; osc.frequency.setValueAtTime(2500, time);
+    osc.frequency.linearRampToValueAtTime(2200, time + 0.15); osc.frequency.setValueAtTime(2300, time + 0.2); osc.frequency.linearRampToValueAtTime(1900, time + 0.4);
+    gain.gain.setValueAtTime(0, time); gain.gain.linearRampToValueAtTime(0.002, time + 0.08); gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.45);
+    osc.connect(gain); gain.connect(mainGain); osc.start(time); osc.stop(time + 0.45);
+}
+function playSadDrone(time, duration) {
+    const freqs = [55.00, 73.42];
+    freqs.forEach(f => {
+        const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(f, time);
+        gain.gain.setValueAtTime(0, time); gain.gain.linearRampToValueAtTime(0.006, time + 4); gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+        osc.connect(gain); gain.connect(mainGain); osc.start(time); osc.stop(time + duration);
+    });
+}
+function scheduler() {
+    while (nextEventTime < audioCtx.currentTime + 0.1) {
+        const loopPosition = nextEventTime % 24;
+        if (loopPosition === 0) { whisperText('jinsei', nextEventTime); playSadDrone(nextEventTime, 24.0); }
+        if (loopPosition === 12) { whisperText('ikiru', nextEventTime); }
+        if (loopPosition >= 2 && loopPosition < 6) { playTick(nextEventTime); } 
+        else if (loopPosition >= 7 && loopPosition < 11) { if (loopPosition === 7) playSand(nextEventTime, 3.5); } 
+        else if (loopPosition >= 14 && loopPosition < 18) { playTick(nextEventTime); }
+        else if (loopPosition >= 19 && loopPosition < 23) { if (Math.random() < 0.5) playMournfulBird(nextEventTime); }
+        nextEventTime += 1.0;
+    }
+    loopTimer = setTimeout(scheduler, 50);
+}
+document.getElementById('playBtn').addEventListener('click', () => {
+    if (!audioCtx) initAudio();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (!isPlaying) { isPlaying = true; nextEventTime = audioCtx.currentTime; scheduler(); document.getElementById('statusText').innerText = "♪ 哀愁の環境音（100%）が流れています..."; }
+});
+document.getElementById('stopBtn').addEventListener('click', () => {
+    if (isPlaying) { isPlaying = false; clearTimeout(loopTimer); if (audioCtx) audioCtx.suspend(); document.getElementById('statusText').innerText = "◆ 静粛中 ◆"; }
+});
+</script>
+</body>
+</html>
