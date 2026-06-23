@@ -122,12 +122,13 @@
 
 
                         <!-- ⌛ 砂時計ボタン（不動のシンボル：クリックで金・銀・赤に変変転） -->
-                       <div class="relative shrink-0 select-none w-16 h-16 sm:w-24 sm:h-24">
+                     <div class="relative shrink-0 select-none w-16 h-16 sm:w-24 sm:h-24">
 
-                            <div id="jinsei-core-btn" onclick="triggerCoreBurstInterlocking();" class="absolute inset-0 cursor-pointer group flex items-center justify-center rounded-2xl bg-gradient-to-br from-slate-600 via-slate-700 to-slate-800 border-2 border-amber-400 overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.4)] transition-all duration-300 select-none" title="クリックしてシミュレーション実行＆世界変転">
+                            <div id="jinsei-core-btn" onclick="triggerCoreBurstInterlocking();" class="absolute inset-0 cursor-pointer group flex items-center justify-center rounded-2xl bg-gradient-to-br from-slate-600 via-slate-700 to-slate-800 border-2 border-amber-400 overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.4)] transition-all duration-300 active:scale-95 active:shadow-inner select-none" title="クリックしてシミュレーション実行＆世界変転">
                                 
                                 <svg class="w-full h-full z-10 transition-transform duration-300 group-hover:scale-105" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
+
+  <defs>
                                         <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
                                             <stop offset="0%" stop-color="#FFD700"/>
                                             <stop offset="50%" stop-color="#FCD34D"/>
@@ -2181,16 +2182,16 @@
 
 <!-- 🎯【ジェムキン改築：音響＆3色変転ロジック開始】ここから最末尾へ追加 -->
     <script>
-        // 🏛️ 三連変転の軍略状態を管理するグローバル変数
+
+// 🏛️ 三連変転の軍略状態を管理するグローバル変数
         let currentCoreStyleState = 0; // 0:金枠, 1:銀枠, 2:赤枠
         let audioBgmIframe = null;     // 金枠用（BGM.html）
         let audioMediaElement = null;  // 銀枠用（song.mp4）
 
         // ⌛ クリック時に「コリッ」と鳴らし、枠色とBGMを3段階に変転させる統括関数
         function triggerCoreBurstInterlocking() {
-            // 1. 先に本来のシミュレーションを実行＆トースト表示
+            // 1. 先に本来のシミュレーションを実行
             runSimulation();
-            showToast('⚡️ 未来の資産が再計算され、世界の因果が変転しました！');
 
             // 2. 「コリッ」というSE（短音）を物理合成で発音
             playClickClickSound();
@@ -2198,10 +2199,136 @@
             // 3. 状態を進行（0 -> 1 -> 2 -> 0 のループ）
             currentCoreStyleState = (currentCoreStyleState + 1) % 3;
             
-            // 4. 枠色および音響の変転陣形を執行
+            // 4. 枠色および音響の変転陣形を執行、同時に状態に合わせたトーストを鳴らす
             applyCoreBurstStyleAndMusic();
         }
 
+        // 🔊 電子音を排し、高級なスイッチや木を叩いたような上品な「コリッ（コッ）」を生成
+        function playClickClickSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(850, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.03);
+                
+                gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.03);
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.start();
+                osc.stop(ctx.currentTime + 0.03);
+            } catch (e) {
+                console.warn("新SEの発音に失敗しました:", e);
+            }
+        }
+
+        // 🔮 枠の見た目と音楽、さらに個別メッセージを完全に同期させて切り替える執行関数
+        function applyCoreBurstStyleAndMusic() {
+            const btn = document.getElementById('jinsei-core-btn');
+            if (!btn) return;
+
+            // ⏳ ボタン内にある全てのインラインSVGアニメーションタグを一括取得
+            const svgAnims = btn.querySelectorAll('animateTransform, animate');
+
+            // すべての既存音響を一度綺麗に消去・停止する（防衛陣）
+            if (audioBgmIframe) { audioBgmIframe.remove(); audioBgmIframe = null; }
+            if (audioMediaElement) { audioMediaElement.pause(); audioMediaElement.remove(); audioMediaElement = null; }
+
+            // 状態に応じたクラスの剥奪と再付与、および音響展開
+            if (currentCoreStyleState === 0) {
+                // ✨【金枠の陣】（今の速度 ＝ 標準）
+                btn.style.borderColor = '#FFD700'; // 金枠固定
+                btn.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.4)';
+
+                // ⚡ トーストメッセージの個別執行（金枠）
+                showToast('⚡️ 未来の資産が再計算され、人生の音色が聞こえてきました！');
+
+                // ⏳ 金の落下速度：元々の標準速度に設定
+                svgAnims.forEach(anim => {
+                    const dur = anim.getAttribute('dur');
+                    if (anim.getAttribute('type') === 'rotate' || anim.getAttribute('attributeName') === 'cy' || anim.getAttribute('attributeName') === 'y') {
+                        if (anim.getAttribute('type') === 'rotate') {
+                            const baseDurs = { '180': '12.5s', '190': '11s', '200': '14s', '165': '12.5s', '175': '11s' };
+                            const cx = anim.getAttribute('from')?.split(' ')[1] || '180';
+                            anim.setAttribute('dur', baseDurs[cx] || '12s');
+                        } else {
+                            const begin = anim.getAttribute('begin');
+                            if (begin === '0.0s') anim.setAttribute('dur', '4.2s');
+                            else if (begin === '0.3s') anim.setAttribute('dur', '5.1s');
+                            else if (begin === '0.6s') anim.setAttribute('dur', '3.7s');
+                            else anim.setAttribute('dur', '5s');
+                        }
+                    } else {
+                        const begin = anim.getAttribute('begin');
+                        if (begin === '6.0s') anim.setAttribute('dur', '18s');
+                        else if (begin === '14.4s') anim.setAttribute('dur', '20s');
+                        else if (begin === '0.0s') anim.setAttribute('dur', '15s');
+                        else if (begin === '9.6s') anim.setAttribute('dur', '17s');
+                        else anim.setAttribute('dur', '22s');
+                    }
+                });
+                
+                audioBgmIframe = document.createElement('iframe');
+                audioBgmIframe.src = './music/BGM.html';
+                audioBgmIframe.style.display = 'none';
+                audioBgmIframe.setAttribute('allow', 'autoplay');
+                document.body.appendChild(audioBgmIframe);
+
+            } else if (currentCoreStyleState === 1) {
+                // 🥈【銀枠の陣】（今より速い ＝ 2.5倍速で爆速落下！）
+                btn.style.borderColor = '#E2E8F0'; // 銀枠固定
+                btn.style.boxShadow = '0 0 20px rgba(226, 232, 240, 0.4)';
+
+                // ⚡ トーストメッセージの個別執行（銀枠）
+                showToast('⚡️ 未来の資産が再計算され、人生の歌声が聞こえてきました！');
+
+                // ⏳ 銀の落下速度：dur（周期）をギュッと縮めて超高速にする
+                svgAnims.forEach(anim => {
+                    if (anim.getAttribute('type') === 'rotate' || anim.getAttribute('attributeName') === 'cy' || anim.getAttribute('attributeName') === 'y') {
+                        anim.setAttribute('dur', '1.5s');
+                    } else {
+                        anim.setAttribute('dur', '6s');
+                    }
+                });
+                
+                audioMediaElement = document.createElement('audio');
+                audioMediaElement.src = './music/song.mp4';
+                audioMediaElement.loop = true;
+                audioMediaElement.style.display = 'none';
+                audioMediaElement.volume = 0.5; 
+                document.body.appendChild(audioMediaElement);
+                audioMediaElement.play().catch(e => console.warn("ブラウザの自動再生制限:", e));
+
+            } else if (currentCoreStyleState === 2) {
+                // 🩸【赤枠の陣】（今より遅い ＝ 厳かにスローモーション…）
+                btn.style.borderColor = '#EF4444'; // 赤枠固定
+                btn.style.boxShadow = '0 0 20px rgba(239, 68, 68, 0.4)';
+
+                // ⚡ トーストメッセージの個別執行（赤枠）
+                showToast('⚡️ 未来の資産が再計算され、静寂の世界が訪れました。');
+
+                // ⏳ 赤の落下速度：dur（周期）を長くして重々しく停滞させる
+                svgAnims.forEach(anim => {
+                    if (anim.getAttribute('type') === 'rotate' || anim.getAttribute('attributeName') === 'cy' || anim.getAttribute('attributeName') === 'y') {
+                        anim.setAttribute('dur', '14s');
+                    } else {
+                        anim.setAttribute('dur', '55s');
+                    }
+                });
+                
+                // 音楽なし（静寂の維持）
+            }
+        }
+
+    </script>
 
 
 // 🎯【ジェムキン改築：上品な「別のコリッ」開始】ここから差し替えました
@@ -2238,10 +2365,15 @@
 
         // 🎯【ジェムキン改築：上品な「別のコリッ」終了】ここまで差し替えました
 
-        // 🔮 枠の見た目と音楽を完全に同期させて切り替える執行関数
+
+
+// 🔮 枠の見た目と音楽を完全に同期させて切り替える執行関数
         function applyCoreBurstStyleAndMusic() {
             const btn = document.getElementById('jinsei-core-btn');
             if (!btn) return;
+
+            // ⏳ ボタン内にある全てのインラインSVGアニメーションタグ（animateTransform / animate）を一括取得
+            const svgAnims = btn.querySelectorAll('animateTransform, animate');
 
             // すべての既存音響を一度綺麗に消去・停止する（防衛陣）
             if (audioBgmIframe) { audioBgmIframe.remove(); audioBgmIframe = null; }
@@ -2249,9 +2381,38 @@
 
             // 状態に応じたクラスの剥奪と再付与、および音響展開
             if (currentCoreStyleState === 0) {
-                // ✨【金枠の陣】
+                // ✨【金枠の陣】（今の速度 ＝ 標準）
                 btn.style.borderColor = '#FFD700'; // 金枠固定
                 btn.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.4)';
+
+                // ⏳ 金の落下速度：元々の標準速度に設定
+                svgAnims.forEach(anim => {
+                    const dur = anim.getAttribute('dur');
+                    // もし書き換わっていたら元に戻す（回転/砂の粒は元の速度、その他は15〜22秒等の初期値へ）
+                    if (anim.getAttribute('type') === 'rotate' || anim.getAttribute('attributeName') === 'cy' || anim.getAttribute('attributeName') === 'y') {
+                        // 文字の回転や砂の落下、rectの落下を元のペースに
+                        if (anim.getAttribute('type') === 'rotate') {
+                            const baseDurs = { '180': '12.5s', '190': '11s', '200': '14s', '165': '12.5s', '175': '11s' };
+                            const cx = anim.getAttribute('from')?.split(' ')[1] || '180';
+                            anim.setAttribute('dur', baseDurs[cx] || '12s');
+                        } else {
+                            // 砂の粒の cy 落下（4.2s / 5.1s / 3.7s など）や rect 落下
+                            const begin = anim.getAttribute('begin');
+                            if (begin === '0.0s') anim.setAttribute('dur', '4.2s');
+                            else if (begin === '0.3s') anim.setAttribute('dur', '5.1s');
+                            else if (begin === '0.6s') anim.setAttribute('dur', '3.7s');
+                            else anim.setAttribute('dur', '5s');
+                        }
+                    } else {
+                        // 全体の y移動（生・死などの漢字の移動 dur="18s" 〜 "22s"）
+                        const begin = anim.getAttribute('begin');
+                        if (begin === '6.0s') anim.setAttribute('dur', '18s');
+                        else if (begin === '14.4s') anim.setAttribute('dur', '20s');
+                        else if (begin === '0.0s') anim.setAttribute('dur', '15s');
+                        else if (begin === '9.6s') anim.setAttribute('dur', '17s');
+                        else anim.setAttribute('dur', '22s');
+                    }
+                });
                 
                 // BGM.html を不可視の iframe で裏起動
                 audioBgmIframe = document.createElement('iframe');
@@ -2261,9 +2422,18 @@
                 document.body.appendChild(audioBgmIframe);
 
             } else if (currentCoreStyleState === 1) {
-                // 🥈【銀枠の陣】
+                // 🥈【銀枠の陣】（今より速い ＝ 2.5倍速で爆速落下！）
                 btn.style.borderColor = '#E2E8F0'; // 銀枠固定
                 btn.style.boxShadow = '0 0 20px rgba(226, 232, 240, 0.4)';
+
+                // ⏳ 銀の落下速度：dur（周期）をギュッと縮めて超高速にする
+                svgAnims.forEach(anim => {
+                    if (anim.getAttribute('type') === 'rotate' || anim.getAttribute('attributeName') === 'cy' || anim.getAttribute('attributeName') === 'y') {
+                        anim.setAttribute('dur', '1.5s'); // 回転や一粒ずつの落下を1.5秒周期に加速
+                    } else {
+                        anim.setAttribute('dur', '6s');   // 「生」「死」などの大きな文字のスクロールを6秒周期に加速
+                    }
+                });
                 
                 // song.mp4 を不可視の audio/video タグで起動
                 audioMediaElement = document.createElement('audio');
@@ -2276,13 +2446,25 @@
                 audioMediaElement.play().catch(e => console.warn("ブラウザの自動再生制限:", e));
 
             } else if (currentCoreStyleState === 2) {
-                // 🩸【赤枠の陣】
+                // 🩸【赤枠の陣】（今より遅い ＝ 厳かにスローモーション…）
                 btn.style.borderColor = '#EF4444'; // 赤枠固定
                 btn.style.boxShadow = '0 0 20px rgba(239, 68, 68, 0.4)';
+
+                // ⏳ 赤の落下速度：dur（周期）を長くして重々しく停滞させる
+                svgAnims.forEach(anim => {
+                    if (anim.getAttribute('type') === 'rotate' || anim.getAttribute('attributeName') === 'cy' || anim.getAttribute('attributeName') === 'y') {
+                        anim.setAttribute('dur', '14s');  // 1回の落下や回転に14秒かける
+                    } else {
+                        anim.setAttribute('dur', '55s');  // 漢字が落ち切るのに55秒かける（ほぼ時が止まる感覚）
+                    }
+                });
                 
                 // 音楽なし（静寂の維持）
             }
         }
+
+
+
     </script>
     <!-- 🎯【ジェムキン改築：音響＆3色変転ロジック終了】ここまで最末尾へ追加 -->
 
