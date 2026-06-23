@@ -212,11 +212,19 @@
 </div>
                     </div>
 
-                    <div class="shrink-0 self-end sm:self-auto pl-2">
-                        <button id="how-to-use-btn" class="bg-slate-800 hover:bg-slate-700 text-white px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition-all flex items-center gap-1.5 shadow-md border border-slate-700 transform active:scale-95 select-none whitespace-nowrap">
+
+
+<div class="shrink-0 self-end pl-2 hidden sm:block">
+                        <button id="how-to-use-btn" class="bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 shadow-md border border-slate-700 transform active:scale-95 select-none whitespace-nowrap">
                             <i class="fas fa-question-circle text-amber-400"></i> 使い方？
                         </button>
                     </div>
+                </div>
+
+                <div class="flex justify-end sm:hidden px-1 -mt-2">
+                    <button id="how-to-use-btn-mobile" onclick="document.getElementById('how-to-use-btn').click();" class="bg-slate-800 hover:bg-slate-700 text-white px-2.5 py-1.5 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1.5 shadow-md border border-slate-700 transform active:scale-95 select-none whitespace-nowrap">
+                        <i class="fas fa-question-circle text-amber-400"></i> 使い方？
+                    </button>
                 </div>
                 
 
