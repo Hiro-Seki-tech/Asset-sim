@@ -124,9 +124,10 @@
                         <!-- ⌛ 砂時計ボタン（不動のシンボル：クリックで金・銀・赤に変変転） -->
                      <div class="relative shrink-0 select-none w-16 h-16 sm:w-24 sm:h-24">
 
-                            <div id="jinsei-core-btn" onclick="triggerCoreBurstInterlocking();" class="absolute inset-0 cursor-pointer group flex items-center justify-center rounded-2xl bg-gradient-to-br from-slate-600 via-slate-700 to-slate-800 border-2 border-amber-400 overflow-hidden shadow-[0_4px_15px_rgba(0,0,0,0.4)] transition-all duration-300 active:scale-95 active:shadow-inner select-none" title="クリックしてシミュレーション実行＆世界変転">
-                                
-                                <svg class="w-full h-full z-10 transition-transform duration-300 group-hover:scale-105" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+                           <!-- ⌛ 砂時計ボタン（クリック時の3D沈み込み・爆速反応・フラッシュ演出を強化） -->
+<div id="jinsei-core-btn" onclick="triggerCoreBurstInterlocking();" class="absolute inset-0 cursor-pointer group flex items-center justify-center rounded-2xl bg-gradient-to-br from-slate-600 via-slate-700 to-slate-800 border-2 border-amber-400 overflow-hidden shadow-[0_6px_20px_rgba(0,0,0,0.5)] transition-all duration-200 ease-out active:scale-95 active:translate-y-1 active:shadow-[0_2px_5px_rgba(0,0,0,0.3)] active:brightness-125 active:duration-75 select-none" title="クリックしてシミュレーション実行＆世界変転">             
+                            
+    <svg class="w-full h-full z-10 transition-transform duration-300 group-hover:scale-105" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
 
   <defs>
                                         <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
@@ -533,19 +534,24 @@
                         </div>
                         
                         <div class="flex flex-wrap items-center gap-2 self-stretch sm:self-auto w-full sm:w-auto">
-                            <button id="save-local-btn" onclick="saveToLocalStorage()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
-                                <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="btn_save_settings">💾 設定をブラウザ保存</span>
-                            </button>
-                            <button id="clear-local-btn" onclick="clearLocalStorage()" class="px-4 py-2 bg-slate-500 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
-                                <i class="fa-solid fa-trash-can"></i> <span data-i18n="btn_clear_settings">🧹 設定初期化</span>
+
+
+<button onclick="openJinseiSaveLoadModal('save')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial" title="現在の軍略を『尽生の書』へ固定保存">
+    <i class="fa-solid fa-floppy-disk"></i> <span>設定を保存</span>
+</button>
+<button onclick="openJinseiSaveLoadModal('load')" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-slate-950 text-xs font-black rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial" title="『尽生の書』から軍略を復元">
+    <i class="fa-solid fa-folder-open"></i> <span>設定の読込</span>
+</button>
+
+<button onclick="downloadCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
+                                <i class="fa-solid fa-file-csv"></i> <span data-i18n="btn_csv_export_label">設定CSV保存</span>
                             </button>
                             <label for="csv-import-file" class="cursor-pointer px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
                                 <i class="fa-solid fa-file-import"></i> <span data-i18n="btn_csv_import_label">設定CSV読込</span>
                             </label>
                             <input type="file" id="csv-import-file" accept=".csv" class="hidden" onchange="importCSV(event)">
-                            <button onclick="downloadCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
-                                <i class="fa-solid fa-file-csv"></i> <span data-i18n="btn_csv_export_label">設定CSV出力</span>
-                            </button>
+
+
                         </div>
                     </div>
 
@@ -708,6 +714,68 @@
             </div>
         </div>
     </div>
+
+<div id="jinsei-saveload-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center z-[200] p-4">
+  <div class="bg-slate-900 border border-amber-500/30 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4 text-slate-100">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <h4 id="jinsei-saveload-modal-title" class="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
+        </h4>
+      <button onclick="closeJinseiSaveLoadModal()" class="text-slate-400 hover:text-white">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+    
+    <p id="jinsei-saveload-modal-desc" class="text-[11px] text-slate-400">
+      軍略の歴史を記録・復元するスロットを選択してください。
+    </p>
+    
+    <div class="space-y-3">
+      <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex flex-col gap-2 transition-all hover:border-amber-500/20">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-black text-amber-400 tracking-wider"><i class="fa-solid fa-bookmark mr-1"></i> 尽生の書 一</span>
+          <span class="text-[9px] text-slate-500 font-mono" id="j-slot-time-1">データなし</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="j-slot-name-1" placeholder="（例：準富裕層・40代早期FIRE）" 
+            class="flex-grow bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+          <button id="j-slot-btn-1" class="shrink-0 px-3 py-1.5 rounded-lg font-bold text-xs transition-all"></button>
+        </div>
+      </div>
+
+      <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex flex-col gap-2 transition-all hover:border-amber-500/20">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-black text-amber-400 tracking-wider"><i class="fa-solid fa-bookmark mr-1"></i> 尽生の書 二</span>
+          <span class="text-[9px] text-slate-500 font-mono" id="j-slot-time-2">データなし</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="j-slot-name-2" placeholder="（例：現役全力積立・タワマン購入）" 
+            class="flex-grow bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+          <button id="j-slot-btn-2" class="shrink-0 px-3 py-1.5 rounded-lg font-bold text-xs transition-all"></button>
+        </div>
+      </div>
+
+      <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 flex flex-col gap-2 transition-all hover:border-amber-500/20">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-black text-amber-400 tracking-wider"><i class="fa-solid fa-bookmark mr-1"></i> 尽生の書 三</span>
+          <span class="text-[9px] text-slate-500 font-mono" id="j-slot-time-3">データなし</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="text" id="j-slot-name-3" placeholder="（例：中流堅実・子供2人進学）" 
+            class="flex-grow bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+          <button id="j-slot-btn-3" class="shrink-0 px-3 py-1.5 rounded-lg font-bold text-xs transition-all"></button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="pt-2 text-right">
+      <button onclick="closeJinseiSaveLoadModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-all">
+        閉じる
+      </button>
+    </div>
+  </div>
+</div>
+
+
 
     <script src="./js/i18n.js"></script>
 
@@ -2019,7 +2087,7 @@
 
 
 
-      // 📥 完全動的版：CSV出力（人物の雛形に入力された名前をファイル名にしてエクスポート）
+      // 📥 完全動的版：CSV保存（人物の雛形に入力された名前をファイル名にしてエクスポート）
         function downloadCSV() {
             let csvContent = "\uFEFF項目ID,設定値\n"; // Excel文字化け防止BOM
 
@@ -2311,5 +2379,219 @@
                 });
             }
         }
+
+// ==========================================================================
+// 💾 【尽生の書】3スロット・セーブ＆ロードシステム（ドラクエ風世界線記録陣）
+// ==========================================================================
+
+// モーダルを開く（mode: 'save' または 'load'）
+function openJinseiSaveLoadModal(mode) {
+  const modal = document.getElementById('jinsei-saveload-modal');
+  const title = document.getElementById('jinsei-saveload-modal-title');
+  const desc = document.getElementById('jinsei-saveload-modal-desc');
+  
+  if (mode === 'save') {
+    title.innerHTML = `<i class="fa-solid fa-floppy-disk text-amber-400"></i> 尽生の書（軍略の記録）`;
+    desc.textContent = "現在の基本設定や配置アセット構成を固定保存するスロットを選び、名前をつけて記録しておくと便利です。";
+  } else {
+    title.innerHTML = `<i class="fa-solid fa-folder-open text-amber-500"></i> 尽生の書（軍略の復元）`;
+    desc.textContent = "以前に記録した世界線へ跳躍（復元）します。現在の未保存データは上書きされるのでご注意ください。";
+  }
+  
+  // 1〜3のスロットUIを最新のLocalStorageの状態に基づいて更新
+  for (let i = 1; i <= 3; i++) {
+    const savedData = JSON.parse(localStorage.getItem(`jinsei_slot_${i}`));
+    const timeEl = document.getElementById(`j-slot-time-${i}`);
+    const nameInput = document.getElementById(`j-slot-name-${i}`);
+    const btn = document.getElementById(`j-slot-btn-${i}`);
+    
+    if (savedData) {
+      // 既にデータが存在する場合
+      timeEl.textContent = savedData.savedAt;
+      if (mode === 'save') {
+        nameInput.value = savedData.slotName;
+        nameInput.disabled = false;
+        btn.className = "shrink-0 px-3 py-1.5 rounded-lg bg-rose-600/30 hover:bg-rose-600 border border-rose-500 text-white font-bold text-xs transition-all";
+        btn.textContent = "上書き保存";
+        btn.onclick = () => executeJinseiSaveSlot(i);
+      } else {
+        nameInput.value = savedData.slotName;
+        nameInput.disabled = true; // ロード時は入力不可
+        btn.className = "shrink-0 px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs transition-all shadow-md shadow-amber-500/10";
+        btn.textContent = "この書を開く";
+        btn.onclick = () => executeJinseiLoadSlot(i);
+      }
+    } else {
+      // スロットが空の場合
+      timeEl.textContent = "セーブデータはありません";
+      nameInput.value = "";
+      if (mode === 'save') {
+        nameInput.disabled = false;
+        nameInput.placeholder = i === 1 ? "（例：準富裕層・40代早期FIRE）" : i === 2 ? "（例：現役全力積立・タワマン購入）" : "（例：中流堅実・子供2人進学）";
+        btn.className = "shrink-0 px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 border border-emerald-500 text-white font-bold text-xs transition-all";
+        btn.textContent = "新規保存";
+        btn.onclick = () => executeJinseiSaveSlot(i);
+      } else {
+        nameInput.disabled = true;
+        nameInput.placeholder = "記録がありません";
+        btn.className = "shrink-0 px-4 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-500 text-xs font-bold cursor-not-allowed opacity-40";
+        btn.textContent = "ーーー";
+        btn.onclick = null;
+      }
+    }
+  }
+  
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+// モーダルを閉じる
+function closeJinseiSaveLoadModal() {
+  const modal = document.getElementById('jinsei-saveload-modal');
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+}
+
+// 収集用のヘルパー（既存のCSVエクスポートロジックと100%同一の生データ抽出陣）
+function captureCurrentJinseiState() {
+  let allDynamicData = [];
+  document.querySelectorAll('.other-income-row').forEach(row => {
+    allDynamicData.push({
+      type: 'other-income',
+      name: row.querySelector('.other-inc-name')?.value || '',
+      amount: parseFloat(row.querySelector('.other-inc-amount')?.value) || 0,
+      start: parseInt(row.querySelector('.other-inc-start')?.value) || 0,
+      end: parseInt(row.querySelector('.other-inc-end')?.value) || 0
+    });
+  });
+  document.querySelectorAll('.stage-row').forEach(row => {
+    allDynamicData.push({
+      type: 'stage',
+      amount: parseFloat(row.querySelector('.stage-amount')?.value) || 0,
+      endAge: parseInt(row.querySelector('.stage-end')?.value) || 0
+    });
+  });
+  document.querySelectorAll('.income-row').forEach(row => {
+    allDynamicData.push({
+      type: 'income',
+      name: row.querySelector('.income-memo')?.value || '',
+      age: parseInt(row.querySelector('.income-age')?.value) || 0,
+      amount: parseFloat(row.querySelector('.income-amount')?.value) || 0,
+      target: row.querySelector('.income-target')?.value || 'cash'
+    });
+  });
+  document.querySelectorAll('.expense-row').forEach(row => {
+    allDynamicData.push({
+      type: 'expense',
+      name: row.querySelector('.expense-memo')?.value || '',
+      age: parseInt(row.querySelector('.expense-age')?.value) || 0,
+      amount: parseFloat(row.querySelector('.expense-amount')?.value) || 0
+    });
+  });
+  document.querySelectorAll('.asset-card').forEach(card => {
+    allDynamicData.push({
+      type: 'asset-card',
+      name: card.querySelector('.asset-name-field')?.value || '',
+      assetType: card.querySelector('.asset-type-field')?.value || '',
+      initAmt: parseFloat(card.querySelector('.asset-init-field')?.value) || 0,
+      rate: parseFloat(card.querySelector('.asset-rate-field')?.value) || 0,
+      payout: card.querySelector('.asset-payout-field')?.value || 'reinvest',
+      yearAmt: parseFloat(card.querySelector('.asset-year-field')?.value) || 0,
+      monthAmt: parseFloat(card.querySelector('.asset-month-field')?.value) || 0,
+      startAge: parseInt(card.querySelector('.asset-start-field')?.value) || 0,
+      endAge: parseInt(card.querySelector('.asset-end-field')?.value) || 0
+    });
+  });
+
+  return {
+    customName: document.getElementById('scenario-input').value,
+    startYear: document.getElementById('start-year').value,
+    startAge: document.getElementById('start-age').value,
+    years: document.getElementById('years').value,
+    salaryAmount: document.getElementById('salary-amount').value,
+    salaryLimit: document.getElementById('salary-limit').value,
+    initCash: document.getElementById('init-cash').value,
+    rateCash: document.getElementById('rate-cash').value,
+    dynamicDataList: allDynamicData
+  };
+}
+
+// 保存の実行
+function executeJinseiSaveSlot(slotNumber) {
+  const nameInput = document.getElementById(`j-slot-name-${slotNumber}`);
+  let slotName = nameInput.value.trim();
+  
+  if (!slotName) {
+    slotName = `軍略パターン ${slotNumber === 1 ? '一' : slotNumber === 2 ? '二' : '三'}`;
+  }
+  
+  const now = new Date();
+  const timestamp = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+  
+  const stateData = captureCurrentJinseiState();
+  stateData.slotName = slotName;
+  stateData.savedAt = timestamp;
+  
+  localStorage.setItem(`jinsei_slot_${slotNumber}`, JSON.stringify(stateData));
+  
+  showToast(`💾 【尽生の書 ${slotNumber === 1 ? '一' : slotNumber === 2 ? '二' : '三'}】に『${slotName}』の布陣を完全記録しました。`);
+  closeJinseiSaveLoadModal();
+}
+
+// 読込の実行
+function executeJinseiLoadSlot(slotNumber) {
+  const savedData = JSON.parse(localStorage.getItem(`jinsei_slot_${slotNumber}`));
+  if (!savedData) return;
+  
+  // 1. 各フォーム要素の復元
+  document.getElementById('start-year').value = savedData.startYear;
+  document.getElementById('start-age').value = savedData.startAge;
+  document.getElementById('years').value = savedData.years;
+  document.getElementById('salary-amount').value = savedData.salaryAmount;
+  document.getElementById('salary-limit').value = savedData.salaryLimit;
+  document.getElementById('init-cash').value = savedData.initCash;
+  document.getElementById('rate-cash').value = savedData.rateCash;
+  
+  if (savedData.customName) {
+    document.getElementById('scenario-input').value = savedData.customName;
+    document.getElementById('graph-title-element').innerHTML = `<i class="fa-solid fa-chart-line text-blue-500"></i> 「${savedData.customName}」の生涯キャッシュフロー`;
+  }
+  
+  // 2. 動的コンテナを初期化して再構築（既存のCSVインポートの仕組みを完全応用）
+  document.getElementById('other-income-container').innerHTML = '';
+  document.getElementById('stage-container').innerHTML = '';
+  document.getElementById('income-container').innerHTML = '';
+  document.getElementById('expense-container').innerHTML = '';
+  document.getElementById('dynamic-assets-container').innerHTML = '';
+
+  if (savedData.dynamicDataList && Array.isArray(savedData.dynamicDataList)) {
+    savedData.dynamicDataList.forEach(item => {
+      if (item.type === 'other-income') {
+        addOtherIncomeRow(item.name, item.amount, item.start, item.end);
+      } else if (item.type === 'stage') {
+        addStageRow(item.amount, item.endAge);
+      } else if (item.type === 'income') {
+        addIncomeRow(item.name, item.age, item.amount, item.target);
+      } else if (item.type === 'expense') {
+        addExpenseRow(item.name, item.age, item.amount);
+      } else if (item.type === 'asset-card') {
+        addAssetElement({
+          name: item.name, type: item.assetType, initAmt: item.initAmt, rate: item.rate,
+          payout: item.payout, yearAmt: item.yearAmt, monthAmt: item.monthAmt,
+          startAge: item.startAge, endAge: item.endAge
+        });
+      }
+    });
+  }
+  
+  // 3. 再計算
+  updateStageAges();
+  runSimulation();
+  document.getElementById('scenario-selector').value = 'custom';
+  
+  showToast(`🔮 【尽生の書 ${slotNumber === 1 ? '一' : slotNumber === 2 ? '二' : '三'}】より『${savedData.slotName}』の世界線を完全に復元しました。`);
+  closeJinseiSaveLoadModal();
+}
+
     </script>
 </html>
