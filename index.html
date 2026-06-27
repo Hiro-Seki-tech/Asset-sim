@@ -277,7 +277,7 @@
  <div class="flex flex-col lg:flex-row items-start justify-between gap-3 bg-slate-800/80 p-3 rounded-xl border border-slate-700/60 text-xs w-full">
                     
                     <div class="flex items-start gap-1.5 flex-wrap min-w-0 grow lg:grow-0">
-                        <span class="text-slate-400 font-bold whitespace-nowrap mt-1.5"><i class="fa-solid fa-user-tie text-amber-400 mr-1"></i><span data-i18n="label_character_selection">人生の雛形（おおよその基本設定を選択可能）：</span></span>
+                        <span class="text-slate-400 font-bold whitespace-nowrap mt-1.5"><i class="fa-solid fa-user-tie text-amber-400 mr-1"></i><span data-i18n="label_character_selection">人生の雛形（おおよその人生設計を選択可能）：</span></span>
                         <div class="flex items-center bg-slate-900 rounded-lg border border-slate-700 overflow-hidden flex-wrap max-w-full">
                             <input type="text" id="scenario-input" value="準富裕層" oninput="handleUserTypeInput()" class="bg-transparent text-slate-100 px-3 py-1.5 font-bold focus:outline-none text-xs w-36">
                             <select id="scenario-selector" onchange="handleScenarioSelect(this.value)" class="bg-slate-800 text-slate-400 border-l border-slate-700 focus:outline-none cursor-pointer py-1.5 text-xs px-2">
@@ -373,15 +373,39 @@
         <!-- 🎯【ジェムキン改築：新ヘッダー終了】ここまでを貼り付けました -->
 
 
-
-
         <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 pb-32">
             <section class="lg:col-span-5 flex flex-col gap-6 w-full min-w-0">
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-5">
+			<div class="flex p-1 rounded-2xl gap-1.5 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 border border-slate-700/60 shadow-md backdrop-blur-md">
+                    <button id="tab-basic" onclick="switchJinseiTab('basic')" 
+                            class="relative flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/10 border border-amber-400/20">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>1. 人生の設計</span>
+                    </button>
+                    
+                    <button id="tab-assets" onclick="switchJinseiTab('assets')" 
+                            class="relative flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-white hover:bg-white/5">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>2. 資産の配分</span>
+                    </button>
+                    
+                    <button id="tab-saveload" onclick="switchJinseiTab('saveload')" 
+                            class="relative flex-1 py-3 text-[11px] sm:text-xs font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-500 hover:text-white hover:bg-white/5">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        <span>設定の保存／呼出</span>
+                    </button>
+                </div>
+		
+		
+		
+<!-- 外枠自体を id="jinsei-panel-basic" に変更 -->
+               <div id="jinsei-panel-basic" class="bg-white rounded-2xl border-[3px] border-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.3)] p-6 flex flex-col gap-5">
                     <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-amber-500"></i> <span data-i18n="title_basic_setting">基本設定</span>
+                        <i class="fa-solid fa-sliders text-amber-500"></i> <span data-i18n="title_basic_setting">人生の設計</span>
                     </h2>
                     
+					<div class="flex flex-col gap-6 w-full">
+					
+					
                     <div class="grid grid-cols-3 gap-3">
                         <div>
                             <label for="start-year" class="block text-[10px] font-semibold text-slate-500 mb-1.5 uppercase tracking-wider" data-i18n="lbl_start_year">開始西暦</label>
@@ -425,6 +449,7 @@
                         </div>
                     </div>
 
+
                     <div class="border-t border-slate-100 pt-3">
                         <div class="flex items-center justify-between mb-2">
                             <span class="font-bold text-purple-500 text-xs flex items-center gap-1.5">
@@ -462,6 +487,7 @@
                         <div id="income-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
                     </div>
 
+
                     <div class="border-t border-slate-100 pt-3">
                         <div class="flex items-center justify-between mb-2">
                             <span class="font-bold text-rose-800 text-xs flex items-center gap-1.5">
@@ -471,15 +497,19 @@
                                 ＋ 追加
                             </button>
                         </div>
-                        <div id="expense-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
+                       <div id="expense-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
                     </div>
-                </div>
+   </div> </div> <div id="jinsei-panel-assets" class="flex flex-col gap-6 w-full hidden">
 
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
+
+                <div class="bg-white rounded-2xl border-[3px] border-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.3)] p-6 flex flex-col gap-4">
                     <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
                         <span class="flex items-center gap-2">
                             <i class="fa-solid fa-chart-pie text-emerald-500"></i> <span data-i18n="title_asset_allocation">資産の配分</span>
                         </span>
+						
+						
+						
                         <span class="text-xs font-normal text-slate-400" data-i18n="desc_cashflow_integration">キャッシュフロー連動</span>
                     </h2>
 
@@ -509,62 +539,141 @@
                             <button type="button" onclick="addDirectAsset('metal')" class="px-2 py-1.5 bg-amber-50 text-amber-600 border border-amber-200 text-[10px] font-bold rounded-lg hover:bg-amber-100 transition-colors flex items-center justify-center gap-1" data-i18n="btn_add_metal_asset">👑 貴金属追加</button>
                             <button type="button" onclick="addDirectAsset('bonds')" class="px-2 py-1.5 bg-purple-50 text-purple-600 border border-purple-200 text-[10px] font-bold rounded-lg hover:bg-purple-100 transition-colors flex items-center justify-center gap-1" data-i18n="btn_add_bond_asset">📜 債券追加</button>
                         </div>
-                        <div id="dynamic-assets-container" class="flex flex-col gap-4 mt-2"></div>
+						
+						
+                       <div id="dynamic-assets-container" class="flex flex-col gap-4 mt-2"></div>
                     </div>
                 </div>
+</div>
 
-                <button onclick="runSimulation()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-calculator text-amber-400"></i> <span data-i18n="btn_recalculate">各種設定でシミュレーションを実行</span>
-                </button>
+                <div id="jinsei-panel-saveload" class="flex flex-col gap-6 w-full hidden text-xs">
+                    <div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-xl p-5 flex flex-col gap-4 text-slate-300">
+                        
+                        <div class="p-3 bg-slate-950/40 border border-slate-800/60 rounded-xl flex items-start gap-2.5">
+                            <i class="fa-solid fa-circle-info text-amber-400 mt-0.5 text-sm"></i>
+                            <p class="text-slate-400 leading-relaxed text-[11px]">
+                                現在の基本設定や配置アセット構成を固定保存するスロットを選び、名前をつけて記録しておくと便利です。
+                            </p>
+                        </div>
+
+                        <h2 class="text-sm font-bold text-slate-100 border-b border-slate-800 pb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-book-bookmark text-amber-500"></i> <span>尽生の書（伝承スロット）</span>
+                        </h2>
+                        
+                        <div class="grid grid-cols-1 gap-3">
+                            <div class="p-3 bg-slate-950/60 border border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div class="flex flex-col gap-0.5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-5 h-5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold flex items-center justify-center text-[10px]">一</span>
+                                        <span id="jinsei-slot-title-1" class="font-medium text-slate-200">データがありません</span>
+                                    </div>
+                                    <span id="jinsei-slot-date-1" class="text-[10px] text-slate-500 pl-7">ーーー</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 self-end sm:self-auto">
+                                    <button onclick="executeSlotAction('save', 1)" class="px-2.5 py-1 bg-blue-950/40 hover:bg-blue-900/60 text-blue-400 border border-blue-900/50 rounded-lg font-bold transition-all flex items-center gap-1 text-[11px]">
+                                        <i class="fa-solid fa-download"></i> 記録
+                                    </button>
+                                    <button onclick="executeSlotAction('load', 1)" class="px-2.5 py-1 bg-amber-950/40 hover:bg-amber-900/60 text-amber-400 border border-amber-900/50 rounded-lg font-bold transition-all flex items-center gap-1 text-[11px]">
+                                        <i class="fa-solid fa-upload"></i> 出す
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-slate-950/60 border border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div class="flex flex-col gap-0.5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-5 h-5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold flex items-center justify-center text-[10px]">二</span>
+                                        <span id="jinsei-slot-title-2" class="font-medium text-slate-200">データがありません</span>
+                                    </div>
+                                    <span id="jinsei-slot-date-2" class="text-[10px] text-slate-500 pl-7">ーーー</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 self-end sm:self-auto">
+                                    <button onclick="executeSlotAction('save', 2)" class="px-2.5 py-1 bg-blue-950/40 hover:bg-blue-900/60 text-blue-400 border border-blue-900/50 rounded-lg font-bold transition-all flex items-center gap-1 text-[11px]">
+                                        <i class="fa-solid fa-download"></i> 記録
+                                    </button>
+                                    <button onclick="executeSlotAction('load', 2)" class="px-2.5 py-1 bg-amber-950/40 hover:bg-amber-900/60 text-amber-400 border border-amber-900/50 rounded-lg font-bold transition-all flex items-center gap-1 text-[11px]">
+                                        <i class="fa-solid fa-upload"></i> 出す
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-slate-950/60 border border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                                <div class="flex flex-col gap-0.5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-5 h-5 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold flex items-center justify-center text-[10px]">三</span>
+                                        <span id="jinsei-slot-title-3" class="font-medium text-slate-200">データがありません</span>
+                                    </div>
+                                    <span id="jinsei-slot-date-3" class="text-[10px] text-slate-500 pl-7">ーーー</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 self-end sm:self-auto">
+                                    <button onclick="executeSlotAction('save', 3)" class="px-2.5 py-1 bg-blue-950/40 hover:bg-blue-900/60 text-blue-400 border border-blue-900/50 rounded-lg font-bold transition-all flex items-center gap-1 text-[11px]">
+                                        <i class="fa-solid fa-download"></i> 記録
+                                    </button>
+                                    <button onclick="executeSlotAction('load', 3)" class="px-2.5 py-1 bg-amber-950/40 hover:bg-amber-900/60 text-amber-400 border border-amber-900/50 rounded-lg font-bold transition-all flex items-center gap-1 text-[11px]">
+                                        <i class="fa-solid fa-upload"></i> 出す
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+<div class="border-t border-slate-800/80 pt-4 flex flex-col gap-2">
+                            <span class="text-[10px] font-bold text-slate-500 tracking-wider uppercase">ファイル操作・外部保存</span>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="downloadCSV()" class="p-2 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700/60 rounded-xl font-bold transition-colors flex items-center justify-center gap-1.5 text-[11px]">
+                                    <i class="fa-solid fa-file-csv text-emerald-400"></i> 設定CSV保存
+                                </button>
+                                <div class="relative w-full">
+                                    <button onclick="document.getElementById('csv-import-file').click()" class="w-full p-2 bg-slate-800 hover:bg-slate-750 text-slate-200 border border-slate-700/60 rounded-xl font-bold transition-colors flex items-center justify-center gap-1.5 text-[11px]">
+                                        <i class="fa-solid fa-file-import text-purple-400"></i> 設定CSV読込
+                                    </button>
+                                    <input type="file" id="csv-import-file" accept=".csv" class="hidden" onchange="importCSV(event)">
+                                </div>
+                            </div>
+                        </div>
+						
+						
+                    </div>
+                </div>
+             
+       <button onclick="runSimulation()" style="display: none;" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-2xl shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-calculator text-amber-400"></i> <span data-i18n="btn_recalculate">各種設定でシミュレーションを実行</span>
+                    </button>
             </section>
 
+ <!-- 最初の部分 -->
             <section class="lg:col-span-7 flex flex-col gap-6 w-full min-w-0">
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
+                <div class="bg-white rounded-2xl p-6 flex flex-col gap-4" style="border: 3px solid #b45309; box-shadow: 0 0 15px rgba(180, 83, 9, 0.3);">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+<!-- 最後の部分 -->
                         <div>
                             <h2 id="graph-title-element" class="text-lg font-bold text-slate-900 flex items-center gap-2">
                                 <i class="fa-solid fa-chart-line text-blue-500"></i> <span data-i18n="title_graph">「準富裕層」の生涯キャッシュフロー</span>
                             </h2>
-                            <p class="text-slate-400 text-xs mt-0.5 flex flex-wrap items-center gap-2">
+							
+							
+							
+<p class="text-slate-400 text-xs mt-0.5 flex flex-wrap items-center gap-2">
                                 <span data-i18n="desc_graph_tooltip_hint">各プロット点にホバーすると資産割合(%)と額面（万円）が浮遊ポップアップします</span>
                                 <span id="cash-warning-badge" class="hidden px-2.5 py-0.5 rounded bg-rose-100 text-rose-700 font-bold text-[10px] animate-pulse" data-i18n="badge_cash_deficit_warning">
                                     ⚠️ 預金不足期間あり
                                 </span>
                             </p>
                         </div>
-                        
-                        <div class="flex flex-wrap items-center gap-2 self-stretch sm:self-auto w-full sm:w-auto">
-
-
-<button onclick="openJinseiSaveLoadModal('save')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial" title="現在の軍略を『尽生の書』へ固定保存">
-    <i class="fa-solid fa-floppy-disk"></i> <span>設定を保存</span>
-</button>
-<button onclick="openJinseiSaveLoadModal('load')" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-slate-950 text-xs font-black rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial" title="『尽生の書』から軍略を復元">
-    <i class="fa-solid fa-folder-open"></i> <span>設定の読込</span>
-</button>
-
-<button onclick="downloadCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
-                                <i class="fa-solid fa-file-csv"></i> <span data-i18n="btn_csv_export_label">設定CSV保存</span>
-                            </button>
-                            <label for="csv-import-file" class="cursor-pointer px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg transition-all flex items-center gap-1.5 justify-center flex-1 sm:flex-initial">
-                                <i class="fa-solid fa-file-import"></i> <span data-i18n="btn_csv_import_label">設定CSV読込</span>
-                            </label>
-                            <input type="file" id="csv-import-file" accept=".csv" class="hidden" onchange="importCSV(event)">
-
-
-                        </div>
                     </div>
 
                     <div class="relative w-full h-[380px] bg-slate-50/50 rounded-xl p-2 border border-slate-100">
+					
+					
+					
                         <canvas id="growthChart"></canvas>
                     </div>
+     <!-- 最初の部分 -->
                 </div>
 
-                <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 flex flex-col gap-4">
+                <div class="bg-white rounded-2xl p-6 flex flex-col gap-4" style="border: 3px solid #b45309; box-shadow: 0 0 15px rgba(180, 83, 9, 0.3);">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                            <i class="fa-solid fa-table text-violet-500"></i> <span data-i18n="title_annual_data_table">年次データ明細</span>
-                        </h2>
+<!-- 最後の部分 -->
                         <span class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-full font-medium max-sm:hidden" data-i18n="desc_table_flow_hint">所得は現金に流入・各積立は現金より期末支出</span>
                     </div>
 
@@ -653,7 +762,7 @@
     </div>
 
 
-<div class="fixed top-3/4 -translate-y-1/2 right-4 z-[60]" style="transform: translate3d(0,-50%,0); will-change: transform;">
+<div id="floating-dwz-btn" class="fixed top-3/4 -translate-y-1/2 right-4 z-[60]" style="transform: translate3d(0,-50%,0); will-change: transform;">
         <button onclick="transitionToDwz()" class="pulse-dwz bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 hover:from-amber-500 hover:to-yellow-400 text-slate-950 font-black px-4 py-3 sm:px-5 sm:py-4 rounded-2xl shadow-[0_10px_30px_rgba(245,158,11,0.4)] flex items-center gap-2 transition-all group focus:outline-none focus:ring-2 focus:ring-amber-400 text-xs sm:text-sm">
             <span class="text-base sm:text-lg">💀</span>
             <span class="text-[10px] sm:text-xs uppercase tracking-widest font-black" data-i18n="btn_floating_dwz_check">DIE WITH ZERO !</span>
@@ -694,7 +803,7 @@
                     <span class="text-amber-400 font-bold mt-0.5">2.</span>
                     <div>
                         <strong class="text-slate-100">設定を整える</strong>
-                        <p class="text-xs text-slate-400 mt-0.5">必要に応じて、基本設定や資産の値を変えましょう。（※数値を変更するだけで、自動かつ瞬時に未来が計算されます）</p>
+                        <p class="text-xs text-slate-400 mt-0.5">必要に応じて、人生の設定や資産の値を変えましょう。（※数値を変更するだけで、自動かつ瞬時に未来が計算されます）</p>
                     </div>
                 </div>
 
@@ -707,15 +816,26 @@
                 </div>
             </div>
 
+
+<!-- 最初の部分 -->
             <div class="mt-6 text-right">
                 <button id="close-use-modal-btn" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-5 py-2 rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20">
                     了解しました
                 </button>
             </div>
+
+            <!-- 🎯 ここから：さりげない著作権表記の追加 -->
+            <div class="mt-5 pt-3 border-t border-slate-800/60 text-center text-[10px] text-slate-500 font-light leading-relaxed tracking-wider">
+                © 2026 PLIP & Hiro-Seki-Tech & 投資運用のジェムキン (Gemkin FinTech Lab). 無断転載及びハルシネーションはお断り申し上げます。
+            </div>
+            <!-- 🎯 ここまで -->
+
         </div>
     </div>
 
 <div id="jinsei-saveload-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm hidden items-center justify-center z-[200] p-4">
+<!-- 最後の部分 -->
+
   <div class="bg-slate-900 border border-amber-500/30 rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-4 text-slate-100">
     <div class="flex items-center justify-between border-b border-slate-800 pb-3">
       <h4 id="jinsei-saveload-modal-title" class="text-base sm:text-lg font-bold text-amber-400 flex items-center gap-2">
@@ -1988,13 +2108,21 @@
                         （すなわち <span class="text-yellow-400 font-black text-xl px-1 bg-yellow-400/10 rounded">${formatAssetValue(additionalSpendPerMonth)}／月</span>）
                         【多く】使わなければなりません。
                     `;
-                    if (adviceBox) { adviceBox.innerHTML = `「富を抱いたまま墓場へ入るは人生の恥辱。若き日に経験という名の投資へ配分を移し、人生の効用を極大化させよ。生きるを尽くせ！」`; }
+                   
+
+	if (adviceBox) { adviceBox.innerHTML = `「富を抱いたまま墓場へ入るは人生の恥辱。若き日に経験という名の投資へ配分を移し、人生の効用を極大化させよ。生きるを尽くせ！」`; }
                 }
+
+                // 💀 DWZ警告画面では右下のフローティングボタンを非表示にする
+                const floatingBtn = document.getElementById('floating-dwz-btn');
+                if (floatingBtn) floatingBtn.classList.add('hidden');
 
                 document.getElementById('simulator-view').classList.add('hidden');
                 document.getElementById('dwz-view').classList.remove('hidden');
                 document.getElementById('dwz-view').classList.add('flex');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+				
+				
 
                 setTimeout(() => {
                     overlay.style.opacity = '0'; overlay.classList.add('pointer-events-none');
@@ -2004,10 +2132,14 @@
             }, 1200);
         }
 
-        function backToSimulator() {
+function backToSimulator() {
             document.getElementById('dwz-view').classList.remove('flex'); document.getElementById('dwz-view').classList.add('hidden');
             document.getElementById('simulator-view').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // 💀 シミュレータに戻るときに右下のフローティングボタンを再表示する
+            const floatingBtn = document.getElementById('floating-dwz-btn');
+            if (floatingBtn) floatingBtn.classList.remove('hidden');
         }
 
 
@@ -2183,10 +2315,422 @@
         }
 
 
+// 👑 【新設】尽生3連調停タブ切り替えコントロール（宝均直系）
+function switchJinseiTab(tabId) {
+    const tabs = {
+        'basic': { btn: 'tab-basic', panel: 'jinsei-panel-basic', activeClass: 'from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/10 border border-amber-400/20' },
+        'assets': { btn: 'tab-assets', panel: 'jinsei-panel-assets', activeClass: 'from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/10 border border-amber-400/20' },
+        'saveload': { btn: 'tab-saveload', panel: 'jinsei-panel-saveload', activeClass: 'from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/10 border border-amber-400/20' }
+    };
 
+    // 通常状態（非アクティブ）のボタン装飾クラス
+    const normalClassBasic = "text-slate-400 hover:text-white hover:bg-white/5";
+    const normalClassAssets = "text-slate-400 hover:text-white hover:bg-white/5";
+    const normalClassSaveload = "text-slate-500 hover:text-white hover:bg-white/5";
 
+    Object.keys(tabs).forEach(key => {
+        const config = tabs[key];
+        const btnEl = document.getElementById(config.btn);
+        const panelEl = document.getElementById(config.panel);
 
+        if (!btnEl || !panelEl) return;
 
+        if (key === tabId) {
+            // アクティブ化
+            panelEl.classList.remove('hidden');
+            btnEl.className = `relative flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 bg-gradient-to-r ${config.activeClass}`;
+            if (key === 'saveload') {
+                // タブ3だけは文字を少し小さく
+                btnEl.classList.add('text-[11px]', 'sm:text-xs');
+            }
+        } else {
+            // 非アクティブ化
+            panelEl.classList.add('hidden');
+            let nClass = (key === 'saveload') ? normalClassSaveload : ((key === 'assets') ? normalClassAssets : normalClassBasic);
+            let fontSize = (key === 'saveload') ? 'text-[11px] sm:text-xs' : 'text-xs sm:text-sm';
+            btnEl.className = `relative flex-1 py-3 ${fontSize} font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 ${nClass}`;
+        }
+    });
+}
+
+// 👑 【新設】「尽生の書 一〜三」ローカルストレージ連動セーブ＆ロードシステム
+function saveToSlot(slotNum) {
+    try {
+        // 既存の尽生のセーブ用データ生成処理（モーダル等で使われている仕組み）を応用
+        const data = {
+            // 基本設定
+            startYear: parseInt(document.getElementById('start-year').value) || 2026,
+            currentAge: parseInt(document.getElementById('current-age').value) || 30,
+            endAge: parseInt(document.getElementById('end-age').value) || 100,
+            
+            // 給与所得
+            salaryIncome: parseFloat(document.getElementById('salary-income').value) || 0,
+            salaryStartAge: parseInt(document.getElementById('salary-start-age').value) || 30,
+            salaryEndAge: parseInt(document.getElementById('salary-end-age').value) || 60,
+            
+            // 現金口座
+            initCash: parseFloat(document.getElementById('init-cash').value) || 0,
+            cashRate: parseFloat(document.getElementById('cash-rate').value) || 0,
+            
+            // 動的要素（その他所得、生活費ステージ、臨時収入・出費、アセットカード）の全回収
+            dynamicDataList: []
+        };
+
+        // その他所得の回収
+        document.querySelectorAll('#other-income-container .grid').forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 4) {
+                data.dynamicDataList.push({
+                    type: 'other-income',
+                    name: inputs[0].value,
+                    amount: parseFloat(inputs[1].value) || 0,
+                    start: parseInt(inputs[2].value) || 0,
+                    end: parseInt(inputs[3].value) || 0
+                });
+            }
+        });
+
+        // 生活費ステージの回収
+        document.querySelectorAll('#stage-container .grid').forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 2) {
+                data.dynamicDataList.push({
+                    type: 'stage',
+                    amount: parseFloat(inputs[0].value) || 0,
+                    endAge: parseInt(inputs[1].value) || 0
+                });
+            }
+        });
+
+        // 臨時収入の回収
+        document.querySelectorAll('#income-container .grid').forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 3) {
+                data.dynamicDataList.push({
+                    type: 'income',
+                    name: inputs[0].value,
+                    age: parseInt(inputs[1].value) || 0,
+                    amount: parseFloat(inputs[2].value) || 0,
+                    target: row.querySelector('select')?.value || 'cash'
+                });
+            }
+        });
+
+        // 臨時出費の回収
+        document.querySelectorAll('#expense-container .grid').forEach(row => {
+            const inputs = row.querySelectorAll('input');
+            if (inputs.length >= 3) {
+                data.dynamicDataList.push({
+                    type: 'expense',
+                    name: inputs[0].value,
+                    age: parseInt(inputs[1].value) || 0,
+                    amount: parseFloat(inputs[2].value) || 0
+                });
+            }
+        });
+
+        // アセットカードの回収
+        document.querySelectorAll('#dynamic-assets-container > div').forEach(card => {
+            const name = card.querySelector('h3 span')?.innerText || '';
+            const assetType = card.getAttribute('data-asset-type') || '';
+            const initAmt = parseFloat(card.querySelector('[id^="asset-init-amt-"]')?.value) || 0;
+            const rate = parseFloat(card.querySelector('[id^="asset-rate-"]')?.value) || 0;
+            const payout = card.querySelector('[id^="asset-payout-"]')?.value || 'reinvest';
+            const yearAmt = parseFloat(card.querySelector('[id^="asset-year-amt-"]')?.value) || 0;
+            const monthAmt = parseFloat(card.querySelector('[id^="asset-month-amt-"]')?.value) || 0;
+            const startAge = parseInt(card.querySelector('[id^="asset-start-age-"]')?.value) || 0;
+            const endAge = parseInt(card.querySelector('[id^="asset-end-age-"]')?.value) || 0;
+
+            data.dynamicDataList.push({
+                type: 'asset-card',
+                name, assetType, initAmt, rate, payout, yearAmt, monthAmt, startAge, endAge
+            });
+        });
+
+        // ローカルストレージに「jinsei_slot_X」としてシリアライズ保存
+        localStorage.setItem(`jinsei_slot_${slotNum}`, JSON.stringify(data));
+        
+        // 既存のトースト通知機能（showToast）を呼び出す
+        if (typeof showToast === 'function') {
+            showToast(`『尽生の書 伝承スロット${slotNum}』に現在の設定を記録しました。`, 'success');
+        } else {
+            alert(`『尽生の書 一〜三』スロット ${slotNum} に保存しました！`);
+        }
+    } catch (e) {
+        console.error(e);
+        alert('セーブ中にエラーが発生しました。');
+    }
+}
+
+function loadFromSlot(slotNum) {
+    try {
+        const rawData = localStorage.getItem(`jinsei_slot_${slotNum}`);
+        if (!rawData) {
+            if (typeof showToast === 'function') {
+                showToast(`『尽生の書 ${slotNum}』にはまだデータが記録されていません。`, 'warning');
+            } else {
+                alert('データが存在しません。');
+            }
+            return;
+        }
+
+        const savedData = JSON.parse(rawData);
+
+        // 1. 基本入力項目の復元
+        if(document.getElementById('start-year')) document.getElementById('start-year').value = savedData.startYear || 2026;
+        if(document.getElementById('current-age')) document.getElementById('current-age').value = savedData.currentAge || 30;
+        if(document.getElementById('end-age')) document.getElementById('end-age').value = savedData.endAge || 100;
+        
+        if(document.getElementById('salary-income')) document.getElementById('salary-income').value = savedData.salaryIncome || 0;
+        if(document.getElementById('salary-start-age')) document.getElementById('salary-start-age').value = savedData.salaryStartAge || 30;
+        if(document.getElementById('salary-end-age')) document.getElementById('salary-end-age').value = savedData.salaryEndAge || 60;
+        
+        if(document.getElementById('init-cash')) document.getElementById('init-cash').value = savedData.initCash || 0;
+        if(document.getElementById('cash-rate')) document.getElementById('cash-rate').value = savedData.cashRate || 0;
+
+        // 2. 動的コンテナを全クリア（既存の読込ロジックと同様の挙動）
+        if(document.getElementById('other-income-container')) document.getElementById('other-income-container').innerHTML = '';
+        if(document.getElementById('stage-container')) document.getElementById('stage-container').innerHTML = '';
+        if(document.getElementById('income-container')) document.getElementById('income-container').innerHTML = '';
+        if(document.getElementById('expense-container')) document.getElementById('expense-container').innerHTML = '';
+        if(document.getElementById('dynamic-assets-container')) document.getElementById('dynamic-assets-container').innerHTML = '';
+
+        // 3. 動的アセット・行の再生成
+        if (savedData.dynamicDataList && Array.isArray(savedData.dynamicDataList)) {
+            savedData.dynamicDataList.forEach(item => {
+                if (item.type === 'other-income' && typeof addOtherIncomeRow === 'function') {
+                    addOtherIncomeRow(item.name, item.amount, item.start, item.end);
+                } else if (item.type === 'stage' && typeof addStageRow === 'function') {
+                    addStageRow(item.amount, item.endAge);
+                } else if (item.type === 'income' && typeof addIncomeRow === 'function') {
+                    addIncomeRow(item.name, item.age, item.amount, item.target);
+                } else if (item.type === 'expense' && typeof addExpenseRow === 'function') {
+                    addExpenseRow(item.name, item.age, item.amount);
+                } else if (item.type === 'asset-card' && typeof addAssetElement === 'function') {
+                    addAssetElement({
+                        name: item.name, type: item.assetType, initAmt: item.initAmt, rate: item.rate,
+                        payout: item.payout, yearAmt: item.yearAmt, monthAmt: item.monthAmt,
+                        startAge: item.startAge, endAge: item.endAge
+                    });
+                }
+            });
+        }
+        
+        // 4. 再計算とシミュレーション更新
+        if (typeof updateStageAges === 'function') updateStageAges();
+        if (typeof runSimulation === 'function') runSimulation();
+
+        if (typeof showToast === 'function') {
+            showToast(`『尽生の書 伝承スロット${slotNum}』から設定を読み込みました！`, 'success');
+        }
+    } catch (e) {
+        console.error(e);
+        alert('ロード中にエラーが発生しました。');
+    }
+}
+
+// 👑 【新設】「尽生の書 一〜三」名前・日付対応ローカルストレージ連動システム
+
+// 各スロットのラベル（名前と日付）を画面に反映する関数
+function updateSlotLabels() {
+    for (let slot = 1; slot <= 3; slot++) {
+        const rawData = localStorage.getItem(`jinsei_slot_v2_${slot}`);
+        const slotTitleEl = document.getElementById(`jinsei-slot-title-${slot}`);
+        const slotDateEl = document.getElementById(`jinsei-slot-date-${slot}`);
+        
+        if (slotTitleEl && slotDateEl) {
+            if (rawData) {
+                try {
+                    const parsed = JSON.parse(rawData);
+                    // 保存された名前が空ならデフォルト名を出す
+                    slotTitleEl.innerText = parsed.slotName || `尽生の書 ${slot === 1 ? '一' : slot === 2 ? '二' : '三'}`;
+                    slotDateEl.innerText = parsed.savedAt || 'ーーー';
+                } catch(e) {
+                    slotTitleEl.innerText = `尽生の書 ${slot === 1 ? '一' : slot === 2 ? '二' : '三'} (データあり)`;
+                    slotDateEl.innerText = 'ーーー';
+                }
+            } else {
+                slotTitleEl.innerText = 'データがありません';
+                slotDateEl.innerText = 'ーーー';
+            }
+        }
+    }
+}
+
+// 記録（セーブ）＆ 出す（ロード）の統合コントロール
+function executeSlotAction(action, slotNum) {
+    if (action === 'save') {
+        // 🎯 1. 人生パターンの名称をHiroに入力してもらうポップアップ
+        const defaultName = document.getElementById(`jinsei-slot-title-${slotNum}`)?.innerText;
+        const currentName = (defaultName === 'データがありません') ? '' : defaultName;
+        const userInput = prompt(`『尽生の書 ${slotNum === 1 ? '一' : slotNum === 2 ? '二' : '三'}』に記録します。\nこの人生パターン（プラン名）の名称を入力してください：`, currentName);
+        
+        if (userInput === null) return; // キャンセルされたら何もしない
+        const slotName = userInput.trim() || `無題のプラン（書 ${slotNum === 1 ? '一' : slotNum === 2 ? '二' : '三'}）`;
+
+        try {
+            // 2. 現在の日付・時刻（タイムスタンプ）を美しく生成
+            const now = new Date();
+            const savedAt = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+
+            // 3. 現在のすべての入力フォームからデータを完全回収
+            const data = {
+                slotName: slotName,
+                savedAt: savedAt,
+                // 基本設定
+                startYear: parseInt(document.getElementById('start-year')?.value) || 2026,
+                currentAge: parseInt(document.getElementById('current-age')?.value) || 30,
+                endAge: parseInt(document.getElementById('end-age')?.value) || 100,
+                // 給与所得
+                salaryIncome: parseFloat(document.getElementById('salary-income')?.value) || 0,
+                salaryStartAge: parseInt(document.getElementById('salary-start-age')?.value) || 30,
+                salaryEndAge: parseInt(document.getElementById('salary-end-age')?.value) || 60,
+                // 現金口座
+                initCash: parseFloat(document.getElementById('init-cash')?.value) || 0,
+                cashRate: parseFloat(document.getElementById('rate-cash')?.value) || 0, // ここを実際のID『rate-cash』に完全同期調停
+                // 動的配列データ
+                dynamicDataList: []
+            };
+
+            // その他所得の回収
+            document.querySelectorAll('#other-income-container .grid').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs.length >= 4) {
+                    data.dynamicDataList.push({
+                        type: 'other-income', name: inputs[0].value, amount: parseFloat(inputs[1].value) || 0, start: parseInt(inputs[2].value) || 0, end: parseInt(inputs[3].value) || 0
+                    });
+                }
+            });
+
+            // 生活費ステージの回収
+            document.querySelectorAll('#stage-container .grid').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs.length >= 2) {
+                    data.dynamicDataList.push({
+                        type: 'stage', amount: parseFloat(inputs[0].value) || 0, endAge: parseInt(inputs[1].value) || 0
+                    });
+                }
+            });
+
+            // 臨時収入の回収
+            document.querySelectorAll('#income-container .grid').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const select = row.querySelector('select');
+                if (inputs.length >= 3) {
+                    data.dynamicDataList.push({
+                        type: 'income', name: inputs[0].value, age: parseInt(inputs[1].value) || 0, amount: parseFloat(inputs[2].value) || 0, target: select ? select.value : 'cash'
+                    });
+                }
+            });
+
+            // 臨時出費の回収
+            document.querySelectorAll('#expense-container .grid').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs.length >= 3) {
+                    data.dynamicDataList.push({
+                        type: 'expense', name: inputs[0].value, age: parseInt(inputs[1].value) || 0, amount: parseFloat(inputs[2].value) || 0
+                    });
+                }
+            });
+
+            // アセットカードの回収
+            document.querySelectorAll('#dynamic-assets-container > div').forEach(card => {
+                const name = card.querySelector('h3 span')?.innerText || '';
+                const assetType = card.getAttribute('data-asset-type') || '';
+                const initAmt = parseFloat(card.querySelector('[id^="asset-init-amt-"]')?.value) || 0;
+                const rate = parseFloat(card.querySelector('[id^="asset-rate-"]')?.value) || 0;
+                const payout = card.querySelector('[id^="asset-payout-"]')?.value || 'reinvest';
+                const yearAmt = parseFloat(card.querySelector('[id^="asset-year-amt-"]')?.value) || 0;
+                const monthAmt = parseFloat(card.querySelector('[id^="asset-month-amt-"]')?.value) || 0;
+                const startAge = parseInt(card.querySelector('[id^="asset-start-age-"]')?.value) || 0;
+                const endAge = parseInt(card.querySelector('[id^="asset-end-age-"]')?.value) || 0;
+
+                data.dynamicDataList.push({
+                    type: 'asset-card', name, assetType, initAmt, rate, payout, yearAmt, monthAmt, startAge, endAge
+                });
+            });
+
+            // ローカルストレージへ保存
+            localStorage.setItem(`jinsei_slot_v2_${slotNum}`, JSON.stringify(data));
+            
+            // 画面の文字（ラベル）を即座に更新
+            updateSlotLabels();
+
+            // 既存のトースト通知システムと直結
+            if (typeof showToast === 'function') {
+                showToast(`『尽生の書 ${slotNum === 1 ? '一' : slotNum === 2 ? '二' : '三'}』に「${slotName}」を記録しました。`, 'success');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('セーブ中にエラーが発生しました。');
+        }
+
+    } else if (action === 'load') {
+        // 📥 出す（ロード）
+        try {
+            const rawData = localStorage.getItem(`jinsei_slot_v2_${slotNum}`);
+            if (!rawData) {
+                if (typeof showToast === 'function') {
+                    showToast(`『尽生の書』伝承スロット ${slotNum === 1 ? '一' : slotNum === 2 ? '二' : '三'} にはデータがありません。`, 'warning');
+                }
+                return;
+            }
+
+            const savedData = JSON.parse(rawData);
+
+            // 各入力項目の安全な復元
+            if(document.getElementById('start-year')) document.getElementById('start-year').value = savedData.startYear || 2026;
+            if(document.getElementById('current-age')) document.getElementById('current-age').value = savedData.currentAge || 30;
+            if(document.getElementById('end-age')) document.getElementById('end-age').value = savedData.endAge || 100;
+            
+            if(document.getElementById('salary-income')) document.getElementById('salary-income').value = savedData.salaryIncome || 0;
+            if(document.getElementById('salary-start-age')) document.getElementById('salary-start-age').value = savedData.salaryStartAge || 30;
+            if(document.getElementById('salary-end-age')) document.getElementById('salary-end-age').value = savedData.salaryEndAge || 60;
+            
+            if(document.getElementById('init-cash')) document.getElementById('init-cash').value = savedData.initCash || 0;
+            if(document.getElementById('rate-cash')) document.getElementById('rate-cash').value = savedData.cashRate || 0; // ここも同期調停
+
+            // 各動的コンテナを一度すっきり全クリア
+            if(document.getElementById('other-income-container')) document.getElementById('other-income-container').innerHTML = '';
+            if(document.getElementById('stage-container')) document.getElementById('stage-container').innerHTML = '';
+            if(document.getElementById('income-container')) document.getElementById('income-container').innerHTML = '';
+            if(document.getElementById('expense-container')) document.getElementById('expense-container').innerHTML = '';
+            if(document.getElementById('dynamic-assets-container')) document.getElementById('dynamic-assets-container').innerHTML = '';
+
+            // データの復元とDOMアセットの自動再生成
+            if (savedData.dynamicDataList && Array.isArray(savedData.dynamicDataList)) {
+                savedData.dynamicDataList.forEach(item => {
+                    if (item.type === 'other-income' && typeof addOtherIncomeRow === 'function') {
+                        addOtherIncomeRow(item.name, item.amount, item.start, item.end);
+                    } else if (item.type === 'stage' && typeof addStageRow === 'function') {
+                        addStageRow(item.amount, item.endAge);
+                    } else if (item.type === 'income' && typeof addIncomeRow === 'function') {
+                        addIncomeRow(item.name, item.age, item.amount, item.target);
+                    } else if (item.type === 'expense' && typeof addExpenseRow === 'function') {
+                        addExpenseRow(item.name, item.age, item.amount);
+                    } else if (item.type === 'asset-card' && typeof addAssetElement === 'function') {
+                        addAssetElement({
+                            name: item.name, type: item.assetType, initAmt: item.initAmt, rate: item.rate,
+                            payout: item.payout, yearAmt: item.yearAmt, monthAmt: item.monthAmt,
+                            startAge: item.startAge, endAge: item.endAge
+                        });
+                    }
+                });
+            }
+            
+            // 既存のシミュレーション計算全体をキックしてグラフを同期更新
+            if (typeof updateStageAges === 'function') updateStageAges();
+            if (typeof runSimulation === 'function') runSimulation();
+
+            if (typeof showToast === 'function') {
+                showToast(`『尽生の書』から「${savedData.slotName || '無題'}」の軍略を展開しました！`, 'success');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('ロード中にエラーが発生しました。');
+        }
+    }
+}
 
         window.onload = function() { 
             const lastScenario = localStorage.getItem('gemkin_active_scenario') || 'sub_rich';
@@ -2592,6 +3136,192 @@ function executeJinseiLoadSlot(slotNumber) {
   showToast(`🔮 【尽生の書 ${slotNumber === 1 ? '一' : slotNumber === 2 ? '二' : '三'}】より『${savedData.slotName}』の世界線を完全に復元しました。`);
   closeJinseiSaveLoadModal();
 }
+
+// 👑 【新設】「尽生の書 一〜三」名前・日付対応ローカルストレージ連動システム
+
+// 各スロットのラベル（名前と日付）を画面に反映する関数
+function updateSlotLabels() {
+    for (let slot = 1; slot <= 3; slot++) {
+        const rawData = localStorage.getItem(`jinsei_slot_v2_${slot}`);
+        const slotTitleEl = document.getElementById(`jinsei-slot-title-${slot}`);
+        const slotDateEl = document.getElementById(`jinsei-slot-date-${slot}`);
+        
+        if (slotTitleEl && slotDateEl) {
+            if (rawData) {
+                try {
+                    const parsed = JSON.parse(rawData);
+                    slotTitleEl.innerText = parsed.slotName || `尽生の書 ${slot === 1 ? '一' : slot === 2 ? '二' : '三'}`;
+                    slotDateEl.innerText = parsed.savedAt || 'ーーー';
+                } catch(e) {
+                    slotTitleEl.innerText = `尽生の書 ${slot === 1 ? '一' : slot === 2 ? '二' : '三'} (データあり)`;
+                    slotDateEl.innerText = 'ーーー';
+                }
+            } else {
+                slotTitleEl.innerText = 'データがありません';
+                slotDateEl.innerText = 'ーーー';
+            }
+        }
+    }
+}
+
+// 記録（セーブ）＆ 出す（ロード）の統合コントロール
+function executeSlotAction(action, slotNum) {
+    if (action === 'save') {
+        const defaultName = document.getElementById(`jinsei-slot-title-${slotNum}`)?.innerText;
+        const currentName = (defaultName === 'データがありません') ? '' : defaultName;
+        const userInput = prompt(`『尽生の書 ${slotNum === 1 ? '一' : slotNum === 2 ? '二' : '三'}』に記録します。\nこの人生パターン（プラン名）の名称を入力してください：`, currentName);
+        
+        if (userInput === null) return; 
+        const slotName = userInput.trim() || `無題のプラン（書 ${slotNum === 1 ? '一' : slotNum === 2 ? '二' : '三'}）`;
+
+        try {
+            const now = new Date();
+            const savedAt = `${now.getFullYear()}/${String(now.getMonth()+1).padStart(2,'0')}/${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+
+            const data = {
+                slotName: slotName,
+                savedAt: savedAt,
+                startYear: parseInt(document.getElementById('start-year')?.value) || 2026,
+                currentAge: parseInt(document.getElementById('current-age')?.value) || 30,
+                endAge: parseInt(document.getElementById('end-age')?.value) || 100,
+                salaryIncome: parseFloat(document.getElementById('salary-income')?.value) || 0,
+                salaryStartAge: parseInt(document.getElementById('salary-start-age')?.value) || 30,
+                salaryEndAge: parseInt(document.getElementById('salary-end-age')?.value) || 60,
+                initCash: parseFloat(document.getElementById('init-cash')?.value) || 0,
+                cashRate: parseFloat(document.getElementById('rate-cash')?.value) || 0,
+                dynamicDataList: []
+            };
+
+            document.querySelectorAll('#other-income-container .grid').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs.length >= 4) {
+                    data.dynamicDataList.push({
+                        type: 'other-income', name: inputs[0].value, amount: parseFloat(inputs[1].value) || 0, start: parseInt(inputs[2].value) || 0, end: parseInt(inputs[3].value) || 0
+                    });
+                }
+            });
+
+            document.querySelectorAll('#stage-container .grid').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs.length >= 2) {
+                    data.dynamicDataList.push({
+                        type: 'stage', amount: parseFloat(inputs[0].value) || 0, endAge: parseInt(inputs[1].value) || 0
+                    });
+                }
+            });
+
+            document.querySelectorAll('#income-container .grid').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const select = row.querySelector('select');
+                if (inputs.length >= 3) {
+                    data.dynamicDataList.push({
+                        type: 'income', name: inputs[0].value, age: parseInt(inputs[1].value) || 0, amount: parseFloat(inputs[2].value) || 0, target: select ? select.value : 'cash'
+                    });
+                }
+            });
+
+            document.querySelectorAll('#expense-container .grid').forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs.length >= 3) {
+                    data.dynamicDataList.push({
+                        type: 'expense', name: inputs[0].value, age: parseInt(inputs[1].value) || 0, amount: parseFloat(inputs[2].value) || 0
+                    });
+                }
+            });
+
+            document.querySelectorAll('#dynamic-assets-container > div').forEach(card => {
+                const name = card.querySelector('h3 span')?.innerText || '';
+                const assetType = card.getAttribute('data-asset-type') || '';
+                const initAmt = parseFloat(card.querySelector('[id^="asset-init-amt-"]')?.value) || 0;
+                const rate = parseFloat(card.querySelector('[id^="asset-rate-"]')?.value) || 0;
+                const payout = card.querySelector('[id^="asset-payout-"]')?.value || 'reinvest';
+                const yearAmt = parseFloat(card.querySelector('[id^="asset-year-amt-"]')?.value) || 0;
+                const monthAmt = parseFloat(card.querySelector('[id^="asset-month-amt-"]')?.value) || 0;
+                const startAge = parseInt(card.querySelector('[id^="asset-start-age-"]')?.value) || 0;
+                const endAge = parseInt(card.querySelector('[id^="asset-end-age-"]')?.value) || 0;
+
+                data.dynamicDataList.push({
+                    type: 'asset-card', name, assetType, initAmt, rate, payout, yearAmt, monthAmt, startAge, endAge
+                });
+            });
+
+            localStorage.setItem(`jinsei_slot_v2_${slotNum}`, JSON.stringify(data));
+            updateSlotLabels();
+
+            if (typeof showToast === 'function') {
+                showToast(`『尽生の書 ${slotNum === 1 ? '一' : slotNum === 2 ? '二' : '三'}』に「${slotName}」を記録しました。`, 'success');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('セーブ中にエラーが発生しました。');
+        }
+
+    } else if (action === 'load') {
+        try {
+            const rawData = localStorage.getItem(`jinsei_slot_v2_${slotNum}`);
+            if (!rawData) {
+                if (typeof showToast === 'function') {
+                    showToast(`『尽生の書』伝承スロット ${slotNum === 1 ? '一' : slotNum === 2 ? '二' : '三'} にはデータがありません。`, 'warning');
+                }
+                return;
+            }
+
+            const savedData = JSON.parse(rawData);
+
+            if(document.getElementById('start-year')) document.getElementById('start-year').value = savedData.startYear || 2026;
+            if(document.getElementById('current-age')) document.getElementById('current-age').value = savedData.currentAge || 30;
+            if(document.getElementById('end-age')) document.getElementById('end-age').value = savedData.endAge || 100;
+            
+            if(document.getElementById('salary-income')) document.getElementById('salary-income').value = savedData.salaryIncome || 0;
+            if(document.getElementById('salary-start-age')) document.getElementById('salary-start-age').value = savedData.salaryStartAge || 30;
+            if(document.getElementById('salary-end-age')) document.getElementById('salary-end-age').value = savedData.salaryEndAge || 60;
+            
+            if(document.getElementById('init-cash')) document.getElementById('init-cash').value = savedData.initCash || 0;
+            if(document.getElementById('rate-cash')) document.getElementById('rate-cash').value = savedData.cashRate || 0;
+
+            if(document.getElementById('other-income-container')) document.getElementById('other-income-container').innerHTML = '';
+            if(document.getElementById('stage-container')) document.getElementById('stage-container').innerHTML = '';
+            if(document.getElementById('income-container')) document.getElementById('income-container').innerHTML = '';
+            if(document.getElementById('expense-container')) document.getElementById('expense-container').innerHTML = '';
+            if(document.getElementById('dynamic-assets-container')) document.getElementById('dynamic-assets-container').innerHTML = '';
+
+            if (savedData.dynamicDataList && Array.isArray(savedData.dynamicDataList)) {
+                savedData.dynamicDataList.forEach(item => {
+                    if (item.type === 'other-income' && typeof addOtherIncomeRow === 'function') {
+                        addOtherIncomeRow(item.name, item.amount, item.start, item.end);
+                    } else if (item.type === 'stage' && typeof addStageRow === 'function') {
+                        addStageRow(item.amount, item.endAge);
+                    } else if (item.type === 'income' && typeof addIncomeRow === 'function') {
+                        addIncomeRow(item.name, item.age, item.amount, item.target);
+                    } else if (item.type === 'expense' && typeof addExpenseRow === 'function') {
+                        addExpenseRow(item.name, item.age, item.amount);
+                    } else if (item.type === 'asset-card' && typeof addAssetElement === 'function') {
+                        addAssetElement({
+                            name: item.name, type: item.assetType, initAmt: item.initAmt, rate: item.rate,
+                            payout: item.payout, yearAmt: item.yearAmt, monthAmt: item.monthAmt,
+                            startAge: item.startAge, endAge: item.endAge
+                        });
+                    }
+                });
+            }
+            
+            if (typeof updateStageAges === 'function') updateStageAges();
+            if (typeof runSimulation === 'function') runSimulation();
+
+            if (typeof showToast === 'function') {
+                showToast(`『尽生の書』から「${savedData.slotName || '無題'}」の軍略を展開しました！`, 'success');
+            }
+        } catch (e) {
+            console.error(e);
+            alert('ロード中にエラーが発生しました。');
+        }
+    }
+}
+
+// ページ読み込み時に初期化処理を走らせる自動フック
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof updateSlotLabels === 'function') updateSlotLabels();
+});
 
     </script>
 </html>
