@@ -72,7 +72,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased transition-all duration-300">
 
-    <div id="toast" class="fixed top-5 right-5 z-50 transform translate-y-[-20px] opacity-0 pointer-events-none transition-all duration-300 ease-out bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3">
+    <div id="toast" class="fixed top-5 right-5 z-100 transform translate-y-[-20px] opacity-0 pointer-events-none transition-all duration-300 ease-out bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3">
         <span id="toast-icon" class="text-emerald-400 text-lg"><i class="fa-solid fa-circle-check"></i></span>
         <span id="toast-text" data-i18n="toast_message" class="text-sm font-medium">通知メッセージ</span>
     </div>
@@ -303,21 +303,24 @@
                         <div class="flex items-center bg-slate-900 rounded-lg border border-slate-700 overflow-hidden flex-wrap max-w-full">        
 						   <input type="text" id="scenario-input" value="準富裕層" oninput="handleUserTypeInput()" class="bg-transparent text-slate-100 px-3 py-1.5 font-bold focus:outline-none text-xs w-36">
                             <select id="scenario-selector" onchange="handleScenarioSelect(this.value)" class="bg-slate-800 text-slate-400 border-l border-slate-700 focus:outline-none cursor-pointer py-1.5 text-xs px-2">
-                                <option value="custom" data-i18n="opt_custom_input">— 自由入力 —</option>
-                                <option value="nri_ultra_rich">【資産】超富裕層（5億円以上）</option>
-                                <option value="nri_rich">【資産】富裕層（1億〜5億円）</option>
-                                <option value="nri_sub_rich">【資産】準富裕層（5000万〜1億円）</option>
-                                <option value="nri_upper_mass">【資産】アッパーマス層（3000万〜5000万）</option>
-                                <option value="nri_mass">【資産】マス層（3000万円未満）</option>
-                                <option value="live_power_couple">【生活】都心タワマン共働き</option>
-                                <option value="live_fire">【生活】40代FIRE達成・資産取り崩し型</option>
-                                <option value="live_middle_mainstream" selected>【生活】THE・日本の中流（最も普通の暮らし）</option>
-                                <option value="live_children_room">【生活】実家暮らし子供部屋おじさん（極限積立型）</option>
-                                <option value="live_local_startup">【生活】脱サラ地方移住起業</option>
-                                <option value="live_mild_yankee">【生活】堅実地元定住</option>
-                                <option value="koo">【特殊】閃きの大家さん KOO</option>
-                                <option value="child_a">【特殊】未来ある子供達 A</option>
-                                <option value="child_b">【特殊】未来ある子供達 B</option>
+<option value="custom" data-i18n="opt_custom_input" class="bg-slate-800 text-slate-200">— 自由入力 —</option>
+
+                                <option value="nri_ultra_rich" class="bg-emerald-950 text-emerald-300 font-medium">【資産】超富裕層（5億円以上）</option>
+                                <option value="nri_rich" class="bg-emerald-950 text-emerald-300 font-medium">【資産】富裕層（1億〜5億円）</option>
+                                <option value="nri_sub_rich" class="bg-emerald-950 text-emerald-300 font-medium">【資産】準富裕層（5000万〜1億円）</option>
+                                <option value="nri_upper_mass" class="bg-emerald-950 text-emerald-300 font-medium">【資産】アッパーマス層（3000万〜5000万）</option>
+                                <option value="nri_mass" class="bg-emerald-950 text-emerald-300 font-medium">【資産】マス層（3000万円未満）</option>
+
+                                <option value="live_power_couple" class="bg-indigo-950 text-indigo-300 font-medium">【生活】都心タワマン共働き</option>
+                                <option value="live_fire" class="bg-indigo-950 text-indigo-300 font-medium">【生活】40代FIRE達成・資産取り崩し型</option>
+                                <option value="live_middle_mainstream" class="bg-indigo-950 text-indigo-300 font-medium" selected>【生活】THE・日本の中流（最も普通の暮らし）</option>
+                                <option value="live_children_room" class="bg-indigo-950 text-indigo-300 font-medium">【生活】実家暮らし子供部屋おじさん（極限積立型）</option>
+                                <option value="live_local_startup" class="bg-indigo-950 text-indigo-300 font-medium">【生活】脱サラ地方移住起業</option>
+                                <option value="live_mild_yankee" class="bg-indigo-950 text-indigo-300 font-medium">【生活】堅実地元定住</option>
+
+                                <option value="koo" class="bg-amber-950 text-amber-200 font-bold">【特殊】閃きの大家さん KOO</option>
+                                <option value="child_a" class="bg-amber-950 text-amber-200 font-bold">【特殊】未来ある子供達 A</option>
+                                <option value="child_b" class="bg-amber-950 text-amber-200 font-bold">【特殊】未来ある子供達 B</option>
                             </select>
                         </div>
                     </div>
@@ -410,35 +413,68 @@
 
         <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 pb-32">
             <section class="lg:col-span-5 flex flex-col gap-6 w-full min-w-0">
-			<div class="flex p-1 rounded-2xl gap-1.5 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 border border-slate-700/60 shadow-md backdrop-blur-md">
-                    <button id="tab-basic" onclick="switchJinseiTab('basic')" 
-                            class="relative flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/10 border border-amber-400/20">
-                        <i class="fa-solid fa-sliders"></i>
-                        <span>1. 人生の設計</span>
-                    </button>
-                    
-                    <button id="tab-assets" onclick="switchJinseiTab('assets')" 
-                            class="relative flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-white hover:bg-white/5">
-                        <i class="fa-solid fa-chart-pie"></i>
-                        <span>2. 資産の配分</span>
-                    </button>
-                    
-                    <button id="tab-saveload" onclick="switchJinseiTab('saveload')" 
-                            class="relative flex-1 py-3 text-[11px] sm:text-xs font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-500 hover:text-white hover:bg-white/5">
-                        <i class="fa-solid fa-book-bookmark"></i>
-                        <span>設定の保存／呼出</span>
-                    </button>
-                </div>
+<div class="flex p-1 rounded-2xl gap-1.5 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 border border-slate-700/60 shadow-md backdrop-blur-md relative z-50">
+    <button id="tab-basic" onclick="switchJinseiTab('basic')" 
+            class="relative flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 shadow-md shadow-amber-500/10 border border-amber-400/20 group/tab">
+        <i class="fa-solid fa-sliders"></i>
+        <span>1. 人生の設計</span>
+        
+        <div class="absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-48 bg-slate-950/95 border border-amber-500/40 text-slate-200 p-2 rounded-lg shadow-2xl transition-all duration-200 opacity-0 scale-95 pointer-events-none group-hover/tab:opacity-100 group-hover/tab:scale-100 z-[100] text-center max-sm:hidden">
+            <p class="text-[11px] font-medium text-slate-300">予寿命や収入・支出等の基本計画を設定</p>
+            <span class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[5px] border-x-transparent border-t-[5px] border-t-slate-950"></span>
+        </div>
+    </button>
+    
+    <button id="tab-assets" onclick="switchJinseiTab('assets')" 
+            class="relative flex-1 py-3 text-xs sm:text-sm font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-400 hover:text-white hover:bg-white/5 group/tab">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>2. 資産の配分</span>
+        
+        <div class="absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-48 bg-slate-950/95 border border-amber-500/40 text-slate-200 p-2 rounded-lg shadow-2xl transition-all duration-200 opacity-0 scale-95 pointer-events-none group-hover/tab:opacity-100 group-hover/tab:scale-100 z-[100] text-center max-sm:hidden">
+            <p class="text-[11px] font-medium text-slate-300">運用資産の初期値と運用期間を設定</p>
+            <span class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[5px] border-x-transparent border-t-[5px] border-t-slate-950"></span>
+        </div>
+    </button>
+    
+    <button id="tab-saveload" onclick="switchJinseiTab('saveload')" 
+            class="relative flex-1 py-3 text-[11px] sm:text-xs font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-1.5 text-slate-500 hover:text-white hover:bg-white/5 group/tab">
+        <i class="fa-solid fa-book-bookmark"></i>
+        <span>設定の保存／呼出</span>
+        
+        <div class="absolute bottom-[calc(100%+8px)] left-1/2 -translate-x-1/2 w-48 bg-slate-950/95 border border-amber-500/40 text-slate-200 p-2 rounded-lg shadow-2xl transition-all duration-200 opacity-0 scale-95 pointer-events-none group-hover/tab:opacity-100 group-hover/tab:scale-100 z-[100] text-center max-sm:hidden">
+            <p class="text-[11px] font-medium text-slate-300">設定データのブラウザへの記録・復元</p>
+            <span class="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-[5px] border-x-transparent border-t-[5px] border-t-slate-950"></span>
+        </div>
+    </button>
+</div>
 		
 		
 		
 <!-- 外枠自体を id="jinsei-panel-basic" に変更 -->
-               <div id="jinsei-panel-basic" class="bg-white rounded-2xl border-[3px] border-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.3)] p-6 flex flex-col gap-5">
-                    <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-amber-500"></i> <span data-i18n="title_basic_setting">人生の設計</span>
+<div id="jinsei-panel-basic" class="bg-white rounded-2xl border-[3px] border-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.3)] p-6 flex flex-col gap-5 relative">
+                    <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-amber-500"></i> <span data-i18n="title_basic_setting">人生の設計</span>
+                        </div>
+                        <button onclick="toggleJinseiHelp('help-basic')" class="w-5 h-5 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-400 hover:text-amber-600 transition-colors flex items-center justify-center text-xs focus:outline-none shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-question"></i>
+                        </button>
                     </h2>
                     
+                    <div id="help-basic" class="hidden absolute top-14 left-4 right-4 z-[100] bg-slate-900/95 border border-amber-500/30 text-slate-100 p-4 rounded-xl shadow-2xl flex flex-col gap-2.5 max-h-60 overflow-y-auto custom-scrollbar animate-fade-in text-xs leading-relaxed">
+                        <div class="font-bold text-amber-400 flex items-center gap-1.5 border-b border-slate-800 pb-1">
+                            <i class="fa-solid fa-scale-balanced"></i> <span>⚖️ このカードは何？</span>
+                        </div>
+                        <p class="text-slate-200">あなたのこれからの生存期間、働く期間、日常や人生の節目で発生する「すべてのお金の日記（収入と支出）」の土台を組み立てるカードです。</p>
+                        <div class="font-bold text-amber-400 flex items-center gap-1.5 border-b border-slate-800 pb-1 mt-1">
+                            <i class="fa-solid fa-map-location-dot"></i> <span>💡 面倒くさがり屋さんへの道案内</span>
+                        </div>
+                        <p class="text-slate-300">色々入力欄があってウッ…となるかもしれませんが、最初は<strong class="text-white bg-amber-500/20 px-1 rounded">『現在の年齢』</strong>と<strong class="text-white bg-amber-500/20 px-1 rounded">『シミュレーション終了年齢』</strong>の2つだけ入れれば準備完了です！あとは『年間生活費』をざっくり入れるだけで、未来のグラフが自動でギュンギュン動き出します。細かい臨時収入などは後からパズル感覚で足していけばOKですよ！</p>
+                        <button onclick="toggleJinseiHelp('help-basic')" class="mt-1 self-end text-[10px] text-slate-400 hover:text-white bg-slate-800 px-2 py-1 rounded transition-colors">閉じる</button>
+                    </div>
+                    
 					<div class="flex flex-col gap-6 w-full">
+					
 					
 					
                     <div class="grid grid-cols-3 gap-3">
@@ -534,19 +570,34 @@
                         </div>
                        <div id="expense-container" class="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-1"></div>
                     </div>
-   </div> </div> <div id="jinsei-panel-assets" class="flex flex-col gap-6 w-full hidden">
+					
+					
+</div> </div> <div id="jinsei-panel-assets" class="flex flex-col gap-6 w-full hidden">
 
 
-                <div class="bg-white rounded-2xl border-[3px] border-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.3)] p-6 flex flex-col gap-4">
+                <div class="bg-white rounded-2xl border-[3px] border-slate-400 shadow-[0_0_15px_rgba(148,163,184,0.3)] p-6 flex flex-col gap-4 relative">
                     <h2 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
-                        <span class="flex items-center gap-2">
+                        <div class="flex items-center gap-2">
                             <i class="fa-solid fa-chart-pie text-emerald-500"></i> <span data-i18n="title_asset_allocation">資産の配分</span>
-                        </span>
-						
-						
-						
-                        <span class="text-xs font-normal text-slate-400" data-i18n="desc_cashflow_integration">キャッシュフロー連動</span>
+                            <span class="text-xs font-normal text-slate-400 pl-1" data-i18n="desc_cashflow_integration">キャッシュフロー連動</span>
+                        </div>
+                        <button onclick="toggleJinseiHelp('help-assets')" class="w-5 h-5 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-400 hover:text-amber-600 transition-colors flex items-center justify-center text-xs focus:outline-none shadow-sm cursor-pointer">
+                            <i class="fa-solid fa-question"></i>
+                        </button>
                     </h2>
+                    
+                    <div id="help-assets" class="hidden absolute top-14 left-4 right-4 z-[100] bg-slate-900/95 border border-amber-500/30 text-slate-100 p-4 rounded-xl shadow-2xl flex flex-col gap-2.5 max-h-60 overflow-y-auto custom-scrollbar animate-fade-in text-xs leading-relaxed">
+                        <div class="font-bold text-amber-400 flex items-center gap-1.5 border-b border-slate-800 pb-1">
+                            <i class="fa-solid fa-chart-line"></i> <span>📈 このカードは何？</span>
+                        </div>
+                        <p class="text-slate-200">貯金や投資信託など、あなたが今持っている（またはこれから育てる）財産を戦場にどう配置し、どのくらいのスピード（利回り）で成長させるかを指揮するカードです。</p>
+                        <div class="font-bold text-amber-400 flex items-center gap-1.5 border-b border-slate-800 pb-1 mt-1">
+                            <i class="fa-solid fa-map-location-dot"></i> <span>💡 面倒くさがり屋さんへの道案内</span>
+                        </div>
+                        <p class="text-slate-300">まずは一番上の<strong class="text-white bg-amber-500/20 px-1 rounded">『現金口座の初期資金』</strong>に、今の貯金額をぽんと入力してみましょう！もし投資信託や株をやっているなら、ボタン一つでカードを追加できます。利回り（%）とか難しければ、上にあるマクロ経済ボタン（🚀超高成長など）をポチッと押せば、世界情勢に合わせて一発で全自動設定されますよ！</p>
+                        <button onclick="toggleJinseiHelp('help-assets')" class="mt-1 self-end text-[10px] text-slate-400 hover:text-white bg-slate-800 px-2 py-1 rounded transition-colors">閉じる</button>
+                    </div>
+					
 
                     <div class="border-l-4 border-slate-500 bg-slate-50 p-4 rounded-xl flex flex-col gap-3">
                         <div class="flex items-center justify-between">
@@ -579,10 +630,12 @@
                        <div id="dynamic-assets-container" class="flex flex-col gap-4 mt-2"></div>
                     </div>
                 </div>
+
+
 </div>
 
                 <div id="jinsei-panel-saveload" class="flex flex-col gap-6 w-full hidden text-xs">
-                    <div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-xl p-5 flex flex-col gap-4 text-slate-300">
+                    <div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-xl p-5 flex flex-col gap-4 text-slate-300 relative">
                         
                         <div class="p-3 bg-slate-950/40 border border-slate-800/60 rounded-xl flex items-start gap-2.5">
                             <i class="fa-solid fa-circle-info text-amber-400 mt-0.5 text-sm"></i>
@@ -591,9 +644,33 @@
                             </p>
                         </div>
 
-                        <h2 class="text-sm font-bold text-slate-100 border-b border-slate-800 pb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-book-bookmark text-amber-500"></i> <span>尽生の書（伝承スロット）</span>
+                        <h2 class="text-sm font-bold text-slate-100 border-b border-slate-800 pb-2 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-book-bookmark text-amber-500"></i> <span>尽生の書（伝承スロット）</span>
+                            </div>
+                            <button onclick="toggleJinseiHelp('help-saveload')" class="w-5 h-5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-amber-400 transition-colors flex items-center justify-center text-xs focus:outline-none shadow-sm cursor-pointer border border-slate-700">
+                                <i class="fa-solid fa-question"></i>
+                            </button>
                         </h2>
+                        
+                        <div id="help-saveload" class="hidden absolute top-32 left-4 right-4 z-[100] bg-slate-950 border border-amber-500/40 text-slate-100 p-4 rounded-xl shadow-2xl flex flex-col gap-2.5 max-h-60 overflow-y-auto custom-scrollbar animate-fade-in text-xs leading-relaxed">
+                            <div class="font-bold text-amber-400 flex items-center gap-1.5 border-b border-slate-800 pb-1">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> <span>🔮 このカードは何？</span>
+                            </div>
+                            <p class="text-slate-200">あなたが考えた作戦（人生の設計や資産の配分）を歴史の書に刻み、いつでも別の未来へ時間跳躍（切り替え）できるようにする「時間操作の魔法陣」です。</p>
+                            <p class="text-amber-300 font-medium bg-amber-500/10 p-2 rounded border border-amber-500/20">「もし40代で早期FIREしたら？」「もし現役で定年までバリバリ働いてタワマンを買ったら？」など、<strong>まったく異なる人生のパターンをいくつも保存してグラフで並べて比較することで、自分にとって一番後悔のない、最適な歩み方をじっくり選び抜くために大活躍します！</strong></p>
+                            
+                            <div class="font-bold text-amber-400 flex items-center gap-1.5 border-b border-slate-800 pb-1 mt-1">
+                                <i class="fa-solid fa-circle-question"></i> <span>💡「尽生の書」と「設定CSV保存」の違いって？</span>
+                            </div>
+                            <p class="text-slate-300">パソコンやスマホが苦手な人でも大丈夫！違いはとってもシンプルです：</p>
+                            <ul class="list-none flex flex-col gap-1.5 text-slate-300 pl-1">
+                                <li>• <strong class="text-white">尽生の書（伝承スロット）:</strong> ゲームのセーブデータと同じ！このブラウザの中にそっと記憶させるので、次回このページを開いた瞬間に「出す」ボタン一つで前回の続きから再開できます。一番お手軽です！</li>
+                                <li>• <strong class="text-white">設定CSV保存（外部保存）:</strong> あなたの作ったプランを「1つのファイル」としてスマホやパソコンにダウンロードします。ブラウザの履歴を消しちゃっても安心ですし、メールやLINEで誰かに「僕の考えた最強の人生プラン」を送って見せることもできちゃいます！</li>
+                            </ul>
+                            <button onclick="toggleJinseiHelp('help-saveload')" class="mt-1 self-end text-[10px] text-slate-400 hover:text-white bg-slate-800 px-2 py-1 rounded transition-colors">閉じる</button>
+                        </div>
+						
                         
                         <div class="grid grid-cols-1 gap-3">
                             <div class="p-3 bg-slate-950/60 border border-slate-800 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -3713,6 +3790,28 @@ function executeSlotAction(action, slotNum) {
 document.addEventListener('DOMContentLoaded', () => {
     if (typeof updateSlotLabels === 'function') updateSlotLabels();
 });
+
+// 💡 【新設】親切説明ポップオーバーの表示・非表示を切り替える調停関数
+function toggleJinseiHelp(helpId) {
+    const helpBox = document.getElementById(helpId);
+    if (!helpBox) return;
+    
+    // クリックされたボックス以外のすべての説明ボックスを一度綺麗に閉じる（重複防止）
+    const allHelpBoxes = ['help-basic', 'help-assets', 'help-saveload'];
+    allHelpBoxes.forEach(id => {
+        if (id !== helpId) {
+            const otherBox = document.getElementById(id);
+            if (otherBox) otherBox.classList.add('hidden');
+        }
+    });
+
+    // 対象のボックスをパッと切り替え
+    if (helpBox.classList.contains('hidden')) {
+        helpBox.classList.remove('hidden');
+    } else {
+        helpBox.classList.add('hidden');
+    }
+}
 
     </script>
 </html>
