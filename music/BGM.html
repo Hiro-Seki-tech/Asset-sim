@@ -2,109 +2,148 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>尽生 - 生きるを尽くす (100% Vol)</title>
+    <title>「尽生」金枠の陣・時間拡張音響（連携用ステルスBGM）</title>
     <style>
-        body { background: #050609; color: #6c7282; font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .panel { background: #0b0d14; padding: 40px; border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,0.9); text-align: center; border: 1px solid #131622; width: 420px; }
-        h1 { color: #c5c9d6; font-weight: 300; letter-spacing: 8px; margin-bottom: 5px; }
-        .subtitle { color: #32364a; font-size: 0.85em; margin-bottom: 35px; letter-spacing: 2px; }
-        .status { font-size: 0.95em; color: #4ad3a0; margin-bottom: 35px; min-height: 24px; font-family: monospace; }
-        .ctrl-btn { background: transparent; border: 2px solid #1a1e30; color: #a3a8b8; padding: 14px 35px; font-size: 0.95em; cursor: pointer; border-radius: 30px; margin: 0 10px; transition: all 0.3s; }
-        .ctrl-btn:hover { background: #a3a8b8; color: #050609; }
-        #stopBtn:hover { background: #db5a60; color: #fff; border-color: #db5a60; }
+        /* iframe内での完全非表示・ステルス仕様 */
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
-<div class="panel">
-    <h1>尽生 -時の移ろい-</h1>
-    <div class="subtitle">Ambient Soundscape (100% Volume)</div>
-    <div class="status" id="statusText">◆ 静粛中 ◆</div>
-    <div>
-        <button class="ctrl-btn" id="playBtn">奏上</button>
-        <button class="ctrl-btn" id="stopBtn">静粛</button>
-    </div>
-</div>
+
 <script>
-let audioCtx = null, isPlaying = false, nextEventTime = 0, loopTimer = null, mainGain = null;
+let audioCtx = null;
+let isPlaying = false;
+let sequenceTimer = null;
+let lfoTimer = null;
+let mainGain = null;
+let padFilter = null;
+let padOscs = [];
+
+// さわやかで儚い白金のコード進行 (Cmaj9 -> Am9 -> Fmaj9 -> G6)
+const etherealChords = [
+    [261.63, 329.63, 392.00, 493.88], // Cmaj9
+    [220.00, 261.63, 329.63, 392.00], // Am9
+    [174.61, 218.27, 261.63, 349.23], // Fmaj9
+    [196.00, 246.94, 293.66, 392.00]  // G6
+];
+
+let chordIndex = 0;
+
+// 1. DOMContentLoaded 発火時に自動的に AudioContext を生成・再生開始
+document.addEventListener('DOMContentLoaded', () => {
+    playAmbient();
+});
+
 function initAudio() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
     mainGain = audioCtx.createGain();
-    mainGain.gain.setValueAtTime(1.0, audioCtx.currentTime); // 全体音量を100%（最大）に設定
+    mainGain.gain.setValueAtTime(0.35, audioCtx.currentTime); 
+    
+    // パッド持続音用ローパス（角を徹底的に丸める：300Hz制限）
+    padFilter = audioCtx.createBiquadFilter();
+    padFilter.type = 'lowpass';
+    padFilter.frequency.setValueAtTime(300, audioCtx.currentTime);
+    
+    padFilter.connect(mainGain);
     mainGain.connect(audioCtx.destination);
 }
-function createNoiseBuffer() {
-    const size = audioCtx.sampleRate * 2, buffer = audioCtx.createBuffer(1, size, audioCtx.sampleRate), data = buffer.getChannelData(0);
-    for (let i = 0; i < size; i++) data[i] = Math.random() * 2 - 1;
-    return buffer;
-}
-function whisperText(text, time) {
-    if (!audioCtx) return;
-    const dur = text === 'jinsei' ? 0.8 : 1.5, noise = audioCtx.createBufferSource();
-    noise.buffer = createNoiseBuffer();
-    const filter = audioCtx.createBiquadFilter(), gain = audioCtx.createGain();
-    filter.type = 'bandpass';
-    if (text === 'jinsei') {
-        filter.frequency.setValueAtTime(650, time); filter.frequency.exponentialRampToValueAtTime(300, time + 0.5); filter.Q.setValueAtTime(8, time);
-    } else {
-        filter.frequency.setValueAtTime(550, time); filter.frequency.exponentialRampToValueAtTime(250, time + 1.2); filter.Q.setValueAtTime(6, time);
-    }
-    gain.gain.setValueAtTime(0, time); gain.gain.linearRampToValueAtTime(0.02, time + 0.05); gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
-    const osc = audioCtx.createOscillator(); osc.type = 'sine';
-    osc.frequency.setValueAtTime(text === 'jinsei' ? 90 : 75, time); osc.frequency.linearRampToValueAtTime(text === 'jinsei' ? 75 : 60, time + dur * 0.7);
-    noise.connect(filter); osc.connect(filter); filter.connect(gain); gain.connect(mainGain);
-    noise.start(time); osc.start(time); noise.stop(time + dur); osc.stop(time + dur);
-}
-function playSand(time, duration) {
-    const noise = audioCtx.createBufferSource(); noise.buffer = createNoiseBuffer();
-    const filter = audioCtx.createBiquadFilter(), gain = audioCtx.createGain();
-    filter.type = 'lowpass'; filter.frequency.setValueAtTime(850, time);
-    gain.gain.setValueAtTime(0, time); gain.gain.linearRampToValueAtTime(0.003, time + duration/2); gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
-    noise.connect(filter); filter.connect(gain); gain.connect(mainGain);
-    noise.start(time); noise.stop(time + duration);
-}
-function playTick(time) {
-    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-    osc.type = 'triangle'; osc.frequency.setValueAtTime(4500, time);
-    gain.gain.setValueAtTime(0.005, time); gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.012);
-    osc.connect(gain); gain.connect(mainGain); osc.start(time); osc.stop(time + 0.02);
-}
-function playMournfulBird(time) {
-    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-    osc.type = 'sine'; osc.frequency.setValueAtTime(2500, time);
-    osc.frequency.linearRampToValueAtTime(2200, time + 0.15); osc.frequency.setValueAtTime(2300, time + 0.2); osc.frequency.linearRampToValueAtTime(1900, time + 0.4);
-    gain.gain.setValueAtTime(0, time); gain.gain.linearRampToValueAtTime(0.002, time + 0.08); gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.45);
-    osc.connect(gain); gain.connect(mainGain); osc.start(time); osc.stop(time + 0.45);
-}
-function playSadDrone(time, duration) {
-    const freqs = [55.00, 73.42];
-    freqs.forEach(f => {
-        const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(f, time);
-        gain.gain.setValueAtTime(0, time); gain.gain.linearRampToValueAtTime(0.006, time + 4); gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
-        osc.connect(gain); gain.connect(mainGain); osc.start(time); osc.stop(time + duration);
+
+// アタック・ゼロのシンセパッド（光のフェードイン・アウトの超緩慢ループ）
+function spawnEtherealWave() {
+    if (!isPlaying) return;
+
+    const now = audioCtx.currentTime;
+    const currentChord = etherealChords[chordIndex];
+    
+    const duration = 24.0; // 1つの和音の鳴動時間は24秒
+    const attack = 5.5;    // 音が鳴る瞬間のアタックを「5.5秒」かけて超・緩慢にフェードイン
+    const fadeOut = 12.0;   // 12秒かけて空気にとけるようにフェードアウト
+
+    currentChord.forEach((freq) => {
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        
+        osc.type = 'sine'; // トゲの一切ない純粋サイン波
+        osc.frequency.setValueAtTime(freq, now);
+        
+        gainNode.gain.setValueAtTime(0, now);
+        gainNode.gain.linearRampToValueAtTime(0.06, now + attack);
+        gainNode.gain.setValueAtTime(0.06, now + duration - fadeOut);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, now + duration);
+        
+        osc.connect(gainNode);
+        gainNode.connect(padFilter);
+        
+        osc.start(now);
+        osc.stop(now + duration);
     });
+
+    chordIndex = (chordIndex + 1) % etherealChords.length;
+    
+    // 次の波が来るまで20秒〜30秒の間隔（1/fゆらぎ）をあける超広域設計
+    const nextInterval = 20000 + Math.random() * 10000;
+    sequenceTimer = setTimeout(spawnEtherealWave, nextInterval);
 }
-function scheduler() {
-    while (nextEventTime < audioCtx.currentTime + 0.1) {
-        const loopPosition = nextEventTime % 24;
-        if (loopPosition === 0) { whisperText('jinsei', nextEventTime); playSadDrone(nextEventTime, 24.0); }
-        if (loopPosition === 12) { whisperText('ikiru', nextEventTime); }
-        if (loopPosition >= 2 && loopPosition < 6) { playTick(nextEventTime); } 
-        else if (loopPosition >= 7 && loopPosition < 11) { if (loopPosition === 7) playSand(nextEventTime, 3.5); } 
-        else if (loopPosition >= 14 && loopPosition < 18) { playTick(nextEventTime); }
-        else if (loopPosition >= 19 && loopPosition < 23) { if (Math.random() < 0.5) playMournfulBird(nextEventTime); }
-        nextEventTime += 1.0;
+
+// 緩慢なLFOによる空気のそよ風（18秒周期）
+function pulseLFO() {
+    if (!isPlaying) return;
+    const currentNow = audioCtx.currentTime;
+    const cutoff = 300 + Math.sin(currentNow * 0.1) * 50;
+    padFilter.frequency.setValueAtTime(cutoff, currentNow);
+    lfoTimer = requestAnimationFrame(pulseLFO);
+}
+
+function playAmbient() {
+    if (isPlaying) return;
+    
+    if (!audioCtx) {
+        initAudio();
     }
-    loopTimer = setTimeout(scheduler, 50);
+    
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    
+    isPlaying = true;
+    
+    spawnEtherealWave();
+    pulseLFO();
 }
-document.getElementById('playBtn').addEventListener('click', () => {
-    if (!audioCtx) initAudio();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    if (!isPlaying) { isPlaying = true; nextEventTime = audioCtx.currentTime; scheduler(); document.getElementById('statusText').innerText = "♪ 哀愁の環境音（100%）が流れています..."; }
+
+// ==========================================
+// 🛡️ 必須実装：親画面からの二大制御防衛窓口
+// ==========================================
+
+// 窓口A: メッセージキャッチ（メッセージを受け取って消音・停止）
+window.addEventListener('message', (e) => { 
+    if (e.data === 'stop') { 
+        stopBGM(); 
+    } 
 });
-document.getElementById('stopBtn').addEventListener('click', () => {
-    if (isPlaying) { isPlaying = false; clearTimeout(loopTimer); if (audioCtx) audioCtx.suspend(); document.getElementById('statusText').innerText = "◆ 静粛中 ◆"; }
-});
+
+// 窓口B: 直接関数実行（親のJSスクリプトから window.stopBGM() で直接執行）
+window.stopBGM = stopBGM;
+
+function stopBGM() {
+    if (!isPlaying) return;
+    
+    isPlaying = false;
+    clearTimeout(sequenceTimer);
+    cancelAnimationFrame(lfoTimer);
+    
+    // 進行中のオシレーターや残響音を即座かつ安全に完全消音処理
+    if (audioCtx) {
+        audioCtx.suspend();
+    }
+    audioCtx = null; // コンテキストを安全にクリア
+}
 </script>
 </body>
 </html>
